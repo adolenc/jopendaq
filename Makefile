@@ -9,14 +9,15 @@
 #   make natives    build libcopendaq.so + friends from source into bin/<triple>/
 #                   (needs CMake + a C/C++ toolchain on the host)
 #   make bindings   regenerate src/generated/java from the openDAQ C headers
-#   make test       run the JUnit suite (uses bin/<triple>/ if built, otherwise
-#                   the loader downloads the pinned release archive on first use)
+#   make test       run the JUnit suite against the bin/<triple>/ natives
+#                   (build them with `make natives` first)
 #
-# End users who only run the bindings never need `make natives`, because the
-# NativeLoader fetches the pinned prebuilt archives automatically.
+# End users who only run the bindings never need `make natives`: they add the
+# published natives-<triple> jar for their OS to the classpath and the loader
+# extracts it into a per-user cache on first use -- there is no network access.
 
 DOCKER_IMAGE ?= java-opendaq-dev
-OPENDAQ_RUNTIME_TRIPLE ?= linux-x64
+OPENDAQ_RUNTIME_TRIPLE ?= linux-x86_64
 OPENDAQ_REPO_URL ?= https://github.com/adolenc/openDAQ.git
 OPENDAQ_REF ?= c-bindings-docstrings
 OPENDAQ_SRC_DIR ?= $(CURDIR)/tmp/openDAQ
@@ -51,9 +52,9 @@ OPENDAQ_CMAKE_ARGS := \
 
 # Everything below runs in the dev container as the calling user, with the repo
 # mounted at /workspace and Maven's repository cached in .m2/.  Locally-built
-# natives in bin/<triple>/ are mounted read-only and pointed at by the loader;
-# when they are absent the loader downloads the pinned release archive into the
-# cached-and-persisted .cache/ instead.
+# natives in bin/<triple>/ are mounted read-only and pointed at by the loader
+# via OPENDAQ_JAVA_NATIVE_DIR; XDG_CACHE_HOME is redirected into the persisted
+# .cache/ so the loader's per-user native cache survives across container runs.
 NATIVES_MOUNT := $(if $(wildcard $(NATIVES_DIR)/*.so),\
   -v $(NATIVES_DIR):/natives:ro -e OPENDAQ_JAVA_NATIVE_DIR=/natives,)
 

@@ -45,7 +45,7 @@ Run with `--enable-native-access=ALL-UNNAMED` (the bindings use the FFM API):
 
 ```bash
 java --enable-native-access=ALL-UNNAMED \
-  -cp jopendaq-0.1.0.jar:jopendaq-0.1.0-natives-linux-x64.jar:. \
+  -cp jopendaq-0.1.0.jar:jopendaq-0.1.0-natives-linux-x86_64.jar:. \
   Quickstart
 ```
 
@@ -96,8 +96,12 @@ val samples = reader.read(100, 2000)
 The native openDAQ libraries ship as ordinary jars — one per platform,
 published as `jopendaq-<version>-natives-<platform>.jar` on the
 [releases page](https://github.com/adolenc/jopendaq/releases) (a Maven
-dependency later).  Put the one for your OS on the classpath alongside the main
-jar; there is no runtime download.  On first use the loader extracts the
+dependency later).  The `<platform>` names — `linux-x86_64`, `osx-aarch_64`,
+`windows-x86_64` — match Netty's [`os-maven-plugin`](https://github.com/trustin/os-maven-plugin)
+classifier, so once these are on Maven you can depend on the natives jar as
+`natives-${os.detected.classifier}` and get the right one for the build host
+with no per-OS profile.  Put the one for your OS on the classpath alongside the
+main jar; there is no runtime download.  On first use the loader extracts the
 libraries out of the jar into a per-user cache under `~/.cache/java-opendaq/`
 (`%LOCALAPPDATA%\cache\java-opendaq\` on Windows), keyed by the build's openDAQ
 commit, and reuses it thereafter.

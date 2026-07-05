@@ -119,16 +119,16 @@ jobs:
         include:
           - name: Linux x64
             runner: ubuntu-22.04
-            triple: linux-x64
+            triple: linux-x86_64
             lib_glob: '*.so'
           - name: macOS arm64
             runner: macos-15
-            triple: darwin-arm64
+            triple: osx-aarch_64
             lib_glob: '*.dylib'
             cmake_extra: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15
           - name: Windows x64
             runner: windows-2022
-            triple: windows-x64
+            triple: windows-x86_64
             lib_glob: '*.dll'
     steps:
       - uses: actions/checkout@v4

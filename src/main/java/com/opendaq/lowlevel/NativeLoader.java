@@ -57,17 +57,22 @@ public final class NativeLoader {
         throw new IllegalStateException("Unsupported OS for openDAQ native libraries: " + name);
     }
 
-    /** Name of the platform directory holding this host's natives, e.g. "linux-x64". */
+    /**
+     * Name of the platform directory holding this host's natives, e.g.
+     * "linux-x86_64".  The naming matches Netty's {@code os-maven-plugin}
+     * classifier ({@code ${os.detected.classifier}}) so the natives jar can be
+     * pulled in as {@code natives-${os.detected.classifier}} with no mapping.
+     */
     public static String currentPlatformName() {
         String os = switch (currentOs()) {
             case LINUX -> "linux";
-            case MACOS -> "darwin";
+            case MACOS -> "osx";
             case WINDOWS -> "windows";
         };
         String archName = System.getProperty("os.arch", "").toLowerCase();
         String arch = switch (archName) {
-            case "amd64", "x86_64" -> "x64";
-            case "aarch64", "arm64" -> "arm64";
+            case "amd64", "x86_64" -> "x86_64";
+            case "aarch64", "arm64" -> "aarch_64";
             default -> throw new IllegalStateException(
                 "Unsupported architecture for openDAQ native libraries: " + archName);
         };
