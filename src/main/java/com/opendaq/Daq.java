@@ -31,14 +31,6 @@ public final class Daq {
         NativeLoader.healthcheck(out);
     }
 
-    /**
-     * Download and cache the pinned native openDAQ binaries for this platform
-     * (done automatically on first use unless {@code OPENDAQ_NO_DOWNLOAD} is set).
-     */
-    public static Path installNativeLibraries() {
-        return NativeLoader.installNativeLibraries();
-    }
-
     /** The directory the native openDAQ libraries are loaded from. */
     public static Path nativeLibraryDirectory() {
         return NativeLoader.nativeLibraryDirectory();

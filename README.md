@@ -3,16 +3,18 @@
 Java bindings for interacting with [openDAQ](https://opendaq.com/) devices,
 built on the Java Foreign Function & Memory API (Panama) over the openDAQ
 flat C API — no JNI code to compile, works with stock JDK 22+.  Prebuilt
-native openDAQ binaries for x64 Linux, x64 Windows, and ARM macOS are
-downloaded automatically on first use (only for your platform, ~15 MB).
+native openDAQ binaries for x64 Linux, x64 Windows, and ARM macOS ship as
+per-platform `natives-<platform>` jars; add the one for your OS to the
+classpath and the bindings extract it on first use (no network access).
 
 Because the API is plain Java classes, the bindings are directly usable from
 any JVM language — Clojure, Scala, Kotlin, JRuby, ...
 
 ## Quickstart
 
-Build the jar (`make package`, or `mvn package` with a local JDK 22+) and put
-it on your classpath, then:
+Put the main jar and the `natives-<platform>` jar for your OS on the classpath
+— download them from the [releases page](https://github.com/adolenc/jopendaq/releases),
+or build them locally (`make package` + `make natives natives-jar`). Then:
 
 ```java
 import com.opendaq.*;
@@ -42,7 +44,9 @@ public class Quickstart {
 Run with `--enable-native-access=ALL-UNNAMED` (the bindings use the FFM API):
 
 ```bash
-java --enable-native-access=ALL-UNNAMED -cp opendaq-java.jar:. Quickstart
+java --enable-native-access=ALL-UNNAMED \
+  -cp jopendaq-0.1.0.jar:jopendaq-0.1.0-natives-linux-x64.jar:. \
+  Quickstart
 ```
 
 This gives you 100 samples from the simulator device set to run at 100 Hz, a
@@ -89,24 +93,26 @@ val samples = reader.read(100, 2000)
 
 ### Native binaries
 
-The first use downloads the prebuilt openDAQ libraries for your platform from
-the GitHub release pinned in `src/main/resources/com/opendaq/native-binaries.properties`,
-verifies their SHA-256 checksum, and caches them under `~/.cache/java-opendaq/`
-(`%LOCALAPPDATA%\cache\java-opendaq\` on Windows).  Subsequent runs reuse the
-cache.  The extraction needs `tar`, which ships with Linux, macOS, and
-Windows 10+.
+The native openDAQ libraries ship as ordinary jars — one per platform,
+published as `jopendaq-<version>-natives-<platform>.jar` on the
+[releases page](https://github.com/adolenc/jopendaq/releases) (a Maven
+dependency later).  Put the one for your OS on the classpath alongside the main
+jar; there is no runtime download.  On first use the loader extracts the
+libraries out of the jar into a per-user cache under `~/.cache/java-opendaq/`
+(`%LOCALAPPDATA%\cache\java-opendaq\` on Windows), keyed by the build's openDAQ
+commit, and reuses it thereafter.
 
 The loader looks for the libraries in this order:
 
 1. the directory named by the `OPENDAQ_JAVA_NATIVE_DIR` environment variable
-   (or the `opendaq.native.dir` system property),
-2. the per-user download cache, downloading into it when necessary.
+   (or the `opendaq.native.dir` system property) — a loose `bin/<platform>/`
+   directory, for dev builds and packagers;
+2. the `natives-<platform>` jar on the classpath, extracted into the cache.
 
-Set `OPENDAQ_NO_DOWNLOAD` to forbid the automatic download (e.g. in offline
-or CI environments); you can still trigger it explicitly with
-`Daq.installNativeLibraries()`.  Set `OPENDAQ_NATIVE_ARCHIVE_URL` to fetch
-the archive from a mirror instead of GitHub (checksum verification is skipped
-for mirrors).
+If neither is present the loader fails with a message telling you to add the
+`natives-<platform>` jar.  To build the jars yourself run `make natives`
+(compiles the libraries) then `make natives-jar` (packages them); CI builds all
+three platforms and attaches them to a release.
 
 ## Some details
 
@@ -275,22 +281,23 @@ host needs Docker for them.  The build is self-contained: `make natives` clones
 openDAQ at the pinned ref (`OPENDAQ_REF`) and builds `libcopendaq.so` and its
 runtime modules from source into `bin/<triple>/`, using the host's C/C++
 toolchain (CMake ≥ 3.24, a compiler, git) directly — the same way cl-opendaq
-builds its runtime.  `make bindings` regenerates the Java sources from the same
-checkout's C headers.  Running the bindings never requires either step — the
-`NativeLoader` downloads the pinned prebuilt release archives on first use — so
-`make test` works even without `make natives` (it falls back to that download).
-Override `OPENDAQ_REPO_URL` / `OPENDAQ_REF` / `NATIVES_DIR` to build against a
-different openDAQ.
+builds its runtime.  `make natives-jar` then packages `bin/<triple>/` into a
+publishable `natives-<triple>` jar.  `make bindings` regenerates the Java
+sources from the same checkout's C headers.  `make test` runs against the
+locally built `bin/<triple>/` (mounted via `OPENDAQ_JAVA_NATIVE_DIR`), so run
+`make natives` first.  Override `OPENDAQ_REPO_URL` / `OPENDAQ_REF` /
+`NATIVES_DIR` to build against a different openDAQ.
 
 ### Makefile
 
 ```bash
 make docker-image  # build the dev image (JDK + Maven + python3)
 make natives       # build libcopendaq.so + modules from openDAQ source -> bin/<triple>/ (host toolchain)
+make natives-jar   # package bin/<triple>/ into target/jopendaq-<version>-natives-<triple>.jar
 make bindings      # regenerate src/generated/java from the openDAQ C headers
 make build         # compile everything
-make test          # run the JUnit test suite against the simulator
-make package       # build target/opendaq-java-*.jar
+make test          # run the JUnit test suite against the simulator (needs `make natives` first)
+make package       # build target/jopendaq-<version>.jar
 make example NAME=StreamReaderExample   # compile and run one example
 make repl-shell    # interactive shell inside the dev container
 ```

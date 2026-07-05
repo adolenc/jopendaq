@@ -1,0 +1,253 @@
+name: Build and release native jars
+
+# Builds the openDAQ native libraries from source for every supported platform,
+# packages each platform's libraries into a `natives-<triple>` classifier jar
+# (com/opendaq/natives/<triple>/ with an index.txt file list and a tag.txt cache
+# key), builds the pure-Java main jar, and publishes them all as assets on a
+# GitHub release.  The bindings load the natives from whichever
+# `jopendaq-<version>-natives-<triple>.jar` is on the classpath — there is no
+# runtime download.
+#
+# Adapted from cl-opendaq's build-native-binaries.yml; the openDAQ CMake flags
+# are kept in sync with the Makefile.
+
+'on':
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version for the jars/tag (default: pom project.version)."
+        required: false
+        type: string
+      opendaq_repo:
+        description: "openDAQ repository URL (default: OPENDAQ_REPO_URL from Makefile)."
+        required: false
+        type: string
+      opendaq_ref:
+        description: "openDAQ ref to build (default: OPENDAQ_REF from Makefile)."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  OPENDAQ_SOURCE_DIR: tmp/openDAQ
+  OPENDAQ_BUILD_DIR: tmp/build
+  # Keep in sync with OPENDAQ_CMAKE_ARGS in the Makefile.
+  OPENDAQ_CMAKE_ARGS: >-
+    -DOPENDAQ_GENERATE_C_BINDINGS=ON
+    -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF
+    -DOPENDAQ_GENERATE_DELPHI_BINDINGS=OFF
+    -DOPENDAQ_GENERATE_CSHARP_BINDINGS=OFF
+    -DOPENDAQ_ENABLE_TESTS=OFF
+    -DOPENDAQ_ENABLE_TEST_UTILS=OFF
+    -DOPENDAQ_ENABLE_ACCESS_CONTROL=OFF
+    -DOPENDAQ_ENABLE_NATIVE_STREAMING=ON
+    -DDAQMODULES_OPENDAQ_CLIENT_MODULE=ON
+    -DDAQMODULES_REF_DEVICE_MODULE=ON
+    -DDAQMODULES_REF_FB_MODULE=ON
+    -DDAQMODULES_REF_FB_MODULE_ENABLE_RENDERER=OFF
+    -DBOOST_LOCALE_ENABLE_ICU=OFF
+
+jobs:
+  resolve:
+    name: Resolve version and openDAQ ref
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      repo: ${{ steps.resolve.outputs.repo }}
+      ref: ${{ steps.resolve.outputs.ref }}
+      sha: ${{ steps.resolve.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: resolve
+        shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_REPO: ${{ inputs.opendaq_repo }}
+          INPUT_REF: ${{ inputs.opendaq_ref }}
+        run: |
+          version="$INPUT_VERSION"
+          [ -z "$version" ] && version="$(grep -m1 '<version>' pom.xml | sed -E 's|.*<version>(.*)</version>.*|\1|')"
+          version="${version%-SNAPSHOT}"   # a release is never a snapshot
+
+          repo="$INPUT_REPO"
+          [ -z "$repo" ] && repo="$(awk '/^OPENDAQ_REPO_URL[[:space:]]*\?=/{print $3; exit}' Makefile)"
+
+          ref="$INPUT_REF"
+          [ -z "$ref" ] && ref="$(awk '/^OPENDAQ_REF[[:space:]]*\?=/{print $3; exit}' Makefile)"
+
+          sha="$(git ls-remote "$repo" "refs/heads/$ref" "refs/tags/$ref" | head -n1 | cut -f1)"
+          [ -z "$sha" ] && sha="$ref"   # a raw commit sha
+
+          {
+            echo "version=$version"
+            echo "repo=$repo"
+            echo "ref=$ref"
+            echo "sha=$sha"
+          } >> "$GITHUB_OUTPUT"
+
+  main-jar:
+    name: Build main jar
+    runs-on: ubuntu-latest
+    needs: resolve
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22'
+      - name: Set project version
+        shell: bash
+        run: mvn -q -B versions:set -DnewVersion="${{ needs.resolve.outputs.version }}" -DgenerateBackupPoms=false
+      - name: Package (pure Java, no natives needed)
+        shell: bash
+        run: mvn -q -B -DskipTests package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: main-jar
+          path: target/jopendaq-${{ needs.resolve.outputs.version }}.jar
+          if-no-files-found: error
+
+  natives-jar:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    needs: resolve
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux x64
+            runner: ubuntu-22.04
+            triple: linux-x64
+            lib_glob: '*.so'
+          - name: macOS arm64
+            runner: macos-15
+            triple: darwin-arm64
+            lib_glob: '*.dylib'
+            cmake_extra: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15
+          - name: Windows x64
+            runner: windows-2022
+            triple: windows-x64
+            lib_glob: '*.dll'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22'
+      - uses: jwlawson/actions-setup-cmake@v2
+      - uses: seanmiddleditch/gha-setup-ninja@v6
+
+      - name: Clone openDAQ
+        shell: bash
+        run: |
+          rm -rf "$OPENDAQ_SOURCE_DIR" "$OPENDAQ_BUILD_DIR"
+          mkdir -p "$(dirname "$OPENDAQ_SOURCE_DIR")"
+          git clone "${{ needs.resolve.outputs.repo }}" "$OPENDAQ_SOURCE_DIR"
+          git -C "$OPENDAQ_SOURCE_DIR" checkout --force "${{ needs.resolve.outputs.ref }}"
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ninja-build \
+            $(tr '\n' ' ' < "$OPENDAQ_SOURCE_DIR/.github/packages/apt.txt")
+
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        shell: bash
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install mono ninja
+
+      - name: Configure
+        shell: bash
+        run: |
+          cmake -S "$OPENDAQ_SOURCE_DIR" -B "$OPENDAQ_BUILD_DIR" \
+            -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            $OPENDAQ_CMAKE_ARGS ${{ matrix.cmake_extra }}
+
+      - name: Build
+        shell: bash
+        run: cmake --build "$OPENDAQ_BUILD_DIR" --config Release
+
+      - name: Stage natives jar layout
+        id: stage
+        shell: bash
+        run: |
+          triple="${{ matrix.triple }}"
+          stage="stage/com/opendaq/natives/$triple"
+          rm -rf stage
+          mkdir -p "$stage"
+
+          # Collect the runtime libraries produced under the build's bin/,
+          # excluding the python module and any test-only dlls.
+          list="$(find "$OPENDAQ_BUILD_DIR" -type f -path '*/bin/*' -name '${{ matrix.lib_glob }}' \
+            ! -name 'opendaq.cpython*' ! -name '*_test_dll.*')"
+          if [ -z "$list" ]; then
+            echo "No ${{ matrix.lib_glob }} runtime libraries found under $OPENDAQ_BUILD_DIR." >&2
+            exit 1
+          fi
+
+          : > "$stage/index.txt"
+          while IFS= read -r lib; do
+            cp "$lib" "$stage/"
+            basename "$lib" >> "$stage/index.txt"
+          done <<< "$list"
+
+          # Cache key: the exact openDAQ commit these libraries were built from.
+          printf '%s\n' "${{ needs.resolve.outputs.sha }}" > "$stage/tag.txt"
+
+          # Sanity: the core libraries must be present.
+          for stem in daqcoretypes daqcoreobjects opendaq copendaq; do
+            if ! ls "$stage" | grep -q "$stem"; then
+              echo "Missing expected library matching *$stem* for $triple." >&2
+              exit 1
+            fi
+          done
+          sort -o "$stage/index.txt" "$stage/index.txt"
+          echo "index:"; cat "$stage/index.txt"
+
+      - name: Package natives jar
+        shell: bash
+        run: |
+          jar --create \
+            --file "jopendaq-${{ needs.resolve.outputs.version }}-natives-${{ matrix.triple }}.jar" \
+            -C stage .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: natives-${{ matrix.triple }}
+          path: jopendaq-${{ needs.resolve.outputs.version }}-natives-${{ matrix.triple }}.jar
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs: [resolve, main-jar, natives-jar]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: List assets
+        shell: bash
+        run: find dist -type f | sort
+      - name: Create release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.resolve.outputs.version }}
+        run: |
+          tag="v${VERSION}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release delete "$tag" --yes --cleanup-tag
+          fi
+          gh release create "$tag" \
+            --title "jopendaq $VERSION" \
+            --notes "openDAQ Java bindings $VERSION. Native libraries built from ${{ needs.resolve.outputs.repo }} @ ${{ needs.resolve.outputs.ref }} (${{ needs.resolve.outputs.sha }}).
+
+          Add the main jar plus the \`natives-<platform>\` jar for your OS to the classpath; the bindings extract the natives at first use with no network access." \
+            dist/jopendaq-*.jar

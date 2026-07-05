@@ -6,17 +6,13 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.SymbolLookup;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.MessageDigest;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HexFormat;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Locates and loads the native openDAQ libraries.
@@ -24,16 +20,16 @@ import java.util.Properties;
  * <p>The loader looks for the libraries in this order:
  * <ol>
  *   <li>the directory named by the {@code OPENDAQ_JAVA_NATIVE_DIR} environment
- *       variable (or the {@code opendaq.native.dir} system property),</li>
- *   <li>the per-user download cache, downloading the release archive pinned in
- *       {@code native-binaries.properties} into it when necessary.</li>
+ *       variable (or the {@code opendaq.native.dir} system property) — for dev
+ *       builds and packagers pointing at a {@code bin/<platform>/} directory;</li>
+ *   <li>the {@code natives-<platform>} classifier jar on the classpath, whose
+ *       libraries are extracted once into a versioned per-user cache.</li>
  * </ol>
  *
- * <p>Set {@code OPENDAQ_NO_DOWNLOAD} to forbid the automatic download (e.g. in
- * offline or CI environments); you can still trigger it explicitly with
- * {@link #installNativeLibraries()}.  Set {@code OPENDAQ_NATIVE_ARCHIVE_URL} to
- * fetch the archive from a mirror instead (checksum verification is skipped
- * for mirrors).
+ * <p>There is no network access: the natives ship as ordinary Maven artifacts
+ * (a {@code natives-<platform>} classifier jar published alongside the main
+ * jar).  Add the one for your platform to the classpath, or set
+ * {@code OPENDAQ_JAVA_NATIVE_DIR} to a directory of loose libraries.
  */
 public final class NativeLoader {
 
@@ -41,9 +37,10 @@ public final class NativeLoader {
 
     static final String NATIVE_DIR_ENV_VAR = "OPENDAQ_JAVA_NATIVE_DIR";
     static final String NATIVE_DIR_PROPERTY = "opendaq.native.dir";
-    static final String NO_DOWNLOAD_ENV_VAR = "OPENDAQ_NO_DOWNLOAD";
-    static final String ARCHIVE_URL_ENV_VAR = "OPENDAQ_NATIVE_ARCHIVE_URL";
     static final String MODULES_ENV_VAR = "OPENDAQ_MODULES_PATH";
+
+    /** Classpath resource root under which each platform's natives jar packs its libraries. */
+    static final String NATIVES_RESOURCE_ROOT = "com/opendaq/natives/";
 
     private static Path loadedNativeDirectory;
     private static List<Path> loadedLibraryPaths;
@@ -116,111 +113,112 @@ public final class NativeLoader {
     }
 
     // ------------------------------------------------------------------
-    // Release archive manifest and download cache
+    // Classpath natives jar -> per-user extraction cache
     // ------------------------------------------------------------------
 
-    private static Properties manifest;
-
-    private static synchronized Properties manifest() {
-        if (manifest == null) {
-            manifest = new Properties();
-            try (InputStream in = NativeLoader.class.getResourceAsStream(
-                    "/com/opendaq/native-binaries.properties")) {
-                if (in != null) manifest.load(in);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }
-        return manifest;
-    }
-
-    private static Path cacheRoot() {
-        String tag = manifest().getProperty("tag", "untagged");
+    /** Base of the per-user cache the natives jars extract into (before the tag/platform). */
+    private static Path cacheBaseDir() {
         if (currentOs() == Os.WINDOWS) {
             String base = env("LOCALAPPDATA");
             if (base == null) base = System.getProperty("user.home");
-            return Path.of(base, "cache", "java-opendaq", tag);
+            return Path.of(base, "cache", "java-opendaq");
         }
         String xdg = env("XDG_CACHE_HOME");
         Path base = (xdg != null) ? Path.of(xdg) : Path.of(System.getProperty("user.home"), ".cache");
-        return base.resolve("java-opendaq").resolve(tag);
+        return base.resolve("java-opendaq");
     }
 
-    private static Path cachedNativeDirectory() {
-        Path dir = cacheRoot().resolve(currentPlatformName());
-        return Files.isDirectory(dir) ? dir : null;
-    }
-
-    private static boolean downloadsDisabled() {
-        return env(NO_DOWNLOAD_ENV_VAR) != null;
+    private static Path classpathNativeDirectory() {
+        return extractFromClasspath(NativeLoader.class.getClassLoader(),
+                                    currentPlatformName(), cacheBaseDir());
     }
 
     /**
-     * Download the pinned native-binaries release archive for this platform
-     * into the per-user cache, verify its SHA-256 checksum, extract it, and
-     * return the extracted directory.
+     * Extract the libraries packaged under {@code com/opendaq/natives/<platform>/}
+     * on {@code loader} into {@code cacheBase/<tag>/<platform>/} and return that
+     * directory, or {@code null} when no such natives resource is on the
+     * classpath.  Idempotent: a directory already carrying a {@code .complete}
+     * marker is reused untouched, so concurrent callers converge on one copy.
+     *
+     * <p>Package-private and parameterised so a unit test can drive it with a
+     * synthetic natives jar and a temporary cache, without real libraries.
      */
-    public static synchronized Path installNativeLibraries() {
-        Properties m = manifest();
-        String platform = currentPlatformName();
-        String archiveName = m.getProperty("archive." + platform);
-        String expectedSha = m.getProperty("sha256." + platform);
-        if (archiveName == null) {
-            throw new IllegalStateException(
-                "No pinned native-binaries archive for platform " + platform + ".");
-        }
-        String url = env(ARCHIVE_URL_ENV_VAR);
-        boolean verify = (url == null);
-        if (url == null) url = m.getProperty("base-url") + archiveName;
-
-        Path target = cacheRoot().resolve(platform);
-        Path archive = cacheRoot().resolve(archiveName);
+    static Path extractFromClasspath(ClassLoader loader, String platform, Path cacheBase) {
+        String root = NATIVES_RESOURCE_ROOT + platform + "/";
+        List<String> entries = readIndex(loader, root + "index.txt");
+        if (entries == null) return null;            // no natives jar for this platform on the classpath
+        String tag = readResourceLine(loader, root + "tag.txt", "untagged");
+        Path target = cacheBase.resolve(tag).resolve(platform);
+        Path complete = target.resolve(".complete");
+        if (Files.isRegularFile(complete)) return target;
         try {
-            Files.createDirectories(cacheRoot());
-            System.err.println("[java-opendaq] downloading native openDAQ libraries from " + url);
-            HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.ALWAYS)
-                .build();
-            HttpResponse<Path> response = client.send(
-                HttpRequest.newBuilder(URI.create(url)).GET().build(),
-                HttpResponse.BodyHandlers.ofFile(archive));
-            if (response.statusCode() != 200) {
-                throw new IOException("HTTP " + response.statusCode() + " fetching " + url);
-            }
-            if (verify) {
-                String actual = sha256(archive);
-                if (!actual.equalsIgnoreCase(expectedSha)) {
-                    Files.deleteIfExists(archive);
-                    throw new IOException("SHA-256 mismatch for " + archiveName
-                        + ": expected " + expectedSha + ", got " + actual);
+            Files.createDirectories(cacheBase);
+            Path staging = Files.createTempDirectory(cacheBase, platform + "-");
+            for (String name : entries) {
+                try (InputStream in = loader.getResourceAsStream(root + name)) {
+                    if (in == null) {
+                        throw new IOException(
+                            "natives jar is missing " + root + name + " (listed in index.txt)");
+                    }
+                    Files.copy(in, staging.resolve(name), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
-            Files.createDirectories(target);
-            Process tar = new ProcessBuilder("tar", "-xzf", archive.toString(), "-C", target.toString())
-                .inheritIO().start();
-            int status = tar.waitFor();
-            if (status != 0) throw new IOException("tar exited with status " + status);
-            Files.deleteIfExists(archive);
+            Files.writeString(staging.resolve(".complete"), tag + "\n");
+            Files.createDirectories(target.getParent());
+            try {
+                Files.move(staging, target, StandardCopyOption.ATOMIC_MOVE);
+            } catch (IOException | UnsupportedOperationException raced) {
+                // Another JVM populated the target first, or the filesystem
+                // cannot atomically move onto an existing directory.
+                if (Files.isRegularFile(complete)) {
+                    deleteRecursively(staging);
+                } else {
+                    deleteRecursively(target);
+                    Files.move(staging, target);
+                }
+            }
             return target;
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to install openDAQ native libraries", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException("Interrupted while installing openDAQ native libraries", e);
+            throw new UncheckedIOException(
+                "Failed to extract openDAQ native libraries from the classpath", e);
         }
     }
 
-    private static String sha256(Path file) throws IOException {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            try (InputStream in = Files.newInputStream(file)) {
-                byte[] buffer = new byte[1 << 16];
-                int n;
-                while ((n = in.read(buffer)) > 0) digest.update(buffer, 0, n);
+    private static List<String> readIndex(ClassLoader loader, String resource) {
+        try (InputStream in = loader.getResourceAsStream(resource)) {
+            if (in == null) return null;
+            List<String> names = new ArrayList<>();
+            String text = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            for (String line : text.split("\n")) {
+                String name = line.strip();
+                if (!name.isEmpty()) names.add(name);
             }
-            return HexFormat.of().formatHex(digest.digest());
-        } catch (java.security.NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
+            return names;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static String readResourceLine(ClassLoader loader, String resource, String fallback) {
+        try (InputStream in = loader.getResourceAsStream(resource)) {
+            if (in == null) return fallback;
+            String value = new String(in.readAllBytes(), StandardCharsets.UTF_8).strip();
+            return value.isEmpty() ? fallback : value;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static void deleteRecursively(Path dir) throws IOException {
+        if (!Files.exists(dir)) return;
+        try (var walk = Files.walk(dir)) {
+            walk.sorted(Comparator.reverseOrder()).forEach(p -> {
+                try {
+                    Files.deleteIfExists(p);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
         }
     }
 
@@ -230,23 +228,19 @@ public final class NativeLoader {
 
     /**
      * The directory the native openDAQ libraries live in, resolving the search
-     * order documented on this class (and downloading them when necessary).
+     * order documented on this class (extracting a classpath natives jar into
+     * the per-user cache when necessary).
      */
     public static synchronized Path nativeLibraryDirectory() {
         Path fromEnv = environmentNativeDirectory();
         if (fromEnv != null) return fromEnv;
-        Path cached = cachedNativeDirectory();
-        if (cached != null) return cached;
-        if (!manifest().isEmpty() && !downloadsDisabled()) {
-            return installNativeLibraries();
-        }
+        Path fromClasspath = classpathNativeDirectory();
+        if (fromClasspath != null) return fromClasspath;
         throw new IllegalStateException(
-            "Unable to locate openDAQ native libraries. Set " + NATIVE_DIR_ENV_VAR
-            + " (or -D" + NATIVE_DIR_PROPERTY + ") to the directory containing them"
-            + (downloadsDisabled()
-               ? "; automatic download is disabled because " + NO_DOWNLOAD_ENV_VAR
-                 + " is set (unset it, or call NativeLoader.installNativeLibraries() yourself)."
-               : ", or allow the automatic download."));
+            "Unable to locate the native openDAQ libraries. Add the "
+            + "com.opendaq:jopendaq:<version>:natives-" + currentPlatformName()
+            + " jar to your classpath, or set " + NATIVE_DIR_ENV_VAR
+            + " (or -D" + NATIVE_DIR_PROPERTY + ") to a directory containing them.");
     }
 
     /**
@@ -309,10 +303,12 @@ public final class NativeLoader {
         } catch (RuntimeException e) {
             out.println("  candidate environment: ERROR: " + e.getMessage());
         }
-        Path cached = cachedNativeDirectory();
-        out.println("  candidate download-cache: "
-            + cacheRoot().resolve(currentPlatformName())
-            + (cached != null ? " (exists)" : " (missing)"));
+        String root = NATIVES_RESOURCE_ROOT + currentPlatformName() + "/";
+        boolean onClasspath =
+            NativeLoader.class.getClassLoader().getResource(root + "index.txt") != null;
+        out.println("  candidate classpath natives jar: "
+            + (onClasspath ? "present (" + root + ")" : "absent — add the natives-"
+               + currentPlatformName() + " jar"));
         if (loadError != null) out.println("  load error: " + loadError.getMessage());
         Path resolved = loadedNativeDirectory;
         if (resolved == null) {

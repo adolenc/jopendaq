@@ -26,6 +26,8 @@ PYTHON ?= python3
 JOBS ?= $(shell nproc 2>/dev/null || echo 4)
 M2_CACHE := $(CURDIR)/.m2
 GENERATED_DIR := $(CURDIR)/src/generated/java
+PROJECT_VERSION := $(shell grep -m1 '<version>' pom.xml | sed -E 's|.*<version>(.*)</version>.*|\1|')
+NATIVES_JAR := target/jopendaq-$(PROJECT_VERSION)-natives-$(OPENDAQ_RUNTIME_TRIPLE).jar
 
 USER_SPEC := $(shell id -u):$(shell id -g)
 
@@ -65,7 +67,7 @@ DOCKER_RUN := docker run --rm \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image clone-opendaq natives bindings \
+.PHONY: docker-image clone-opendaq natives natives-jar bindings \
         build test package example repl-shell clean
 
 docker-image:
@@ -90,6 +92,23 @@ natives: clone-opendaq
 	cmake -S $(OPENDAQ_SRC_DIR) -B $(OPENDAQ_BUILD_DIR) $(OPENDAQ_CMAKE_ARGS)
 	cmake --build $(OPENDAQ_BUILD_DIR) -j$(JOBS)
 	cp -a $(OPENDAQ_BUILD_DIR)/bin/*.so $(NATIVES_DIR)/
+
+# Package the built bin/<triple>/ libraries into a natives-<triple> classifier
+# jar (resources under com/opendaq/natives/<triple>/ with an index.txt file list
+# and a tag.txt cache key), which the NativeLoader extracts at runtime.  This is
+# what CI publishes to the release for each platform.
+natives-jar:
+	@if [ -z "$$(ls $(NATIVES_DIR)/ 2>/dev/null)" ]; then \
+	  echo "No native libraries in $(NATIVES_DIR) -- run 'make natives' first."; exit 1; fi
+	rm -rf target/natives-jar
+	mkdir -p target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)
+	cp -a $(NATIVES_DIR)/. target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/
+	ls -1 $(NATIVES_DIR) > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/index.txt
+	git -C $(OPENDAQ_SRC_DIR) rev-parse --short HEAD \
+	  > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/tag.txt 2>/dev/null \
+	  || echo "$(PROJECT_VERSION)" > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/tag.txt
+	$(DOCKER_RUN) jar --create --file $(NATIVES_JAR) -C target/natives-jar .
+	@echo "wrote $(NATIVES_JAR)"
 
 # Regenerate src/generated/java from the openDAQ C binding headers.
 bindings: clone-opendaq
