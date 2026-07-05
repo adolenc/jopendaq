@@ -270,21 +270,23 @@ data.  A descriptor change the reader cannot convert throws
 
 ## Development
 
-The host machine needs only Docker: every Java/Maven/Python/CMake step runs
-inside a container, and the build is self-contained.  `make natives` clones
+The Java/Maven/Python steps run in the `java-opendaq-dev` container, so the
+host needs Docker for them.  The build is self-contained: `make natives` clones
 openDAQ at the pinned ref (`OPENDAQ_REF`) and builds `libcopendaq.so` and its
-runtime modules from source into `bin/<triple>/`; `make bindings` regenerates
-the Java sources from the same checkout's C headers.  Running the bindings
-never requires either step — the `NativeLoader` downloads the pinned prebuilt
-release archives on first use — so `make test` works even without `make
-natives` (it falls back to that download).  Override `OPENDAQ_REPO_URL` /
-`OPENDAQ_REF` / `NATIVES_DIR` to build against a different openDAQ.
+runtime modules from source into `bin/<triple>/`, using the host's C/C++
+toolchain (CMake ≥ 3.24, a compiler, git) directly — the same way cl-opendaq
+builds its runtime.  `make bindings` regenerates the Java sources from the same
+checkout's C headers.  Running the bindings never requires either step — the
+`NativeLoader` downloads the pinned prebuilt release archives on first use — so
+`make test` works even without `make natives` (it falls back to that download).
+Override `OPENDAQ_REPO_URL` / `OPENDAQ_REF` / `NATIVES_DIR` to build against a
+different openDAQ.
 
 ### Makefile
 
 ```bash
 make docker-image  # build the dev image (JDK + Maven + python3)
-make natives       # build libcopendaq.so + modules from openDAQ source -> bin/<triple>/
+make natives       # build libcopendaq.so + modules from openDAQ source -> bin/<triple>/ (host toolchain)
 make bindings      # regenerate src/generated/java from the openDAQ C headers
 make build         # compile everything
 make test          # run the JUnit test suite against the simulator
@@ -293,8 +295,9 @@ make example NAME=StreamReaderExample   # compile and run one example
 make repl-shell    # interactive shell inside the dev container
 ```
 
-`make natives` builds a second image (`Dockerfile.natives`) carrying the C++
-toolchain; it is the only step that needs it.
+`make natives` is the only target that runs on the host rather than in Docker;
+it needs a C/C++ build toolchain (CMake ≥ 3.24, a compiler, git, and the
+[openDAQ build dependencies](https://docs.opendaq.com)) installed locally.
 
 ### Folder structure
 

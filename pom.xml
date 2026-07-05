@@ -12,7 +12,7 @@
   <name>openDAQ Java bindings</name>
   <description>Java bindings for interacting with openDAQ devices, built on the
     Java Foreign Function &amp; Memory API over the openDAQ flat C API.</description>
-  <url>https://github.com/adolenc/java-opendaq</url>
+  <url>https://github.com/adolenc/jopendaq</url>
 
   <licenses>
     <license>

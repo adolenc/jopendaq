@@ -1,21 +1,21 @@
 # Development workflow for the openDAQ Java bindings.
 #
-# The host machine needs only Docker: every Java/Maven/Python/CMake step runs
-# inside a container.  The build is self-contained -- it clones openDAQ at the
-# pinned ref and builds the native libraries itself, with no dependency on a
-# sibling checkout:
+# The Java/Maven/Python steps run in the java-opendaq-dev container, so the host
+# needs Docker for them.  `make natives` is the exception: it builds the openDAQ
+# runtime from source with the host's C/C++ toolchain (CMake, a compiler, git),
+# exactly like cl-opendaq's `make bindings` -- no container involved.  The build
+# is self-contained, cloning openDAQ at the pinned ref with no sibling checkout:
 #
 #   make natives    build libcopendaq.so + friends from source into bin/<triple>/
+#                   (needs CMake + a C/C++ toolchain on the host)
 #   make bindings   regenerate src/generated/java from the openDAQ C headers
 #   make test       run the JUnit suite (uses bin/<triple>/ if built, otherwise
 #                   the loader downloads the pinned release archive on first use)
 #
-# `make natives` mirrors what cl-opendaq's `make bindings` does for its own
-# runtime; end users who only run the bindings never need it, because the
+# End users who only run the bindings never need `make natives`, because the
 # NativeLoader fetches the pinned prebuilt archives automatically.
 
 DOCKER_IMAGE ?= java-opendaq-dev
-NATIVE_BUILDER_IMAGE ?= java-opendaq-native-builder
 OPENDAQ_RUNTIME_TRIPLE ?= linux-x64
 OPENDAQ_REPO_URL ?= https://github.com/adolenc/openDAQ.git
 OPENDAQ_REF ?= c-bindings-docstrings
@@ -31,7 +31,7 @@ USER_SPEC := $(shell id -u):$(shell id -g)
 
 # openDAQ CMake configuration -- the C bindings plus the reference device and
 # function-block modules, everything else off.  Identical to the flags
-# cl-opendaq builds its runtime with.
+# cl-opendaq's `make bindings` builds its runtime with.
 OPENDAQ_CMAKE_ARGS := \
   -DOPENDAQ_GENERATE_C_BINDINGS=ON \
   -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF \
@@ -65,14 +65,11 @@ DOCKER_RUN := docker run --rm \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image native-builder-image clone-opendaq natives bindings \
+.PHONY: docker-image clone-opendaq natives bindings \
         build test package example repl-shell clean
 
 docker-image:
 	docker build -t $(DOCKER_IMAGE) .
-
-native-builder-image:
-	docker build -f Dockerfile.natives -t $(NATIVE_BUILDER_IMAGE) .
 
 # Clone the pinned openDAQ source (shared by `natives` and `bindings`).  A full
 # clone + checkout --force resolves a branch, tag, or raw commit sha alike.
@@ -85,20 +82,14 @@ clone-opendaq:
 	  echo "openDAQ source already present at $(OPENDAQ_SRC_DIR)"; \
 	fi
 
-# Build the openDAQ native libraries from source into bin/<triple>/.  The whole
-# CMake build runs inside the native-builder image, so the host needs only
-# Docker.
-natives: clone-opendaq native-builder-image
+# Build the openDAQ native libraries from source into bin/<triple>/, using the
+# host's C/C++ toolchain (CMake, a compiler, git) -- the same way cl-opendaq
+# builds its runtime.
+natives: clone-opendaq
 	mkdir -p $(NATIVES_DIR)
-	docker run --rm \
-	  -u $(USER_SPEC) \
-	  -v $(CURDIR):/workspace \
-	  -e HOME=/workspace \
-	  -w /workspace \
-	  $(NATIVE_BUILDER_IMAGE) bash -euc '\
-	    cmake -S tmp/openDAQ -B tmp/build -G Ninja -DCMAKE_BUILD_TYPE=Release $(OPENDAQ_CMAKE_ARGS); \
-	    cmake --build tmp/build --config Release -j$(JOBS); \
-	    cp -av tmp/build/bin/*.so bin/$(OPENDAQ_RUNTIME_TRIPLE)/'
+	cmake -S $(OPENDAQ_SRC_DIR) -B $(OPENDAQ_BUILD_DIR) $(OPENDAQ_CMAKE_ARGS)
+	cmake --build $(OPENDAQ_BUILD_DIR) -j$(JOBS)
+	cp -a $(OPENDAQ_BUILD_DIR)/bin/*.so $(NATIVES_DIR)/
 
 # Regenerate src/generated/java from the openDAQ C binding headers.
 bindings: clone-opendaq
@@ -141,4 +132,4 @@ repl-shell:
 	  $(DOCKER_IMAGE) bash
 
 clean:
-	rm -rf target .m2 .cache .cmake bin tmp
+	rm -rf target .m2 .cache bin tmp
