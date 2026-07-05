@@ -54,6 +54,36 @@ class SimulatorSmokeTest {
     }
 
     @Test
+    void streamReaderSkipsDomainOnlyEvents() {
+        // The README quickstart configures the sample rate and frequency *after*
+        // the reader exists, so the first read must cross the reader's initial
+        // descriptor event AND a domain-only sample-rate-change event (whose
+        // value descriptor is null, so it announces no new sample width).  Both
+        // must be skipped, otherwise the read wedges on a zero-sample event.
+        // A fresh instance keeps the rate changes off the shared-device tests.
+        Instance localInstance = new Instance();
+        Device localDevice = localInstance.getRootDevice().addDevice("daqref://device0");
+        Channel channel = localDevice.findComponent("IO/AI/RefCh0").asType(Channel.class);
+        Signal signal = channel.getSignals().get(0);
+        StreamReader reader = new StreamReader(signal);
+
+        localDevice.setPropertyValue("GlobalSampleRate", 100);
+        channel.setPropertyValue("Frequency", 0.5);
+        assertEquals(100, reader.read(100, 2000).length,
+            "the first read must skip the initial and the sample-rate-change events and still return samples");
+
+        // A mid-stream sample-rate change emits another domain-only event; reads
+        // must keep returning samples rather than wedge on it.
+        localDevice.setPropertyValue("GlobalSampleRate", 200);
+        int total = 0;
+        for (int attempt = 0; attempt < 20 && total < 100; attempt++) {
+            total += reader.read(100, 2000).length;
+        }
+        assertTrue(total >= 100,
+            "reads after a mid-stream sample-rate change must keep returning samples, not wedge on the domain-only event");
+    }
+
+    @Test
     void componentTypeDetection() {
         Channel channel = channel("RefCh0");
         Signal signal = channel.getSignalsRecursive().get(0);
