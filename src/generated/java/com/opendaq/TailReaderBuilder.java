@@ -151,13 +151,15 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param type The domain signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setDomainReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDomainReadType(SampleType type) {
+    public TailReaderBuilder setDomainReadType(SampleType type) {
         try {
             DaqTailReaderBuilder.setDomainReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -165,13 +167,15 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param historySize The history size
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setHistorySize()}.
+     * @return this builder, to allow call chaining
      */
-    public void setHistorySize(long historySize) {
+    public TailReaderBuilder setHistorySize(long historySize) {
         try {
             DaqTailReaderBuilder.setHistorySize(requireLivePointer(), historySize);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -179,14 +183,16 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param port The input port which will be handled in tail reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setInputPort()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPort(InputPort port) {
+    public TailReaderBuilder setInputPort(InputPort port) {
         try {
             DaqTailReaderBuilder.setInputPort(requireLivePointer(), (port == null ? MemorySegment.NULL : port.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(port);
         }
+        return this;
     }
 
     /**
@@ -194,13 +200,15 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param mode The read mode
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setReadMode()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadMode(ReadMode mode) {
+    public TailReaderBuilder setReadMode(ReadMode mode) {
         try {
             DaqTailReaderBuilder.setReadMode(requireLivePointer(), mode);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -208,14 +216,16 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param signal The signal which will be handled in tail reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setSignal()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSignal(Signal signal) {
+    public TailReaderBuilder setSignal(Signal signal) {
         try {
             DaqTailReaderBuilder.setSignal(requireLivePointer(), (signal == null ? MemorySegment.NULL : signal.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(signal);
         }
+        return this;
     }
 
     /**
@@ -223,13 +233,15 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param skipEvents The skip events
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setSkipEvents()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSkipEvents(boolean skipEvents) {
+    public TailReaderBuilder setSkipEvents(boolean skipEvents) {
         try {
             DaqTailReaderBuilder.setSkipEvents(requireLivePointer(), skipEvents);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -237,13 +249,15 @@ public class TailReaderBuilder extends BaseObject {
      * &#64;param type The value signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqTailReaderBuilder_setValueReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueReadType(SampleType type) {
+    public TailReaderBuilder setValueReadType(SampleType type) {
         try {
             DaqTailReaderBuilder.setValueReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

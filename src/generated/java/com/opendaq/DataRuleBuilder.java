@@ -60,8 +60,9 @@ public class DataRuleBuilder extends BaseObject {
      * &#64;param parameter The object-type parameter.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataRuleBuilder_addParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void addParameter(String name, Object parameter) {
+    public DataRuleBuilder addParameter(String name, Object parameter) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -73,6 +74,7 @@ public class DataRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -121,8 +123,9 @@ public class DataRuleBuilder extends BaseObject {
      * Removes the parameter with the given name from the Dictionary of Data rule parameters.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataRuleBuilder_removeParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void removeParameter(String name) {
+    public DataRuleBuilder removeParameter(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -131,6 +134,7 @@ public class DataRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -138,8 +142,9 @@ public class DataRuleBuilder extends BaseObject {
      * &#64;param parameters The dictionary containing the rule parameter members.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataRuleBuilder_setParameters()}.
+     * @return this builder, to allow call chaining
      */
-    public void setParameters(java.util.Map<?, ?> parameters) {
+    public DataRuleBuilder setParameters(java.util.Map<?, ?> parameters) {
         try {
             MemorySegment parameters$d = (parameters == null ? MemorySegment.NULL : Box.boxDictOwned(parameters));
             try {
@@ -148,6 +153,7 @@ public class DataRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -155,13 +161,15 @@ public class DataRuleBuilder extends BaseObject {
      * &#64;param type The type of the data rule.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataRuleBuilder_setType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setType(DataRuleType type) {
+    public DataRuleBuilder setType(DataRuleType type) {
         try {
             DaqDataRuleBuilder.setType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

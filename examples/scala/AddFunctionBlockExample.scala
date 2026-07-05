@@ -6,11 +6,12 @@ import com.opendaq.{Unit as _, *}   // hide com.opendaq.Unit so `: Unit` means s
 object AddFunctionBlockExample:
   def main(args: Array[String]): Unit =
     // Building the instance explicitly, to show where the modules come from;
-    // plain Instance() does exactly this.
-    val builder = InstanceBuilder()
-    builder.setModulePath(Daq.nativeLibraryDirectory.toString)  // the bundled modules
-    // builder.addModulePath("/path/to/your/modules")           // your own modules folder
-    val instance = Instance(builder)
+    // plain Instance() does exactly this.  The builder's configuration methods
+    // return the builder, so they chain.
+    val instance = InstanceBuilder()
+      .setModulePath(Daq.nativeLibraryDirectory.toString)  // the bundled modules
+      // .addModulePath("/path/to/your/modules")           // your own modules folder
+      .build()
     instance.addDevice("daqref://device0")
 
     val channel = instance.findComponent("Dev/RefDev0/IO/AI/RefCh0").asType(classOf[Channel])

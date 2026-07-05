@@ -156,8 +156,9 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
      * can be used to read the signals if their sampling rates are compatible.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setReferenceDomainId()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReferenceDomainId(String referenceDomainId) {
+    public ReferenceDomainInfoBuilder setReferenceDomainId(String referenceDomainId) {
         try {
             MemorySegment referenceDomainId$s = Wrap.daqStringOrNull(referenceDomainId);
             try {
@@ -166,6 +167,7 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -181,8 +183,9 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
      * clients have no way of detecting a resync event in the case of asynchronous signals.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setReferenceDomainOffset()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReferenceDomainOffset(Object referenceDomainOffset) {
+    public ReferenceDomainInfoBuilder setReferenceDomainOffset(Object referenceDomainOffset) {
         try {
             Box.Boxed referenceDomainOffset$b = Box.box(referenceDomainOffset);
             try {
@@ -191,6 +194,7 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -204,13 +208,15 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
      * both driven through GPS can be read together, as their absolute time is the same).
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setReferenceTimeProtocol()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReferenceTimeProtocol(TimeProtocol referenceTimeProtocol) {
+    public ReferenceDomainInfoBuilder setReferenceTimeProtocol(TimeProtocol referenceTimeProtocol) {
         try {
             DaqReferenceDomainInfoBuilder.setReferenceTimeProtocol(requireLivePointer(), referenceTimeProtocol);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -219,13 +225,15 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
      * If False, a device will contain time jumps due to resync in the domain signal data.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setUsesOffset()}.
+     * @return this builder, to allow call chaining
      */
-    public void setUsesOffset(UsesOffset usesOffset) {
+    public ReferenceDomainInfoBuilder setUsesOffset(UsesOffset usesOffset) {
         try {
             DaqReferenceDomainInfoBuilder.setUsesOffset(requireLivePointer(), usesOffset);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

@@ -116,8 +116,9 @@ public class DimensionBuilder extends BaseObject {
      * The name that best describes the dimension, in example "Frequency" for spectrum data.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public DimensionBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -126,6 +127,7 @@ public class DimensionBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -136,14 +138,16 @@ public class DimensionBuilder extends BaseObject {
      * with that index.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionBuilder_setRule()}.
+     * @return this builder, to allow call chaining
      */
-    public void setRule(DimensionRule rule) {
+    public DimensionBuilder setRule(DimensionRule rule) {
         try {
             DaqDimensionBuilder.setRule(requireLivePointer(), (rule == null ? MemorySegment.NULL : rule.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(rule);
         }
+        return this;
     }
 
     /**
@@ -151,14 +155,16 @@ public class DimensionBuilder extends BaseObject {
      * &#64;param unit The unit of the dimension.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionBuilder_setUnit()}.
+     * @return this builder, to allow call chaining
      */
-    public void setUnit(Unit unit) {
+    public DimensionBuilder setUnit(Unit unit) {
         try {
             DaqDimensionBuilder.setUnit(requireLivePointer(), (unit == null ? MemorySegment.NULL : unit.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(unit);
         }
+        return this;
     }
 
 }

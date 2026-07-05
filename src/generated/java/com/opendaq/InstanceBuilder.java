@@ -74,14 +74,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param configProvider The configuration provider
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_addConfigProvider()}.
+     * @return this builder, to allow call chaining
      */
-    public void addConfigProvider(ConfigProvider configProvider) {
+    public InstanceBuilder addConfigProvider(ConfigProvider configProvider) {
         try {
             DaqInstanceBuilder.addConfigProvider(requireLivePointer(), (configProvider == null ? MemorySegment.NULL : configProvider.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(configProvider);
         }
+        return this;
     }
 
     /**
@@ -90,8 +92,9 @@ public class InstanceBuilder extends BaseObject {
      * openDAQ supports the "mdns" server by default, but must be added to the instance builder to be enabled.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_addDiscoveryServer()}.
+     * @return this builder, to allow call chaining
      */
-    public void addDiscoveryServer(String serverName) {
+    public InstanceBuilder addDiscoveryServer(String serverName) {
         try {
             MemorySegment serverName$s = Wrap.daqStringOrNull(serverName);
             try {
@@ -100,6 +103,7 @@ public class InstanceBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -107,14 +111,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param sink The logger sink of the default Instance logger
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_addLoggerSink()}.
+     * @return this builder, to allow call chaining
      */
-    public void addLoggerSink(LoggerSink sink) {
+    public InstanceBuilder addLoggerSink(LoggerSink sink) {
         try {
             DaqInstanceBuilder.addLoggerSink(requireLivePointer(), (sink == null ? MemorySegment.NULL : sink.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(sink);
         }
+        return this;
     }
 
     /**
@@ -122,8 +128,9 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param path The path for the default ModuleManager of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_addModulePath()}.
+     * @return this builder, to allow call chaining
      */
-    public void addModulePath(String path) {
+    public InstanceBuilder addModulePath(String path) {
         try {
             MemorySegment path$s = Wrap.daqStringOrNull(path);
             try {
@@ -132,6 +139,7 @@ public class InstanceBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -153,18 +161,20 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param flag Boolean flag indicating whether to enable (true) or disable (false) standard config providers.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_enableStandardProviders()}.
+     * @return this builder, to allow call chaining
      */
-    public void enableStandardProviders(boolean flag) {
+    public InstanceBuilder enableStandardProviders(boolean flag) {
         try {
             DaqInstanceBuilder.enableStandardProviders(requireLivePointer(), flag);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /** enableStandardProviders with trailing arguments at their openDAQ defaults. */
-    public void enableStandardProviders() {
-        enableStandardProviders(true);
+    public InstanceBuilder enableStandardProviders() {
+        return enableStandardProviders(true);
     }
 
     /**
@@ -449,14 +459,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param authenticationProvider The AuthenticationProvider for the Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setAuthenticationProvider()}.
+     * @return this builder, to allow call chaining
      */
-    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
+    public InstanceBuilder setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
         try {
             DaqInstanceBuilder.setAuthenticationProvider(requireLivePointer(), (authenticationProvider == null ? MemorySegment.NULL : authenticationProvider.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(authenticationProvider);
         }
+        return this;
     }
 
     /**
@@ -465,8 +477,9 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param logLevel The log level of Instance component
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setComponentLogLevel()}.
+     * @return this builder, to allow call chaining
      */
-    public void setComponentLogLevel(String component, LogLevel logLevel) {
+    public InstanceBuilder setComponentLogLevel(String component, LogLevel logLevel) {
         try {
             MemorySegment component$s = Wrap.daqStringOrNull(component);
             try {
@@ -475,6 +488,7 @@ public class InstanceBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -482,14 +496,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param context The Context object for instance.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setContext()}.
+     * @return this builder, to allow call chaining
      */
-    public void setContext(Context context) {
+    public InstanceBuilder setContext(Context context) {
         try {
             DaqInstanceBuilder.setContext(requireLivePointer(), (context == null ? MemorySegment.NULL : context.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(context);
         }
+        return this;
     }
 
     /**
@@ -497,14 +513,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param deviceInfo The device info of the default device of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setDefaultRootDeviceInfo()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDefaultRootDeviceInfo(DeviceInfo deviceInfo) {
+    public InstanceBuilder setDefaultRootDeviceInfo(DeviceInfo deviceInfo) {
         try {
             DaqInstanceBuilder.setDefaultRootDeviceInfo(requireLivePointer(), (deviceInfo == null ? MemorySegment.NULL : deviceInfo.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(deviceInfo);
         }
+        return this;
     }
 
     /**
@@ -512,8 +530,9 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param localId The default root device local id
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setDefaultRootDeviceLocalId()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDefaultRootDeviceLocalId(String localId) {
+    public InstanceBuilder setDefaultRootDeviceLocalId(String localId) {
         try {
             MemorySegment localId$s = Wrap.daqStringOrNull(localId);
             try {
@@ -522,6 +541,7 @@ public class InstanceBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -529,24 +549,28 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param logLevel The Logger global level of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setGlobalLogLevel()}.
+     * @return this builder, to allow call chaining
      */
-    public void setGlobalLogLevel(LogLevel logLevel) {
+    public InstanceBuilder setGlobalLogLevel(LogLevel logLevel) {
         try {
             DaqInstanceBuilder.setGlobalLogLevel(requireLivePointer(), logLevel);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
      * Calls the openDAQ C function {&#64;code daqInstanceBuilder_setLoadAuthenticatedModulesOnly()}.
+     * @return this builder, to allow call chaining
      */
-    public void setLoadAuthenticatedModulesOnly(boolean authOnly) {
+    public InstanceBuilder setLoadAuthenticatedModulesOnly(boolean authOnly) {
         try {
             DaqInstanceBuilder.setLoadAuthenticatedModulesOnly(requireLivePointer(), authOnly);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -554,14 +578,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param logger The custom Logger of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setLogger()}.
+     * @return this builder, to allow call chaining
      */
-    public void setLogger(Logger logger) {
+    public InstanceBuilder setLogger(Logger logger) {
         try {
             DaqInstanceBuilder.setLogger(requireLivePointer(), (logger == null ? MemorySegment.NULL : logger.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(logger);
         }
+        return this;
     }
 
     /**
@@ -569,13 +595,15 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param authenticator Verifier object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setModuleAuthenticator()}.
+     * @return this builder, to allow call chaining
      */
-    public void setModuleAuthenticator(MemorySegment authenticator) {
+    public InstanceBuilder setModuleAuthenticator(MemorySegment authenticator) {
         try {
             DaqInstanceBuilder.setModuleAuthenticator(requireLivePointer(), Ffi.orNull(authenticator));
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -583,14 +611,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param moduleManager The custom ModuleManager of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setModuleManager()}.
+     * @return this builder, to allow call chaining
      */
-    public void setModuleManager(ModuleManager moduleManager) {
+    public InstanceBuilder setModuleManager(ModuleManager moduleManager) {
         try {
             DaqInstanceBuilder.setModuleManager(requireLivePointer(), (moduleManager == null ? MemorySegment.NULL : moduleManager.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(moduleManager);
         }
+        return this;
     }
 
     /**
@@ -598,8 +628,9 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param path The path for the default ModuleManager of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setModulePath()}.
+     * @return this builder, to allow call chaining
      */
-    public void setModulePath(String path) {
+    public InstanceBuilder setModulePath(String path) {
         try {
             MemorySegment path$s = Wrap.daqStringOrNull(path);
             try {
@@ -608,6 +639,7 @@ public class InstanceBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -616,8 +648,9 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate, port to use for 3rd party communication, number of channels to generate, or other device specific settings. In case of nullptr, a default configuration is used.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setRootDevice()}.
+     * @return this builder, to allow call chaining
      */
-    public void setRootDevice(String connectionString, PropertyObject config) {
+    public InstanceBuilder setRootDevice(String connectionString, PropertyObject config) {
         try {
             MemorySegment connectionString$s = Wrap.daqStringOrNull(connectionString);
             try {
@@ -627,11 +660,12 @@ public class InstanceBuilder extends BaseObject {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(config);
         }
+        return this;
     }
 
     /** setRootDevice with trailing arguments at their openDAQ defaults. */
-    public void setRootDevice(String connectionString) {
-        setRootDevice(connectionString, (PropertyObject) null);
+    public InstanceBuilder setRootDevice(String connectionString) {
+        return setRootDevice(connectionString, (PropertyObject) null);
     }
 
     /**
@@ -639,14 +673,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param scheduler The custom scheduler of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setScheduler()}.
+     * @return this builder, to allow call chaining
      */
-    public void setScheduler(Scheduler scheduler) {
+    public InstanceBuilder setScheduler(Scheduler scheduler) {
         try {
             DaqInstanceBuilder.setScheduler(requireLivePointer(), (scheduler == null ? MemorySegment.NULL : scheduler.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(scheduler);
         }
+        return this;
     }
 
     /**
@@ -654,13 +690,15 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param numWorkers The amount of worker threads in the scheduler of Instance. If &#64;c is 0, then the amount of workers is the maximum number of concurrent threads supported by the implementation.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setSchedulerWorkerNum()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSchedulerWorkerNum(long numWorkers) {
+    public InstanceBuilder setSchedulerWorkerNum(long numWorkers) {
         try {
             DaqInstanceBuilder.setSchedulerWorkerNum(requireLivePointer(), numWorkers);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -669,14 +707,16 @@ public class InstanceBuilder extends BaseObject {
      * &#64;param logLevel The sink logger level of the default Instance logger
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setSinkLogLevel()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSinkLogLevel(LoggerSink sink, LogLevel logLevel) {
+    public InstanceBuilder setSinkLogLevel(LoggerSink sink, LogLevel logLevel) {
         try {
             DaqInstanceBuilder.setSinkLogLevel(requireLivePointer(), (sink == null ? MemorySegment.NULL : sink.requireLivePointer()), logLevel);
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(sink);
         }
+        return this;
     }
 
     /**
@@ -687,13 +727,15 @@ public class InstanceBuilder extends BaseObject {
      * `IScheduler::runMainLoop()` or `IScheduler::runMainLoopIteration()`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setUsingSchedulerMainLoop()}.
+     * @return this builder, to allow call chaining
      */
-    public void setUsingSchedulerMainLoop(boolean useMainLoop) {
+    public InstanceBuilder setUsingSchedulerMainLoop(boolean useMainLoop) {
         try {
             DaqInstanceBuilder.setUsingSchedulerMainLoop(requireLivePointer(), useMainLoop);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

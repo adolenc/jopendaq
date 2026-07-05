@@ -60,8 +60,9 @@ public class ScalingBuilder extends BaseObject {
      * &#64;param parameter The object-type parameter.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_addParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void addParameter(String name, Object parameter) {
+    public ScalingBuilder addParameter(String name, Object parameter) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -73,6 +74,7 @@ public class ScalingBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -149,8 +151,9 @@ public class ScalingBuilder extends BaseObject {
      * Removes the parameter with the given name from the Dictionary of Scaling parameters.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_removeParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void removeParameter(String name) {
+    public ScalingBuilder removeParameter(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -159,6 +162,7 @@ public class ScalingBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -168,13 +172,15 @@ public class ScalingBuilder extends BaseObject {
      * data packets.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_setInputDataType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputDataType(SampleType type) {
+    public ScalingBuilder setInputDataType(SampleType type) {
         try {
             DaqScalingBuilder.setInputDataType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -185,13 +191,15 @@ public class ScalingBuilder extends BaseObject {
      * the scaling applied to it.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_setOutputDataType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOutputDataType(ScaledSampleType type) {
+    public ScalingBuilder setOutputDataType(ScaledSampleType type) {
         try {
             DaqScalingBuilder.setOutputDataType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -200,8 +208,9 @@ public class ScalingBuilder extends BaseObject {
      * &#64;retval OPENDAQ_ERR_FROZEN if the object is frozen.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_setParameters()}.
+     * @return this builder, to allow call chaining
      */
-    public void setParameters(java.util.Map<?, ?> parameters) {
+    public ScalingBuilder setParameters(java.util.Map<?, ?> parameters) {
         try {
             MemorySegment parameters$d = (parameters == null ? MemorySegment.NULL : Box.boxDictOwned(parameters));
             try {
@@ -210,6 +219,7 @@ public class ScalingBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -217,13 +227,15 @@ public class ScalingBuilder extends BaseObject {
      * &#64;param type The type of the scaling.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_setScalingType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setScalingType(ScalingType type) {
+    public ScalingBuilder setScalingType(ScalingType type) {
         try {
             DaqScalingBuilder.setScalingType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

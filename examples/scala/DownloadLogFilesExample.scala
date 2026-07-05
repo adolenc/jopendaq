@@ -21,10 +21,10 @@ object DownloadLogFilesExample:
     val deviceLog = workDir.resolve("ref_device_simulator.log")
     val downloads = Files.createDirectories(workDir.resolve("downloads"))
 
-    val builder = InstanceBuilder()
-    builder.setModulePath(Daq.nativeLibraryDirectory.toString)   // find the bundled modules
-    builder.addLoggerSink(LoggerSink(deviceLog.toString))
-    val instance = Instance(builder)
+    val instance = InstanceBuilder()
+      .setModulePath(Daq.nativeLibraryDirectory.toString)   // find the bundled modules
+      .addLoggerSink(LoggerSink(deviceLog.toString))
+      .build()
 
     // The reference device reads these two properties from its add-device config.
     val config = PropertyObject()

@@ -115,8 +115,9 @@ public class AddressInfoBuilder extends BaseObject {
      * &#64;param address The server address as a string.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_setAddress()}.
+     * @return this builder, to allow call chaining
      */
-    public void setAddress(String address) {
+    public AddressInfoBuilder setAddress(String address) {
         try {
             MemorySegment address$s = Wrap.daqStringOrNull(address);
             try {
@@ -125,6 +126,7 @@ public class AddressInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -132,8 +134,9 @@ public class AddressInfoBuilder extends BaseObject {
      * &#64;param connectionString The connection string.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_setConnectionString()}.
+     * @return this builder, to allow call chaining
      */
-    public void setConnectionString(String connectionString) {
+    public AddressInfoBuilder setConnectionString(String connectionString) {
         try {
             MemorySegment connectionString$s = Wrap.daqStringOrNull(connectionString);
             try {
@@ -142,6 +145,7 @@ public class AddressInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -151,13 +155,15 @@ public class AddressInfoBuilder extends BaseObject {
      * reachability when querying for available devices.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_setReachabilityStatus()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReachabilityStatus(AddressReachabilityStatus addressReachability) {
+    public AddressInfoBuilder setReachabilityStatus(AddressReachabilityStatus addressReachability) {
         try {
             DaqAddressInfoBuilder.setReachabilityStatus(requireLivePointer(), addressReachability);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -166,8 +172,9 @@ public class AddressInfoBuilder extends BaseObject {
      * Currently available address types in the main openDAQ modules are: IPv4 and IPv6.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_setType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setType(String type) {
+    public AddressInfoBuilder setType(String type) {
         try {
             MemorySegment type$s = Wrap.daqStringOrNull(type);
             try {
@@ -176,6 +183,7 @@ public class AddressInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

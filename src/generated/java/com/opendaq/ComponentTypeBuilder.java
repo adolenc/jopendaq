@@ -194,8 +194,9 @@ public class ComponentTypeBuilder extends BaseObject {
 
     /**
      * Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setConnectionStringPrefix()}.
+     * @return this builder, to allow call chaining
      */
-    public void setConnectionStringPrefix(String prefix) {
+    public ComponentTypeBuilder setConnectionStringPrefix(String prefix) {
         try {
             MemorySegment prefix$s = Wrap.daqStringOrNull(prefix);
             try {
@@ -204,6 +205,7 @@ public class ComponentTypeBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -213,14 +215,16 @@ public class ComponentTypeBuilder extends BaseObject {
      * For example: Port=1000, OutputRate=5000, ...
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setDefaultConfig()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDefaultConfig(PropertyObject defaultConfig) {
+    public ComponentTypeBuilder setDefaultConfig(PropertyObject defaultConfig) {
         try {
             DaqComponentTypeBuilder.setDefaultConfig(requireLivePointer(), (defaultConfig == null ? MemorySegment.NULL : defaultConfig.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(defaultConfig);
         }
+        return this;
     }
 
     /**
@@ -229,8 +233,9 @@ public class ComponentTypeBuilder extends BaseObject {
      * A short description of a component type and the associated configuration parameters it offers.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setDescription()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDescription(String description) {
+    public ComponentTypeBuilder setDescription(String description) {
         try {
             MemorySegment description$s = Wrap.daqStringOrNull(description);
             try {
@@ -239,6 +244,7 @@ public class ComponentTypeBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -247,8 +253,9 @@ public class ComponentTypeBuilder extends BaseObject {
      * Unique id should not be presented on the UI.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setId()}.
+     * @return this builder, to allow call chaining
      */
-    public void setId(String id) {
+    public ComponentTypeBuilder setId(String id) {
         try {
             MemorySegment id$s = Wrap.daqStringOrNull(id);
             try {
@@ -257,6 +264,7 @@ public class ComponentTypeBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -265,8 +273,9 @@ public class ComponentTypeBuilder extends BaseObject {
      * Name is usually presented on the UI. Does not have to be unique.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public ComponentTypeBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -275,6 +284,7 @@ public class ComponentTypeBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -282,13 +292,15 @@ public class ComponentTypeBuilder extends BaseObject {
      * &#64;param sort The sort of the component type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setTypeSort()}.
+     * @return this builder, to allow call chaining
      */
-    public void setTypeSort(ComponentTypeSort sort) {
+    public ComponentTypeBuilder setTypeSort(ComponentTypeSort sort) {
         try {
             DaqComponentTypeBuilder.setTypeSort(requireLivePointer(), sort);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

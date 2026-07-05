@@ -10,11 +10,12 @@ public class AddFunctionBlockExample {
 
     public static void main(String[] args) {
         // Building the instance explicitly, to show where the modules come
-        // from; plain `new Instance()` does exactly this.
-        InstanceBuilder builder = new InstanceBuilder();
-        builder.setModulePath(Daq.nativeLibraryDirectory().toString());  // the bundled modules
-        // builder.addModulePath("/path/to/your/modules");               // your own modules folder
-        Instance instance = new Instance(builder);
+        // from; plain `new Instance()` does exactly this.  The builder's
+        // configuration methods return the builder, so they chain.
+        Instance instance = new InstanceBuilder()
+            .setModulePath(Daq.nativeLibraryDirectory().toString())  // the bundled modules
+            // .addModulePath("/path/to/your/modules")               // your own modules folder
+            .build();
         instance.addDevice("daqref://device0");
 
         Channel channel = instance.findComponent("Dev/RefDev0/IO/AI/RefCh0").asType(Channel.class);

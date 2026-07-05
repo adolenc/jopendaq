@@ -179,13 +179,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param mode The block size
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setBlockSize()}.
+     * @return this builder, to allow call chaining
      */
-    public void setBlockSize(long size) {
+    public BlockReaderBuilder setBlockSize(long size) {
         try {
             DaqBlockReaderBuilder.setBlockSize(requireLivePointer(), size);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -193,13 +195,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param type The domain signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setDomainReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDomainReadType(SampleType type) {
+    public BlockReaderBuilder setDomainReadType(SampleType type) {
         try {
             DaqBlockReaderBuilder.setDomainReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -207,14 +211,16 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param port The input port which will be handled in block reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setInputPort()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPort(InputPort port) {
+    public BlockReaderBuilder setInputPort(InputPort port) {
         try {
             DaqBlockReaderBuilder.setInputPort(requireLivePointer(), (port == null ? MemorySegment.NULL : port.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(port);
         }
+        return this;
     }
 
     /**
@@ -222,14 +228,16 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param blockReader The old Block reader instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setOldBlockReader()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOldBlockReader(BlockReader blockReader) {
+    public BlockReaderBuilder setOldBlockReader(BlockReader blockReader) {
         try {
             DaqBlockReaderBuilder.setOldBlockReader(requireLivePointer(), (blockReader == null ? MemorySegment.NULL : blockReader.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(blockReader);
         }
+        return this;
     }
 
     /**
@@ -237,13 +245,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param mode The overlap
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setOverlap()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOverlap(long overlap) {
+    public BlockReaderBuilder setOverlap(long overlap) {
         try {
             DaqBlockReaderBuilder.setOverlap(requireLivePointer(), overlap);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -251,13 +261,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param mode The read mode
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setReadMode()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadMode(ReadMode mode) {
+    public BlockReaderBuilder setReadMode(ReadMode mode) {
         try {
             DaqBlockReaderBuilder.setReadMode(requireLivePointer(), mode);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -265,14 +277,16 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param signal The signal which will be handled in block reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setSignal()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSignal(Signal signal) {
+    public BlockReaderBuilder setSignal(Signal signal) {
         try {
             DaqBlockReaderBuilder.setSignal(requireLivePointer(), (signal == null ? MemorySegment.NULL : signal.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(signal);
         }
+        return this;
     }
 
     /**
@@ -280,13 +294,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param skipEvents The skip events
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setSkipEvents()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSkipEvents(boolean skipEvents) {
+    public BlockReaderBuilder setSkipEvents(boolean skipEvents) {
         try {
             DaqBlockReaderBuilder.setSkipEvents(requireLivePointer(), skipEvents);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -294,13 +310,15 @@ public class BlockReaderBuilder extends BaseObject {
      * &#64;param type The value signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderBuilder_setValueReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueReadType(SampleType type) {
+    public BlockReaderBuilder setValueReadType(SampleType type) {
         try {
             DaqBlockReaderBuilder.setValueReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

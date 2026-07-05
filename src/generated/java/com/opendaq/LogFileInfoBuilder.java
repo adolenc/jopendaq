@@ -154,8 +154,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param description The description of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setDescription()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDescription(String description) {
+    public LogFileInfoBuilder setDescription(String description) {
         try {
             MemorySegment description$s = Wrap.daqStringOrNull(description);
             try {
@@ -164,6 +165,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -171,8 +173,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param encoding The encoding of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setEncoding()}.
+     * @return this builder, to allow call chaining
      */
-    public void setEncoding(String encoding) {
+    public LogFileInfoBuilder setEncoding(String encoding) {
         try {
             MemorySegment encoding$s = Wrap.daqStringOrNull(encoding);
             try {
@@ -181,6 +184,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -188,8 +192,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param id The id of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setId()}.
+     * @return this builder, to allow call chaining
      */
-    public void setId(String id) {
+    public LogFileInfoBuilder setId(String id) {
         try {
             MemorySegment id$s = Wrap.daqStringOrNull(id);
             try {
@@ -198,6 +203,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -205,8 +211,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param lastModified The date of the last modification of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setLastModified()}.
+     * @return this builder, to allow call chaining
      */
-    public void setLastModified(String lastModified) {
+    public LogFileInfoBuilder setLastModified(String lastModified) {
         try {
             MemorySegment lastModified$s = Wrap.daqStringOrNull(lastModified);
             try {
@@ -215,6 +222,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -222,8 +230,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param localPath The local path of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setLocalPath()}.
+     * @return this builder, to allow call chaining
      */
-    public void setLocalPath(String localPath) {
+    public LogFileInfoBuilder setLocalPath(String localPath) {
         try {
             MemorySegment localPath$s = Wrap.daqStringOrNull(localPath);
             try {
@@ -232,6 +241,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -239,8 +249,9 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param name The name of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public LogFileInfoBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -249,6 +260,7 @@ public class LogFileInfoBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -256,13 +268,15 @@ public class LogFileInfoBuilder extends BaseObject {
      * &#64;param size The size of the log file.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogFileInfoBuilder_setSize()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSize(long size) {
+    public LogFileInfoBuilder setSize(long size) {
         try {
             DaqLogFileInfoBuilder.setSize(requireLivePointer(), size);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

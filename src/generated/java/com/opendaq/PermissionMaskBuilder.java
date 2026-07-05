@@ -68,52 +68,60 @@ public class PermissionMaskBuilder extends BaseObject {
      * Removes all permissions from bit mask.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_clear()}.
+     * @return this builder, to allow call chaining
      */
-    public void clear() {
+    public PermissionMaskBuilder clear() {
         try {
             DaqPermissionMaskBuilder.clear(requireLivePointer());
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
      * Add execute permission to the bit mask.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_execute()}.
+     * @return this builder, to allow call chaining
      */
-    public void execute() {
+    public PermissionMaskBuilder execute() {
         try {
             DaqPermissionMaskBuilder.execute(requireLivePointer());
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
      * Add read permission to the bit mask.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_read()}.
+     * @return this builder, to allow call chaining
      */
-    public void read() {
+    public PermissionMaskBuilder read() {
         try {
             DaqPermissionMaskBuilder.read(requireLivePointer());
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
      * Add write permission to the bit mask.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_write()}.
+     * @return this builder, to allow call chaining
      */
-    public void write() {
+    public PermissionMaskBuilder write() {
         try {
             DaqPermissionMaskBuilder.write(requireLivePointer());
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

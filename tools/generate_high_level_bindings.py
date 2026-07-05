@@ -451,7 +451,7 @@ class Generator:
             indent = indent[:-4]
             lines.append(f"{indent}}}")
 
-    def method_doc(self, function: Function) -> list[str]:
+    def method_doc(self, function: Function, returns_self: bool = False) -> list[str]:
         text = function.docstring.strip()
         if text.startswith("@brief"):
             text = text[len("@brief"):].strip()
@@ -460,6 +460,8 @@ class Generator:
         out = ["    /**"]
         for line in escape_javadoc(full).split("\n"):
             out.append(("     * " + line).rstrip())
+        if returns_self:
+            out.append("     * @return this builder, to allow call chaining")
         out.append("     */")
         return out
 
@@ -477,6 +479,12 @@ class Generator:
         static = not function.has_self
         modifier = "public static" if static else "public"
 
+        # Builder configuration calls (void C setters/adders on a *Builder class)
+        # return the builder itself, so they can be chained fluently before the
+        # terminal build(): new XBuilder().setA(..).setB(..).build().
+        fluent = not static and ret_java == "void" and spec.java.endswith("Builder")
+        decl_ret = spec.java if fluent else ret_java
+
         arg_types = tuple(java for _, java, _ in hl_params)
         signatures = self.emitted_signatures.setdefault(spec.java, {})
         inherited_return = self.inherited_return(spec, name, arg_types)
@@ -491,9 +499,9 @@ class Generator:
 
         first_default = self.trailing_defaults(function, hl_params)
 
-        lines.extend(self.method_doc(function))
+        lines.extend(self.method_doc(function, returns_self=fluent))
         params_sig = ", ".join(f"{java} {p.java_name}" for p, java, _ in hl_params)
-        lines.append(f"    {modifier} {ret_java} {name}({params_sig}) {{")
+        lines.append(f"    {modifier} {decl_ret} {name}({params_sig}) {{")
         body: list[str] = []
 
         def handle_result(call: str, indent: str, out: list[str]) -> None:
@@ -515,10 +523,12 @@ class Generator:
             body.append(f"{indent}}}")
         else:
             self.emit_invocation(function, spec, hl_params, body, indent, handle_result)
+        if fluent:
+            body.append(f"{indent}return this;")
         lines.extend(body)
         lines.append("    }")
         lines.append("")
-        signatures[(name, arg_types)] = ret_java
+        signatures[(name, arg_types)] = decl_ret
 
         # Trimmed overloads for trailing defaulted parameters.
         for cut in range(first_default, len(hl_params)):
@@ -530,12 +540,12 @@ class Generator:
             call_args = [p.java_name for p, _, _ in head] + [
                 self.default_expr(function, p, java) for p, java, _ in hl_params[cut:]]
             lines.append(f"    /** {name} with trailing arguments at their openDAQ defaults. */")
-            lines.append(f"    {modifier} {ret_java} {name}({params_sig}) {{")
+            lines.append(f"    {modifier} {decl_ret} {name}({params_sig}) {{")
             call = f"{name}({', '.join(call_args)})"
-            lines.append(f"        {'return ' if ret_java != 'void' else ''}{call};")
+            lines.append(f"        {'return ' if decl_ret != 'void' else ''}{call};")
             lines.append("    }")
             lines.append("")
-            signatures[(name, head_types)] = ret_java
+            signatures[(name, head_types)] = decl_ret
 
     def inherited_return(self, spec: ClassSpec, name: str, arg_types: tuple) -> str | None:
         parent = spec.parent_c

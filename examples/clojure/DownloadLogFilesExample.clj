@@ -22,10 +22,10 @@
 (def device-log (.resolve work-dir "ref_device_simulator.log"))
 (def downloads (Files/createDirectories (.resolve work-dir "downloads") no-attrs))
 
-(def builder (doto (InstanceBuilder.)
-               (.setModulePath (.toString (Daq/nativeLibraryDirectory)))   ; find the bundled modules
-               (.addLoggerSink (LoggerSink. (.toString device-log)))))
-(def instance (Instance. builder))
+(def instance (-> (InstanceBuilder.)
+                  (.setModulePath (.toString (Daq/nativeLibraryDirectory)))   ; find the bundled modules
+                  (.addLoggerSink (LoggerSink. (.toString device-log)))
+                  (.build)))
 
 ;; The reference device reads these two properties from its add-device config.
 (def config (doto (PropertyObject.)

@@ -681,14 +681,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param callable The Callable info object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setCallableInfo()}.
+     * @return this builder, to allow call chaining
      */
-    public void setCallableInfo(CallableInfo callable) {
+    public PropertyBuilder setCallableInfo(CallableInfo callable) {
         try {
             DaqPropertyBuilder.setCallableInfo(requireLivePointer(), (callable == null ? MemorySegment.NULL : callable.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(callable);
         }
+        return this;
     }
 
     /**
@@ -697,14 +699,16 @@ public class PropertyBuilder extends BaseObject {
      * Used to coerce a value written to the corresponding Property value to the constraints specified by the coercer.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setCoercer()}.
+     * @return this builder, to allow call chaining
      */
-    public void setCoercer(Coercer coercer) {
+    public PropertyBuilder setCoercer(Coercer coercer) {
         try {
             DaqPropertyBuilder.setCoercer(requireLivePointer(), (coercer == null ? MemorySegment.NULL : coercer.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(coercer);
         }
+        return this;
     }
 
     /**
@@ -712,8 +716,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param value The Default value of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setDefaultValue()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDefaultValue(Object value) {
+    public PropertyBuilder setDefaultValue(Object value) {
         try {
             Box.Boxed value$b = Box.box(value);
             try {
@@ -722,6 +727,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -729,8 +735,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param description The Description of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setDescription()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDescription(String description) {
+    public PropertyBuilder setDescription(String description) {
         try {
             MemorySegment description$s = Wrap.daqStringOrNull(description);
             try {
@@ -739,6 +746,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -750,13 +758,15 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param isIntegerValueSelection True to store the selected value; false to store the selection index.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setIsIntegerValueSelection()}.
+     * @return this builder, to allow call chaining
      */
-    public void setIsIntegerValueSelection(boolean isIntegerValueSelection) {
+    public PropertyBuilder setIsIntegerValueSelection(boolean isIntegerValueSelection) {
         try {
             DaqPropertyBuilder.setIsIntegerValueSelection(requireLivePointer(), isIntegerValueSelection);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -764,8 +774,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param max The Maximum value of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setMaxValue()}.
+     * @return this builder, to allow call chaining
      */
-    public void setMaxValue(Object max) {
+    public PropertyBuilder setMaxValue(Object max) {
         try {
             MemorySegment max$n = Box.boxNumberOwned(max);
             try {
@@ -774,6 +785,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -781,8 +793,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param min The Minimum value of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setMinValue()}.
+     * @return this builder, to allow call chaining
      */
-    public void setMinValue(Object min) {
+    public PropertyBuilder setMinValue(Object min) {
         try {
             MemorySegment min$n = Box.boxNumberOwned(min);
             try {
@@ -791,6 +804,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -798,8 +812,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param name The Name of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public PropertyBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -808,6 +823,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -815,14 +831,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param event The on-read event.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setOnPropertyValueRead()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOnPropertyValueRead(Event event) {
+    public PropertyBuilder setOnPropertyValueRead(Event event) {
         try {
             DaqPropertyBuilder.setOnPropertyValueRead(requireLivePointer(), (event == null ? MemorySegment.NULL : event.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(event);
         }
+        return this;
     }
 
     /**
@@ -830,14 +848,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param event The on-write event.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setOnPropertyValueWrite()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOnPropertyValueWrite(Event event) {
+    public PropertyBuilder setOnPropertyValueWrite(Event event) {
         try {
             DaqPropertyBuilder.setOnPropertyValueWrite(requireLivePointer(), (event == null ? MemorySegment.NULL : event.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(event);
         }
+        return this;
     }
 
     /**
@@ -845,14 +865,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param event The on-read event.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setOnSelectionValuesRead()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOnSelectionValuesRead(Event event) {
+    public PropertyBuilder setOnSelectionValuesRead(Event event) {
         try {
             DaqPropertyBuilder.setOnSelectionValuesRead(requireLivePointer(), (event == null ? MemorySegment.NULL : event.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(event);
         }
+        return this;
     }
 
     /**
@@ -860,14 +882,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param event The on-read event.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setOnSuggestedValuesRead()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOnSuggestedValuesRead(Event event) {
+    public PropertyBuilder setOnSuggestedValuesRead(Event event) {
         try {
             DaqPropertyBuilder.setOnSuggestedValuesRead(requireLivePointer(), (event == null ? MemorySegment.NULL : event.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(event);
         }
+        return this;
     }
 
     /**
@@ -876,8 +900,9 @@ public class PropertyBuilder extends BaseObject {
      * Read-only Property values can still be modified by using the `PropertyObjectProtected` interface methods.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setReadOnly()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadOnly(Object readOnly) {
+    public PropertyBuilder setReadOnly(Object readOnly) {
         try {
             Box.Boxed readOnly$b = Box.box(readOnly);
             try {
@@ -886,6 +911,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -894,14 +920,16 @@ public class PropertyBuilder extends BaseObject {
      * If the Property is not bound to a Property object this call will not be able to return the Referenced property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setReferencedProperty()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReferencedProperty(EvalValue propertyEval) {
+    public PropertyBuilder setReferencedProperty(EvalValue propertyEval) {
         try {
             DaqPropertyBuilder.setReferencedProperty(requireLivePointer(), (propertyEval == null ? MemorySegment.NULL : propertyEval.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(propertyEval);
         }
+        return this;
     }
 
     /**
@@ -909,8 +937,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param values The list/dictionary of possible selection values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setSelectionValues()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSelectionValues(Object values) {
+    public PropertyBuilder setSelectionValues(Object values) {
         try {
             Box.Boxed values$b = Box.box(values);
             try {
@@ -919,6 +948,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -926,8 +956,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param values The Suggested values of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setSuggestedValues()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSuggestedValues(java.util.List<?> values) {
+    public PropertyBuilder setSuggestedValues(java.util.List<?> values) {
         try {
             MemorySegment values$l = (values == null ? MemorySegment.NULL : Box.boxListOwned(values));
             try {
@@ -936,6 +967,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -943,14 +975,16 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param unit The Unit of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setUnit()}.
+     * @return this builder, to allow call chaining
      */
-    public void setUnit(Unit unit) {
+    public PropertyBuilder setUnit(Unit unit) {
         try {
             DaqPropertyBuilder.setUnit(requireLivePointer(), (unit == null ? MemorySegment.NULL : unit.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(unit);
         }
+        return this;
     }
 
     /**
@@ -959,14 +993,16 @@ public class PropertyBuilder extends BaseObject {
      * Used to validate whether a value written to the corresponding Property value is valid or not.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setValidator()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValidator(Validator validator) {
+    public PropertyBuilder setValidator(Validator validator) {
         try {
             DaqPropertyBuilder.setValidator(requireLivePointer(), (validator == null ? MemorySegment.NULL : validator.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(validator);
         }
+        return this;
     }
 
     /**
@@ -974,13 +1010,15 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param type The value type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setValueType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueType(CoreType type) {
+    public PropertyBuilder setValueType(CoreType type) {
         try {
             DaqPropertyBuilder.setValueType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -988,8 +1026,9 @@ public class PropertyBuilder extends BaseObject {
      * &#64;param visible True if the Property is visible; false otherwise.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setVisible()}.
+     * @return this builder, to allow call chaining
      */
-    public void setVisible(Object visible) {
+    public PropertyBuilder setVisible(Object visible) {
         try {
             Box.Boxed visible$b = Box.box(visible);
             try {
@@ -998,6 +1037,7 @@ public class PropertyBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

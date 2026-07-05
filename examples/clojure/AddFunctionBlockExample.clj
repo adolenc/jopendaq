@@ -4,11 +4,12 @@
 (import '(com.opendaq InstanceBuilder Instance Daq Channel FunctionBlock MultiReader))
 
 ;; Building the instance explicitly, to show where the modules come from; plain
-;; (Instance.) does exactly this.
-(def builder (doto (InstanceBuilder.)
-               (.setModulePath (.toString (Daq/nativeLibraryDirectory)))))  ; the bundled modules
-;; (.addModulePath builder "/path/to/your/modules")   ; your own modules folder
-(def instance (Instance. builder))
+;; (Instance.) does exactly this.  The builder's configuration methods return
+;; the builder, so they thread.
+(def instance (-> (InstanceBuilder.)
+                  (.setModulePath (.toString (Daq/nativeLibraryDirectory)))  ; the bundled modules
+                  ;; (.addModulePath "/path/to/your/modules")                 ; your own modules folder
+                  (.build)))
 (.addDevice instance "daqref://device0")
 
 (def channel (.asType (.findComponent instance "Dev/RefDev0/IO/AI/RefCh0") Channel))

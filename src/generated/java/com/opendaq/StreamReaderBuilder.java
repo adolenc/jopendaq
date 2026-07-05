@@ -165,13 +165,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param type The domain signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setDomainReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDomainReadType(SampleType type) {
+    public StreamReaderBuilder setDomainReadType(SampleType type) {
         try {
             DaqStreamReaderBuilder.setDomainReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -179,14 +181,16 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param port The input port which will be handled in stream reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setInputPort()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPort(InputPort port) {
+    public StreamReaderBuilder setInputPort(InputPort port) {
         try {
             DaqStreamReaderBuilder.setInputPort(requireLivePointer(), (port == null ? MemorySegment.NULL : port.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(port);
         }
+        return this;
     }
 
     /**
@@ -194,13 +198,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param notificationMethod The notification method to be used. If "None", uses Scheduler for stream reader with signal, and keeps the mode of the input port.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setInputPortNotificationMethod()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPortNotificationMethod(PacketReadyNotification notificationMethod) {
+    public StreamReaderBuilder setInputPortNotificationMethod(PacketReadyNotification notificationMethod) {
         try {
             DaqStreamReaderBuilder.setInputPortNotificationMethod(requireLivePointer(), notificationMethod);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -208,13 +214,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param mode The read mode
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setReadMode()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadMode(ReadMode mode) {
+    public StreamReaderBuilder setReadMode(ReadMode mode) {
         try {
             DaqStreamReaderBuilder.setReadMode(requireLivePointer(), mode);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -222,13 +230,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param type The timeout mode. if "Any" returns immediately if there is available data otherwise time-out is exceeded. if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setReadTimeoutType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadTimeoutType(ReadTimeoutType type) {
+    public StreamReaderBuilder setReadTimeoutType(ReadTimeoutType type) {
         try {
             DaqStreamReaderBuilder.setReadTimeoutType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -236,14 +246,16 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param signal The signal which will be handled in stream reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setSignal()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSignal(Signal signal) {
+    public StreamReaderBuilder setSignal(Signal signal) {
         try {
             DaqStreamReaderBuilder.setSignal(requireLivePointer(), (signal == null ? MemorySegment.NULL : signal.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(signal);
         }
+        return this;
     }
 
     /**
@@ -251,13 +263,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param skipEvents The skip events
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setSkipEvents()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSkipEvents(boolean skipEvents) {
+    public StreamReaderBuilder setSkipEvents(boolean skipEvents) {
         try {
             DaqStreamReaderBuilder.setSkipEvents(requireLivePointer(), skipEvents);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -265,13 +279,15 @@ public class StreamReaderBuilder extends BaseObject {
      * &#64;param type The value signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setValueReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueReadType(SampleType type) {
+    public StreamReaderBuilder setValueReadType(SampleType type) {
         try {
             DaqStreamReaderBuilder.setValueReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

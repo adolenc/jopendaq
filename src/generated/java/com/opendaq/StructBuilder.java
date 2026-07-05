@@ -172,8 +172,9 @@ public class StructBuilder extends BaseObject {
      * &#64;param field The value of the field.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStructBuilder_set()}.
+     * @return this builder, to allow call chaining
      */
-    public void set(String name, Object field) {
+    public StructBuilder set(String name, Object field) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -185,6 +186,7 @@ public class StructBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -194,8 +196,9 @@ public class StructBuilder extends BaseObject {
      * index corresponds to the value stored in the list of values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStructBuilder_setFieldValues()}.
+     * @return this builder, to allow call chaining
      */
-    public void setFieldValues(java.util.List<?> values) {
+    public StructBuilder setFieldValues(java.util.List<?> values) {
         try {
             MemorySegment values$l = (values == null ? MemorySegment.NULL : Box.boxListOwned(values));
             try {
@@ -204,6 +207,7 @@ public class StructBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

@@ -42,8 +42,9 @@ public class PermissionsBuilder extends BaseObject {
      * &#64;param permissions A set of permissions to allow for given group.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionsBuilder_allow()}.
+     * @return this builder, to allow call chaining
      */
-    public void allow(String groupId, PermissionMaskBuilder permissions) {
+    public PermissionsBuilder allow(String groupId, PermissionMaskBuilder permissions) {
         try {
             MemorySegment groupId$s = Wrap.daqStringOrNull(groupId);
             try {
@@ -53,6 +54,7 @@ public class PermissionsBuilder extends BaseObject {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(permissions);
         }
+        return this;
     }
 
     /**
@@ -61,8 +63,9 @@ public class PermissionsBuilder extends BaseObject {
      * &#64;param permissions A set of permissions to allow for given group.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionsBuilder_assign()}.
+     * @return this builder, to allow call chaining
      */
-    public void assign(String groupId, PermissionMaskBuilder permissions) {
+    public PermissionsBuilder assign(String groupId, PermissionMaskBuilder permissions) {
         try {
             MemorySegment groupId$s = Wrap.daqStringOrNull(groupId);
             try {
@@ -72,6 +75,7 @@ public class PermissionsBuilder extends BaseObject {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(permissions);
         }
+        return this;
     }
 
     /**
@@ -94,8 +98,9 @@ public class PermissionsBuilder extends BaseObject {
      * &#64;param permissions A set of permissions to deny for given group.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionsBuilder_deny()}.
+     * @return this builder, to allow call chaining
      */
-    public void deny(String groupId, PermissionMaskBuilder permissions) {
+    public PermissionsBuilder deny(String groupId, PermissionMaskBuilder permissions) {
         try {
             MemorySegment groupId$s = Wrap.daqStringOrNull(groupId);
             try {
@@ -105,6 +110,7 @@ public class PermissionsBuilder extends BaseObject {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(permissions);
         }
+        return this;
     }
 
     /**
@@ -112,14 +118,16 @@ public class PermissionsBuilder extends BaseObject {
      * &#64;param config Permission config object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionsBuilder_extend()}.
+     * @return this builder, to allow call chaining
      */
-    public void extend(Permissions config) {
+    public PermissionsBuilder extend(Permissions config) {
         try {
             DaqPermissionsBuilder.extend(requireLivePointer(), (config == null ? MemorySegment.NULL : config.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(config);
         }
+        return this;
     }
 
     /**
@@ -127,13 +135,15 @@ public class PermissionsBuilder extends BaseObject {
      * &#64;param inherit Flag signifying if component should inherit permissions from its parent object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionsBuilder_inherit()}.
+     * @return this builder, to allow call chaining
      */
-    public void inherit(boolean inherit) {
+    public PermissionsBuilder inherit(boolean inherit) {
         try {
             DaqPermissionsBuilder.inherit(requireLivePointer(), inherit);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

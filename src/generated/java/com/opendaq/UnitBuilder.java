@@ -133,13 +133,15 @@ public class UnitBuilder extends BaseObject {
      * The ID should be -1 if the unit is not available.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_setId()}.
+     * @return this builder, to allow call chaining
      */
-    public void setId(long id) {
+    public UnitBuilder setId(long id) {
         try {
             DaqUnitBuilder.setId(requireLivePointer(), id);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -147,8 +149,9 @@ public class UnitBuilder extends BaseObject {
      * &#64;param name The unit's full name.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public UnitBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -157,6 +160,7 @@ public class UnitBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -164,8 +168,9 @@ public class UnitBuilder extends BaseObject {
      * &#64;param quantity The unit's quantity.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_setQuantity()}.
+     * @return this builder, to allow call chaining
      */
-    public void setQuantity(String quantity) {
+    public UnitBuilder setQuantity(String quantity) {
         try {
             MemorySegment quantity$s = Wrap.daqStringOrNull(quantity);
             try {
@@ -174,6 +179,7 @@ public class UnitBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -181,8 +187,9 @@ public class UnitBuilder extends BaseObject {
      * &#64;param symbol The unit's symbol.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_setSymbol()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSymbol(String symbol) {
+    public UnitBuilder setSymbol(String symbol) {
         try {
             MemorySegment symbol$s = Wrap.daqStringOrNull(symbol);
             try {
@@ -191,6 +198,7 @@ public class UnitBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

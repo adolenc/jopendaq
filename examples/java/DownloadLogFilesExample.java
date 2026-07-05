@@ -28,10 +28,10 @@ public class DownloadLogFilesExample {
         Path deviceLog = workDir.resolve("ref_device_simulator.log");
         Path downloads = Files.createDirectories(workDir.resolve("downloads"));
 
-        InstanceBuilder builder = new InstanceBuilder();
-        builder.setModulePath(Daq.nativeLibraryDirectory().toString());   // find the bundled modules
-        builder.addLoggerSink(new LoggerSink(deviceLog.toString()));
-        Instance instance = new Instance(builder);
+        Instance instance = new InstanceBuilder()
+            .setModulePath(Daq.nativeLibraryDirectory().toString())   // find the bundled modules
+            .addLoggerSink(new LoggerSink(deviceLog.toString()))
+            .build();
 
         // The reference device reads these two properties from its add-device config.
         PropertyObject config = new PropertyObject();

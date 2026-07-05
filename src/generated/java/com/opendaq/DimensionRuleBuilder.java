@@ -60,8 +60,9 @@ public class DimensionRuleBuilder extends BaseObject {
      * &#64;param parameter The object-type parameter.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionRuleBuilder_addParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void addParameter(String name, Object parameter) {
+    public DimensionRuleBuilder addParameter(String name, Object parameter) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -73,6 +74,7 @@ public class DimensionRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -121,8 +123,9 @@ public class DimensionRuleBuilder extends BaseObject {
      * Removes the parameter with the given name from the Dictionary of Dimension rule parameters.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionRuleBuilder_removeParameter()}.
+     * @return this builder, to allow call chaining
      */
-    public void removeParameter(String name) {
+    public DimensionRuleBuilder removeParameter(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -131,6 +134,7 @@ public class DimensionRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -138,8 +142,9 @@ public class DimensionRuleBuilder extends BaseObject {
      * &#64;param parameters The dictionary containing the rule parameter members.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionRuleBuilder_setParameters()}.
+     * @return this builder, to allow call chaining
      */
-    public void setParameters(java.util.Map<?, ?> parameters) {
+    public DimensionRuleBuilder setParameters(java.util.Map<?, ?> parameters) {
         try {
             MemorySegment parameters$d = (parameters == null ? MemorySegment.NULL : Box.boxDictOwned(parameters));
             try {
@@ -148,6 +153,7 @@ public class DimensionRuleBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -159,13 +165,15 @@ public class DimensionRuleBuilder extends BaseObject {
      * - List: `list` parameter. The list contains all dimension labels.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionRuleBuilder_setType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setType(DimensionRuleType type) {
+    public DimensionRuleBuilder setType(DimensionRuleType type) {
         try {
             DaqDimensionRuleBuilder.setType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

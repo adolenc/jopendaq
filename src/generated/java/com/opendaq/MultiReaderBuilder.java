@@ -39,14 +39,16 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param port The port that will be read by the multi reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_addInputPort()}.
+     * @return this builder, to allow call chaining
      */
-    public void addInputPort(InputPort port) {
+    public MultiReaderBuilder addInputPort(InputPort port) {
         try {
             DaqMultiReaderBuilder.addInputPort(requireLivePointer(), (port == null ? MemorySegment.NULL : port.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(port);
         }
+        return this;
     }
 
     /**
@@ -54,8 +56,9 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param ports The ports that will be read by the multi reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_addInputPorts()}.
+     * @return this builder, to allow call chaining
      */
-    public void addInputPorts(java.util.List<?> ports) {
+    public MultiReaderBuilder addInputPorts(java.util.List<?> ports) {
         try {
             MemorySegment ports$l = (ports == null ? MemorySegment.NULL : Box.boxListOwned(ports));
             try {
@@ -64,6 +67,7 @@ public class MultiReaderBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -71,14 +75,16 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param signal The signal that will be read by the multi reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_addSignal()}.
+     * @return this builder, to allow call chaining
      */
-    public void addSignal(Signal signal) {
+    public MultiReaderBuilder addSignal(Signal signal) {
         try {
             DaqMultiReaderBuilder.addSignal(requireLivePointer(), (signal == null ? MemorySegment.NULL : signal.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(signal);
         }
+        return this;
     }
 
     /**
@@ -86,8 +92,9 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param signals The signals that will be read by the multi reader
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_addSignals()}.
+     * @return this builder, to allow call chaining
      */
-    public void addSignals(java.util.List<?> signals) {
+    public MultiReaderBuilder addSignals(java.util.List<?> signals) {
         try {
             MemorySegment signals$l = (signals == null ? MemorySegment.NULL : Box.boxListOwned(signals));
             try {
@@ -96,6 +103,7 @@ public class MultiReaderBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -291,13 +299,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param allowDifferentRates If set to `false`, the multi reader will only accept signals with the same sampling rate.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setAllowDifferentSamplingRates()}.
+     * @return this builder, to allow call chaining
      */
-    public void setAllowDifferentSamplingRates(boolean allowDifferentRates) {
+    public MultiReaderBuilder setAllowDifferentSamplingRates(boolean allowDifferentRates) {
         try {
             DaqMultiReaderBuilder.setAllowDifferentSamplingRates(requireLivePointer(), allowDifferentRates);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -305,13 +315,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param type The domain signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setDomainReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDomainReadType(SampleType type) {
+    public MultiReaderBuilder setDomainReadType(SampleType type) {
         try {
             DaqMultiReaderBuilder.setDomainReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -320,13 +332,15 @@ public class MultiReaderBuilder extends BaseObject {
      * If "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setInputPortNotificationMethod()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPortNotificationMethod(PacketReadyNotification notificationMethod) {
+    public MultiReaderBuilder setInputPortNotificationMethod(PacketReadyNotification notificationMethod) {
         try {
             DaqMultiReaderBuilder.setInputPortNotificationMethod(requireLivePointer(), notificationMethod);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -336,8 +350,9 @@ public class MultiReaderBuilder extends BaseObject {
      * If a method is set to "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setInputPortNotificationMethods()}.
+     * @return this builder, to allow call chaining
      */
-    public void setInputPortNotificationMethods(java.util.List<?> notificationMethods) {
+    public MultiReaderBuilder setInputPortNotificationMethods(java.util.List<?> notificationMethods) {
         try {
             MemorySegment notificationMethods$l = (notificationMethods == null ? MemorySegment.NULL : Box.boxListOwned(notificationMethods));
             try {
@@ -346,6 +361,7 @@ public class MultiReaderBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -356,13 +372,15 @@ public class MultiReaderBuilder extends BaseObject {
      * default value is 1.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setMinReadCount()}.
+     * @return this builder, to allow call chaining
      */
-    public void setMinReadCount(long minReadCount) {
+    public MultiReaderBuilder setMinReadCount(long minReadCount) {
         try {
             DaqMultiReaderBuilder.setMinReadCount(requireLivePointer(), minReadCount);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -370,13 +388,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param mode The read mode
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setReadMode()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadMode(ReadMode mode) {
+    public MultiReaderBuilder setReadMode(ReadMode mode) {
         try {
             DaqMultiReaderBuilder.setReadMode(requireLivePointer(), mode);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -385,13 +405,15 @@ public class MultiReaderBuilder extends BaseObject {
      * NOTE: THIS IS CURRENTLY IGNORED AND IS ALWAYS SET TO ReadTimeoutType::All
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setReadTimeoutType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReadTimeoutType(ReadTimeoutType type) {
+    public MultiReaderBuilder setReadTimeoutType(ReadTimeoutType type) {
         try {
             DaqMultiReaderBuilder.setReadTimeoutType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -399,13 +421,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param sampleRate The required common sample rate
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setRequiredCommonSampleRate()}.
+     * @return this builder, to allow call chaining
      */
-    public void setRequiredCommonSampleRate(long sampleRate) {
+    public MultiReaderBuilder setRequiredCommonSampleRate(long sampleRate) {
         try {
             DaqMultiReaderBuilder.setRequiredCommonSampleRate(requireLivePointer(), sampleRate);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -413,13 +437,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param enabled enable/disable start on full unit of domain
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setStartOnFullUnitOfDomain()}.
+     * @return this builder, to allow call chaining
      */
-    public void setStartOnFullUnitOfDomain(boolean enabled) {
+    public MultiReaderBuilder setStartOnFullUnitOfDomain(boolean enabled) {
         try {
             DaqMultiReaderBuilder.setStartOnFullUnitOfDomain(requireLivePointer(), enabled);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -427,8 +453,9 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param offsetTolerance Ratio that define offset tolerance as a fraction of domain unit.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setTickOffsetTolerance()}.
+     * @return this builder, to allow call chaining
      */
-    public void setTickOffsetTolerance(Object offsetTolerance) {
+    public MultiReaderBuilder setTickOffsetTolerance(Object offsetTolerance) {
         try {
             Box.Boxed offsetTolerance$b = Box.box(offsetTolerance);
             try {
@@ -437,6 +464,7 @@ public class MultiReaderBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -444,13 +472,15 @@ public class MultiReaderBuilder extends BaseObject {
      * &#64;param type The value signal read type
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setValueReadType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueReadType(SampleType type) {
+    public MultiReaderBuilder setValueReadType(SampleType type) {
         try {
             DaqMultiReaderBuilder.setValueReadType(requireLivePointer(), type);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }

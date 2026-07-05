@@ -243,8 +243,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * The number of dimensions defines the rank of the signal's data (eg. Vector, Matrix).
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setDimensions()}.
+     * @return this builder, to allow call chaining
      */
-    public void setDimensions(java.util.List<?> dimensions) {
+    public DataDescriptorBuilder setDimensions(java.util.List<?> dimensions) {
         try {
             MemorySegment dimensions$l = (dimensions == null ? MemorySegment.NULL : Box.boxListOwned(dimensions));
             try {
@@ -253,6 +254,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -261,8 +263,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * All objects in the metadata dictionary must be serializable.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setMetadata()}.
+     * @return this builder, to allow call chaining
      */
-    public void setMetadata(java.util.Map<?, ?> metadata) {
+    public DataDescriptorBuilder setMetadata(java.util.Map<?, ?> metadata) {
         try {
             MemorySegment metadata$d = (metadata == null ? MemorySegment.NULL : Box.boxDictOwned(metadata));
             try {
@@ -271,6 +274,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -279,8 +283,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * When, for example, describing the amplitude values of spectrum data, the name would be `Amplitude`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String name) {
+    public DataDescriptorBuilder setName(String name) {
         try {
             MemorySegment name$s = Wrap.daqStringOrNull(name);
             try {
@@ -289,6 +294,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -300,8 +306,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * Most commonly a time epoch is used, in which case it should be formatted according to the ISO 8601 standard.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setOrigin()}.
+     * @return this builder, to allow call chaining
      */
-    public void setOrigin(String origin) {
+    public DataDescriptorBuilder setOrigin(String origin) {
         try {
             MemorySegment origin$s = Wrap.daqStringOrNull(origin);
             try {
@@ -310,6 +317,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -319,14 +327,16 @@ public class DataDescriptorBuilder extends BaseObject {
      * of either the explicit data in packet buffers, or the packet's implicit value's sample type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setPostScaling()}.
+     * @return this builder, to allow call chaining
      */
-    public void setPostScaling(Scaling scaling) {
+    public DataDescriptorBuilder setPostScaling(Scaling scaling) {
         try {
             DaqDataDescriptorBuilder.setPostScaling(requireLivePointer(), (scaling == null ? MemorySegment.NULL : scaling.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(scaling);
         }
+        return this;
     }
 
     /**
@@ -335,14 +345,16 @@ public class DataDescriptorBuilder extends BaseObject {
      * If set, gives additional information about the reference domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setReferenceDomainInfo()}.
+     * @return this builder, to allow call chaining
      */
-    public void setReferenceDomainInfo(ReferenceDomainInfo referenceDomainInfo) {
+    public DataDescriptorBuilder setReferenceDomainInfo(ReferenceDomainInfo referenceDomainInfo) {
         try {
             DaqDataDescriptorBuilder.setReferenceDomainInfo(requireLivePointer(), (referenceDomainInfo == null ? MemorySegment.NULL : referenceDomainInfo.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(referenceDomainInfo);
         }
+        return this;
     }
 
     /**
@@ -352,14 +364,16 @@ public class DataDescriptorBuilder extends BaseObject {
      * using the packet parameter as the input into the rule.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setRule()}.
+     * @return this builder, to allow call chaining
      */
-    public void setRule(DataRule rule) {
+    public DataDescriptorBuilder setRule(DataRule rule) {
         try {
             DaqDataDescriptorBuilder.setRule(requireLivePointer(), (rule == null ? MemorySegment.NULL : rule.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(rule);
         }
+        return this;
     }
 
     /**
@@ -367,13 +381,15 @@ public class DataDescriptorBuilder extends BaseObject {
      * &#64;param sampleType The descriptor's sample type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setSampleType()}.
+     * @return this builder, to allow call chaining
      */
-    public void setSampleType(SampleType sampleType) {
+    public DataDescriptorBuilder setSampleType(SampleType sampleType) {
         try {
             DaqDataDescriptorBuilder.setSampleType(requireLivePointer(), sampleType);
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -383,8 +399,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * of the list is at the start, followed by the data described by the second and so on.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setStructFields()}.
+     * @return this builder, to allow call chaining
      */
-    public void setStructFields(java.util.List<?> structFields) {
+    public DataDescriptorBuilder setStructFields(java.util.List<?> structFields) {
         try {
             MemorySegment structFields$l = (structFields == null ? MemorySegment.NULL : Box.boxListOwned(structFields));
             try {
@@ -393,6 +410,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -400,8 +418,9 @@ public class DataDescriptorBuilder extends BaseObject {
      * &#64;param tickResolution The Resolution.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setTickResolution()}.
+     * @return this builder, to allow call chaining
      */
-    public void setTickResolution(Object tickResolution) {
+    public DataDescriptorBuilder setTickResolution(Object tickResolution) {
         try {
             Box.Boxed tickResolution$b = Box.box(tickResolution);
             try {
@@ -410,6 +429,7 @@ public class DataDescriptorBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -417,14 +437,16 @@ public class DataDescriptorBuilder extends BaseObject {
      * &#64;param unit The unit specified by the descriptor.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setUnit()}.
+     * @return this builder, to allow call chaining
      */
-    public void setUnit(Unit unit) {
+    public DataDescriptorBuilder setUnit(Unit unit) {
         try {
             DaqDataDescriptorBuilder.setUnit(requireLivePointer(), (unit == null ? MemorySegment.NULL : unit.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(unit);
         }
+        return this;
     }
 
     /**
@@ -433,14 +455,16 @@ public class DataDescriptorBuilder extends BaseObject {
      * The range is not enforced by openDAQ.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setValueRange()}.
+     * @return this builder, to allow call chaining
      */
-    public void setValueRange(Range range) {
+    public DataDescriptorBuilder setValueRange(Range range) {
         try {
             DaqDataDescriptorBuilder.setValueRange(requireLivePointer(), (range == null ? MemorySegment.NULL : range.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(range);
         }
+        return this;
     }
 
 }

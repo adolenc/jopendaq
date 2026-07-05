@@ -72,14 +72,16 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * The default value of object-type properties that are added to a class are frozen once added.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_addProperty()}.
+     * @return this builder, to allow call chaining
      */
-    public void addProperty(Property property) {
+    public PropertyObjectClassBuilder addProperty(Property property) {
         try {
             DaqPropertyObjectClassBuilder.addProperty(requireLivePointer(), (property == null ? MemorySegment.NULL : property.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(property);
         }
+        return this;
     }
 
     /**
@@ -172,8 +174,9 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * &#64;retval OPENDAQ_ERR_NOTFOUND if the property with `propertyName` is not a member of the class.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_removeProperty()}.
+     * @return this builder, to allow call chaining
      */
-    public void removeProperty(String propertyName) {
+    public PropertyObjectClassBuilder removeProperty(String propertyName) {
         try {
             MemorySegment propertyName$s = Wrap.daqStringOrNull(propertyName);
             try {
@@ -182,6 +185,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -189,8 +193,9 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * &#64;param className The name of the class.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_setName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setName(String className) {
+    public PropertyObjectClassBuilder setName(String className) {
         try {
             MemorySegment className$s = Wrap.daqStringOrNull(className);
             try {
@@ -199,6 +204,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -206,8 +212,9 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * &#64;param parentName The parent class's name.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_setParentName()}.
+     * @return this builder, to allow call chaining
      */
-    public void setParentName(String parentName) {
+    public PropertyObjectClassBuilder setParentName(String parentName) {
         try {
             MemorySegment parentName$s = Wrap.daqStringOrNull(parentName);
             try {
@@ -216,6 +223,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
     /**
@@ -226,8 +234,9 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * kept in insertion order at the end of the class's list of properties.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_setPropertyOrder()}.
+     * @return this builder, to allow call chaining
      */
-    public void setPropertyOrder(java.util.List<?> orderedPropertyNames) {
+    public PropertyObjectClassBuilder setPropertyOrder(java.util.List<?> orderedPropertyNames) {
         try {
             MemorySegment orderedPropertyNames$l = (orderedPropertyNames == null ? MemorySegment.NULL : Box.boxListOwned(orderedPropertyNames));
             try {
@@ -236,6 +245,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
         }
+        return this;
     }
 
 }
