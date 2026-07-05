@@ -5,3 +5,8 @@ bin/
 *.class
 tools/__pycache__/
 tmp/
+
+# Clojure / Scala example runner build caches (examples/clojure, examples/scala)
+.cpcache/
+.scala-build/
+.bsp/

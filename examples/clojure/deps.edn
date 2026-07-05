@@ -1,0 +1,17 @@
+;; Dependencies for running the Clojure ports of the openDAQ examples.
+;;
+;; The :jopendaq alias puts the two published jars on the classpath -- the main
+;; jar and the natives-<platform> jar the loader extracts the native libraries
+;; from -- and enables the Foreign Function & Memory API the bindings use.  The
+;; jars are expected in the repository root (the "downloaded release jars" flow
+;; from the README); swap the natives jar for your platform if you are not on
+;; linux-x86_64.
+;;
+;;   clojure -M:jopendaq StreamReaderExample.clj
+{:deps {org.clojure/clojure {:mvn/version "1.12.0"}}
+ :aliases
+ {:jopendaq
+  {:extra-deps
+   {com.opendaq/jopendaq         {:local/root "../../jopendaq-0.1.0.jar"}
+    com.opendaq/jopendaq-natives {:local/root "../../jopendaq-0.1.0-natives-linux-x86_64.jar"}}
+   :jvm-opts ["--enable-native-access=ALL-UNNAMED"]}}}

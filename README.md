@@ -276,7 +276,7 @@ event batches, so the first read after reconfiguring a device still returns
 data.  A descriptor change the reader cannot convert throws
 `ReaderInvalidatedException`; recover with
 `StreamReader.createStreamReaderFromExisting(invalidated, ...)` (see
-`examples/ReaderInvalidationRecoveryExample.java`).
+`examples/java/ReaderInvalidationRecoveryExample.java`).
 
 ## Development
 
@@ -320,5 +320,7 @@ it needs a C/C++ build toolchain (CMake ≥ 3.24, a compiler, git, and the
 - `tools/` — the binding generators and the hand-written class parts they
   inject (`tools/manual/*.java.inc`); `tools/parse_bindings.py` is the
   generic C-header parser shared with cl-opendaq
-- `examples/` — stand-alone example programs, ports of cl-opendaq's examples
+- `examples/` — stand-alone example programs, ports of cl-opendaq's examples;
+  `examples/java/` plus line-for-line ports in `examples/clojure/` and
+  `examples/scala/`
 - `src/test/java/` — JUnit tests, ports of cl-opendaq's FiveAM suites

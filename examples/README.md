@@ -1,40 +1,17 @@
 # Examples
 
-Each example is a self-contained Java program with a `main` method that runs
-against the openDAQ library. You need a JDK 22 or newer (the bindings use the
-FFM API, final since Java 22); any example runs straight from source, no
-separate `javac` step, thanks to the single-file source launcher.
+Stand-alone example programs covering the common openDAQ flows — device
+discovery, readers, function blocks, search filters, core events, hand-built
+signals, and more. Because the bindings are plain Java classes, the same
+programs are provided in three JVM languages, one file per example in each:
 
-## Running an example
+| Language | Folder | Run with |
+|----------|--------|----------|
+| Java     | [`java/`](./java)       | the single-file source launcher (`java …Example.java`) |
+| Clojure  | [`clojure/`](./clojure) | the Clojure CLI (`clojure -M:jopendaq …Example.clj`) |
+| Scala    | [`scala/`](./scala)     | scala-cli (`scala-cli run …Example.scala`) |
 
-### With the downloaded release jars
-
-From the folder holding the two jars (the main jar and the `natives-<platform>`
-jar for your OS — `linux-x86_64`, `osx-aarch_64`, or `windows-x86_64`):
-
-```bash
-java --enable-native-access=ALL-UNNAMED \
-  -cp jopendaq-0.1.0.jar:jopendaq-0.1.0-natives-linux-x86_64.jar \
-  examples/StreamReaderExample.java
-```
-
-Swap `StreamReaderExample` for any other file in this folder. On Windows, use
-`;` instead of `:` as the classpath separator.
-
-### From a local build
-
-Entirely inside the dev container (builds the project and natives as needed):
-
-```bash
-make example NAME=StreamReaderExample
-```
-
-Or directly, once the project is built (`make package`) and the natives are
-built (`make natives`, which writes them to `bin/<platform>/`):
-
-```bash
-OPENDAQ_JAVA_NATIVE_DIR=bin/linux-x86_64 \
-java --enable-native-access=ALL-UNNAMED \
-  -cp target/classes \
-  examples/StreamReaderExample.java
-```
+Each folder has its own README with the exact commands. All of them need a JDK
+22 or newer (the bindings use the Foreign Function & Memory API, final since
+Java 22) and the two published jars — the main jar and the `natives-<platform>`
+jar for your OS — which the run commands put on the classpath.

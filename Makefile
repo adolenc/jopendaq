@@ -68,8 +68,8 @@ DOCKER_RUN := docker run --rm \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image clone-opendaq natives natives-jar bindings \
-        build test package example repl-shell clean
+.PHONY: docker-image examples-image clone-opendaq natives natives-jar bindings \
+        build test package example clojure-example scala-example repl-shell clean
 
 docker-image:
 	docker build -t $(DOCKER_IMAGE) .
@@ -131,12 +131,53 @@ package:
 	mkdir -p $(M2_CACHE)
 	$(DOCKER_RUN) mvn -q -DskipTests package
 
-# Run one example, e.g.:  make example NAME=StreamReaderExample
+# Run one Java example, e.g.:  make example NAME=StreamReaderExample
 example:
 	mkdir -p $(M2_CACHE)
 	$(DOCKER_RUN) bash -c "mvn -q -DskipTests package && \
-	  javac -cp target/classes -d target/examples examples/$(NAME).java && \
+	  javac -cp target/classes -d target/examples examples/java/$(NAME).java && \
 	  java --enable-native-access=ALL-UNNAMED -cp target/classes:target/examples $(NAME)"
+
+# ---------------------------------------------------------------------------
+# Clojure / Scala example ports (examples/clojure, examples/scala).
+#
+# These run in the java-opendaq-examples image (the dev image plus the Clojure
+# CLI and scala-cli -- build it once with `make examples-image`).  Both put the
+# two published jars on the classpath -- the main jar and the natives jar the
+# loader extracts from -- exactly like the "downloaded release jars" flow in the
+# example READMEs, so the jopendaq-*.jar files must be present in the repo root
+# (build them with `make package` + `make natives natives-jar` and copy them up,
+# or download them from a release).  HOME/COURSIER_CACHE point into the mounted
+# .cache/ so the Clojure and Scala runtimes download themselves only once.
+EXAMPLES_IMAGE ?= java-opendaq-examples
+MAIN_JAR := jopendaq-$(PROJECT_VERSION).jar
+NATIVES_CP_JAR := jopendaq-$(PROJECT_VERSION)-natives-$(OPENDAQ_RUNTIME_TRIPLE).jar
+
+DOCKER_RUN_EXAMPLES := docker run --rm \
+  -u $(USER_SPEC) \
+  -v $(CURDIR):/workspace \
+  -v $(M2_CACHE):/workspace/.m2 \
+  -e MAVEN_OPTS="-Dmaven.repo.local=/workspace/.m2" \
+  -e XDG_CACHE_HOME=/workspace/.cache \
+  -e HOME=/workspace/.cache/lang-home \
+  -e COURSIER_CACHE=/workspace/.cache/coursier \
+  -w /workspace \
+  $(EXAMPLES_IMAGE)
+
+examples-image:
+	docker build -t $(EXAMPLES_IMAGE) -f examples/Dockerfile .
+
+# Run one Clojure example, e.g.:  make clojure-example NAME=StreamReaderExample
+clojure-example:
+	mkdir -p $(CURDIR)/.cache/lang-home
+	$(DOCKER_RUN_EXAMPLES) bash -c "cd examples/clojure && clojure -M:jopendaq $(NAME).clj"
+
+# Run one Scala example, e.g.:  make scala-example NAME=StreamReaderExample
+scala-example:
+	mkdir -p $(CURDIR)/.cache/lang-home
+	$(DOCKER_RUN_EXAMPLES) scala-cli run examples/scala/$(NAME).scala \
+	  --jar $(MAIN_JAR) --jar $(NATIVES_CP_JAR) \
+	  --java-opt=--enable-native-access=ALL-UNNAMED --server=false
 
 # An interactive shell inside the dev container.
 repl-shell:
