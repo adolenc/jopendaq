@@ -249,5 +249,5 @@ jobs:
             --title "jopendaq $VERSION" \
             --notes "openDAQ Java bindings $VERSION. Native libraries built from ${{ needs.resolve.outputs.repo }} @ ${{ needs.resolve.outputs.ref }} (${{ needs.resolve.outputs.sha }}).
 
-          Add the main jar plus the \`natives-<platform>\` jar for your OS to the classpath; the bindings extract the natives at first use with no network access." \
+          Add the \`jopendaq-$VERSION.jar\` plus the \`jopendaq-$VERSION-natives-<platform>.jar\` for your OS to the classpath." \
             dist/jopendaq-*.jar
