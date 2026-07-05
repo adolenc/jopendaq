@@ -1,4 +1,4 @@
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Batch several property writes into one update per object: values set inside

@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.LongFunction;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Read two channels at once with a multi reader, aligned on their common

@@ -3,9 +3,9 @@
 
 Emits, under --output-dir (default src/generated/java):
 
-  org/opendaq/<Class>.java   one wrapper class per openDAQ interface, extending
+  com/opendaq/<Class>.java   one wrapper class per openDAQ interface, extending
                              its parent interface's wrapper (root: DaqObject)
-  org/opendaq/DaqTypes.java  the Class -> (wrap constructor, interface id)
+  com/opendaq/DaqTypes.java  the Class -> (wrap constructor, interface id)
                              registry behind DaqObject.asType/isA/wrap
 
 Design (mirroring the reference Common Lisp high-level layer, adapted to Java
@@ -662,7 +662,7 @@ class Generator:
 
     def render_class(self, spec: ClassSpec) -> str:
         parent_java = "DaqObject" if spec.parent_c is None else self.classes[spec.parent_c].java
-        lines = [HEADER, "package org.opendaq;", ""]
+        lines = [HEADER, "package com.opendaq;", ""]
         lines.append("import java.lang.foreign.Arena;")
         lines.append("import java.lang.foreign.MemorySegment;")
         lines.append("import java.lang.foreign.ValueLayout;")
@@ -670,7 +670,7 @@ class Generator:
         lines.append("import java.util.List;")
         lines.append("import java.util.Map;")
         lines.append("")
-        lines.append("import org.opendaq.lowlevel.*;")
+        lines.append("import com.opendaq.lowlevel.*;")
         lines.append("")
         doc = spec.docstring.strip()
         if doc.startswith("@brief"):
@@ -713,7 +713,7 @@ class Generator:
         return "\n".join(lines) + "\n"
 
     def render_daq_types(self) -> str:
-        lines = [HEADER, "package org.opendaq;", ""]
+        lines = [HEADER, "package com.opendaq;", ""]
         lines.append("/** Registers every wrapper class with the runtime type registry. */")
         lines.append("final class DaqTypes {")
         lines.append("")
@@ -722,7 +722,7 @@ class Generator:
         lines.append("    static void registerAll() {")
         for spec in sorted(self.classes.values(), key=lambda s: s.java):
             low = receiver_class_name(spec.c_name)
-            id_ref = (f"org.opendaq.lowlevel.{low}::getInterfaceId"
+            id_ref = (f"com.opendaq.lowlevel.{low}::getInterfaceId"
                       if spec.has_interface_id else "null")
             lines.append(f"        TypeRegistry.register({spec.java}.class, {spec.java}::new, {id_ref});")
         lines.append("    }")

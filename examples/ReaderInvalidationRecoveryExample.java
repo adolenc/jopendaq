@@ -1,4 +1,4 @@
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * A reader is invalidated when its signal's descriptor changes to a sample

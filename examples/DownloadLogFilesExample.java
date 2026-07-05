@@ -2,7 +2,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Download a device's log files: enumerate them with getLogFileInfos and pull

@@ -1,6 +1,6 @@
 import java.util.List;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Read a dimensioned ("2-D") signal: an FFT function block turns the channel

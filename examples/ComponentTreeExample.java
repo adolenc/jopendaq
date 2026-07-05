@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Set;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Walk the whole component tree of the reference device and print it as a

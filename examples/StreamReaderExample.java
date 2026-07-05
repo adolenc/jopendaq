@@ -1,4 +1,4 @@
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * The minimal openDAQ flow: connect to the reference (simulator) device, take

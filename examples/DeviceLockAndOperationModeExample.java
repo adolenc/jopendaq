@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Switch a device between operation modes and lock/unlock it against

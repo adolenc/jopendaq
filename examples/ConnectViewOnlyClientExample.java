@@ -1,7 +1,7 @@
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Connect to a networked openDAQ device as a view-only client (reads work,

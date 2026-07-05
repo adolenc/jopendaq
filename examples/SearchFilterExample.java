@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Finding components with search filters.

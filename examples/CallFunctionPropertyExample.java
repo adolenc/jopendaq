@@ -1,6 +1,6 @@
 import java.util.List;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Call a device's function properties.  getPropertyValue returns a FUNC

@@ -1,6 +1,0 @@
-com.opendaq -> org.opendaq
-opendaq repo cloning
-remove references to cl-opendaq
-clojure, scala examples
-readme
-package binaries directly into distributed jar - ./docs/native-packaging-plan.md

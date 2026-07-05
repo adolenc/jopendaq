@@ -3,13 +3,13 @@
 
 Emits, under --output-dir (default src/generated/java):
 
-  org/opendaq/lowlevel/Daq<Receiver>.java   one class per C receiver, holding a
+  com/opendaq/lowlevel/Daq<Receiver>.java   one class per C receiver, holding a
                                             checked static wrapper per function
-  org/opendaq/lowlevel/ErrorCodes.java      status-code constants and names
-  org/opendaq/<EnumName>.java               one Java enum per C enum typedef
+  com/opendaq/lowlevel/ErrorCodes.java      status-code constants and names
+  com/opendaq/<EnumName>.java               one Java enum per C enum typedef
 
 Each wrapper method mirrors the reference Common Lisp low-level layer: the
-daqErrCode return is checked (throwing org.opendaq.OpenDaqException on
+daqErrCode return is checked (throwing com.opendaq.OpenDaqException on
 failure), out-parameters become return values (a generated per-function record
 when there are several), and in-out parameters appear both as an argument and
 in the result.  Functions with a struct out-parameter (the getInterfaceId
@@ -231,7 +231,7 @@ def emit_raw(function: Function, lines: list[str]) -> None:
 
 def render_receiver_class(receiver: str, functions: list[Function]) -> str:
     class_name = receiver_class_name(receiver)
-    lines = [HEADER, "package org.opendaq.lowlevel;", ""]
+    lines = [HEADER, "package com.opendaq.lowlevel;", ""]
     lines.append("import java.lang.foreign.Arena;")
     lines.append("import java.lang.foreign.FunctionDescriptor;")
     lines.append("import java.lang.foreign.MemorySegment;")
@@ -242,7 +242,7 @@ def render_receiver_class(receiver: str, functions: list[Function]) -> str:
                            if p.jtype.kind == "enum"}
                           | ({f.ret.java for f in functions if f.ret.kind == "enum"}))
     for enum_name in enum_imports:
-        lines.append(f"import org.opendaq.{enum_name};")
+        lines.append(f"import com.opendaq.{enum_name};")
     lines.append("")
     lines.append(f"/** Raw FFI bindings for the {receiver}_* functions of the openDAQ C API. */")
     lines.append(f"public final class {class_name} {{")
@@ -263,7 +263,7 @@ def render_receiver_class(receiver: str, functions: list[Function]) -> str:
 
 
 def render_enum(info) -> str:
-    lines = [HEADER, "package org.opendaq;", ""]
+    lines = [HEADER, "package com.opendaq;", ""]
     lines.append(f"/** The openDAQ {{@code {info.c_name}}} enumeration. */")
     lines.append(f"public enum {info.java_name} {{")
     for index, (name, value) in enumerate(info.entries):
@@ -293,7 +293,7 @@ def render_enum(info) -> str:
 
 
 def render_error_codes(error_codes: list[tuple[int, str]]) -> str:
-    lines = [HEADER, "package org.opendaq.lowlevel;", ""]
+    lines = [HEADER, "package com.opendaq.lowlevel;", ""]
     lines.append("import java.util.Map;")
     lines.append("import java.util.HashMap;")
     lines.append("")

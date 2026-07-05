@@ -1,4 +1,4 @@
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Subscribe a Java lambda to the instance's core event stream: each property

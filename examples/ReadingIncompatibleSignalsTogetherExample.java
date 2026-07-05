@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.LongFunction;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Read two linear-domain signals and one explicit-domain signal at the same

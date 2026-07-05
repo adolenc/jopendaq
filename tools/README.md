@@ -11,10 +11,10 @@ in `src/generated/java/`.
   C types onto `java.lang.foreign` layouts and Java carrier types, and each
   function parameter classified as an input, an output slot, or in-out.
 - `generate_low_level_bindings.py` emits the 1:1 FFI layer
-  (`org.opendaq.lowlevel`): one class of checked static wrappers per C
+  (`com.opendaq.lowlevel`): one class of checked static wrappers per C
   receiver, plus the Java enums and error-code table.
 - `generate_high_level_bindings.py` emits the idiomatic wrapper classes
-  (`org.opendaq`): the interface hierarchy, constructors and factories,
+  (`com.opendaq`): the interface hierarchy, constructors and factories,
   boxing/unboxing conversions, and the type registry.  Classes listed in its
   `MANUAL_*` tables get hand-written parts injected from `manual/*.java.inc`
   (readers, data packets, callables, ...).

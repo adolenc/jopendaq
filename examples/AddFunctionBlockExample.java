@@ -1,6 +1,6 @@
 import java.util.List;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Load a function block from the bundled modules (a statistics block), wire a

@@ -3,7 +3,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.function.LongFunction;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Read samples together with their domain ticks and convert each tick to an

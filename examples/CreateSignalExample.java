@@ -3,7 +3,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.function.LongFunction;
 
-import org.opendaq.*;
+import com.opendaq.*;
 
 /**
  * Build a signal by hand and read it back with wall-clock timestamps.
