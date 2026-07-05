@@ -1,5 +1,8 @@
 target/
 .m2/
+.cache/
+.cmake/
+bin/
 *.class
 tools/__pycache__/
 tmp/

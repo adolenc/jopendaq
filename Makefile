@@ -1,57 +1,112 @@
 # Development workflow for the openDAQ Java bindings.
 #
-# The host machine needs only Docker: every Java/Maven/Python step runs inside
-# the java-opendaq-dev image (see Dockerfile).  Native openDAQ libraries are
-# taken from the sibling cl-opendaq checkout's bin/<platform>/ by default (a
-# `make bindings` build there; end users get the pinned release archives
-# instead).  The C headers used to regenerate the bindings come from a pinned
-# openDAQ clone: `make bindings` clones it into tmp/openDAQ when missing, or
-# set OPENDAQ_SRC_DIR to an existing checkout (e.g. cl-opendaq's tmp/openDAQ).
+# The host machine needs only Docker: every Java/Maven/Python/CMake step runs
+# inside a container.  The build is self-contained -- it clones openDAQ at the
+# pinned ref and builds the native libraries itself, with no dependency on a
+# sibling checkout:
+#
+#   make natives    build libcopendaq.so + friends from source into bin/<triple>/
+#   make bindings   regenerate src/generated/java from the openDAQ C headers
+#   make test       run the JUnit suite (uses bin/<triple>/ if built, otherwise
+#                   the loader downloads the pinned release archive on first use)
+#
+# `make natives` mirrors what cl-opendaq's `make bindings` does for its own
+# runtime; end users who only run the bindings never need it, because the
+# NativeLoader fetches the pinned prebuilt archives automatically.
 
 DOCKER_IMAGE ?= java-opendaq-dev
+NATIVE_BUILDER_IMAGE ?= java-opendaq-native-builder
 OPENDAQ_RUNTIME_TRIPLE ?= linux-x64
-CL_OPENDAQ_DIR ?= $(abspath $(CURDIR)/../cl-opendaq)
-NATIVES_DIR ?= $(CL_OPENDAQ_DIR)/bin/$(OPENDAQ_RUNTIME_TRIPLE)
 OPENDAQ_REPO_URL ?= https://github.com/adolenc/openDAQ.git
 OPENDAQ_REF ?= c-bindings-docstrings
 OPENDAQ_SRC_DIR ?= $(CURDIR)/tmp/openDAQ
+OPENDAQ_BUILD_DIR ?= $(CURDIR)/tmp/build
+NATIVES_DIR ?= $(CURDIR)/bin/$(OPENDAQ_RUNTIME_TRIPLE)
 PYTHON ?= python3
+JOBS ?= $(shell nproc 2>/dev/null || echo 4)
 M2_CACHE := $(CURDIR)/.m2
-
 GENERATED_DIR := $(CURDIR)/src/generated/java
 
-# Everything below runs in the dev container as the calling user, with the
-# repo mounted at /workspace, the natives at /natives, and Maven's repository
-# cached in .m2/ so repeated builds are offline-fast.
+USER_SPEC := $(shell id -u):$(shell id -g)
+
+# openDAQ CMake configuration -- the C bindings plus the reference device and
+# function-block modules, everything else off.  Identical to the flags
+# cl-opendaq builds its runtime with.
+OPENDAQ_CMAKE_ARGS := \
+  -DOPENDAQ_GENERATE_C_BINDINGS=ON \
+  -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF \
+  -DOPENDAQ_GENERATE_DELPHI_BINDINGS=OFF \
+  -DOPENDAQ_GENERATE_CSHARP_BINDINGS=OFF \
+  -DOPENDAQ_ENABLE_TESTS=OFF \
+  -DOPENDAQ_ENABLE_TEST_UTILS=OFF \
+  -DOPENDAQ_ENABLE_ACCESS_CONTROL=OFF \
+  -DOPENDAQ_ENABLE_NATIVE_STREAMING=ON \
+  -DDAQMODULES_OPENDAQ_CLIENT_MODULE=ON \
+  -DDAQMODULES_REF_DEVICE_MODULE=ON \
+  -DDAQMODULES_REF_FB_MODULE=ON \
+  -DDAQMODULES_REF_FB_MODULE_ENABLE_RENDERER=OFF \
+  -DBOOST_LOCALE_ENABLE_ICU=OFF
+
+# Everything below runs in the dev container as the calling user, with the repo
+# mounted at /workspace and Maven's repository cached in .m2/.  Locally-built
+# natives in bin/<triple>/ are mounted read-only and pointed at by the loader;
+# when they are absent the loader downloads the pinned release archive into the
+# cached-and-persisted .cache/ instead.
+NATIVES_MOUNT := $(if $(wildcard $(NATIVES_DIR)/*.so),\
+  -v $(NATIVES_DIR):/natives:ro -e OPENDAQ_JAVA_NATIVE_DIR=/natives,)
+
 DOCKER_RUN := docker run --rm \
-  -u $(shell id -u):$(shell id -g) \
+  -u $(USER_SPEC) \
   -v $(CURDIR):/workspace \
   -v $(M2_CACHE):/workspace/.m2 \
-  -v $(NATIVES_DIR):/natives:ro \
-  -e OPENDAQ_JAVA_NATIVE_DIR=/natives \
+  $(NATIVES_MOUNT) \
   -e MAVEN_OPTS="-Dmaven.repo.local=/workspace/.m2" \
+  -e XDG_CACHE_HOME=/workspace/.cache \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image clone-opendaq bindings build test package example repl-shell clean
+.PHONY: docker-image native-builder-image clone-opendaq natives bindings \
+        build test package example repl-shell clean
 
 docker-image:
 	docker build -t $(DOCKER_IMAGE) .
 
-# Clone the pinned openDAQ source (only the C binding headers are needed).
+native-builder-image:
+	docker build -f Dockerfile.natives -t $(NATIVE_BUILDER_IMAGE) .
+
+# Clone the pinned openDAQ source (shared by `natives` and `bindings`).  A full
+# clone + checkout --force resolves a branch, tag, or raw commit sha alike.
 clone-opendaq:
-	@if [ ! -d "$(OPENDAQ_SRC_DIR)" ]; then \
-	  git clone --depth 1 --branch $(OPENDAQ_REF) $(OPENDAQ_REPO_URL) $(OPENDAQ_SRC_DIR); \
+	@if [ ! -d "$(OPENDAQ_SRC_DIR)/.git" ]; then \
+	  rm -rf "$(OPENDAQ_SRC_DIR)"; \
+	  git clone $(OPENDAQ_REPO_URL) $(OPENDAQ_SRC_DIR); \
+	  git -C $(OPENDAQ_SRC_DIR) checkout --force $(OPENDAQ_REF); \
 	else \
 	  echo "openDAQ source already present at $(OPENDAQ_SRC_DIR)"; \
 	fi
 
+# Build the openDAQ native libraries from source into bin/<triple>/.  The whole
+# CMake build runs inside the native-builder image, so the host needs only
+# Docker.
+natives: clone-opendaq native-builder-image
+	mkdir -p $(NATIVES_DIR)
+	docker run --rm \
+	  -u $(USER_SPEC) \
+	  -v $(CURDIR):/workspace \
+	  -e HOME=/workspace \
+	  -w /workspace \
+	  $(NATIVE_BUILDER_IMAGE) bash -euc '\
+	    cmake -S tmp/openDAQ -B tmp/build -G Ninja -DCMAKE_BUILD_TYPE=Release $(OPENDAQ_CMAKE_ARGS); \
+	    cmake --build tmp/build --config Release -j$(JOBS); \
+	    cp -av tmp/build/bin/*.so bin/$(OPENDAQ_RUNTIME_TRIPLE)/'
+
 # Regenerate src/generated/java from the openDAQ C binding headers.
 bindings: clone-opendaq
-	$(PYTHON) tools/generate_low_level_bindings.py \
-	  --opendaq-repo $(OPENDAQ_SRC_DIR) --output-dir $(GENERATED_DIR)
-	$(PYTHON) tools/generate_high_level_bindings.py \
-	  --opendaq-repo $(OPENDAQ_SRC_DIR) --output-dir $(GENERATED_DIR)
+	mkdir -p $(M2_CACHE)
+	$(DOCKER_RUN) $(PYTHON) tools/generate_low_level_bindings.py \
+	  --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+	$(DOCKER_RUN) $(PYTHON) tools/generate_high_level_bindings.py \
+	  --opendaq-repo tmp/openDAQ --output-dir src/generated/java
 
 build:
 	mkdir -p $(M2_CACHE)
@@ -76,14 +131,14 @@ example:
 repl-shell:
 	mkdir -p $(M2_CACHE)
 	docker run --rm -it \
-	  -u $(shell id -u):$(shell id -g) \
+	  -u $(USER_SPEC) \
 	  -v $(CURDIR):/workspace \
 	  -v $(M2_CACHE):/workspace/.m2 \
-	  -v $(NATIVES_DIR):/natives:ro \
-	  -e OPENDAQ_JAVA_NATIVE_DIR=/natives \
+	  $(NATIVES_MOUNT) \
 	  -e MAVEN_OPTS="-Dmaven.repo.local=/workspace/.m2" \
+	  -e XDG_CACHE_HOME=/workspace/.cache \
 	  -w /workspace \
 	  $(DOCKER_IMAGE) bash
 
 clean:
-	rm -rf target .m2 tmp
+	rm -rf target .m2 .cache .cmake bin tmp

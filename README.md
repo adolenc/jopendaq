@@ -270,16 +270,21 @@ data.  A descriptor change the reader cannot convert throws
 
 ## Development
 
-The host machine needs only Docker: every Java/Maven/Python step runs inside
-the `java-opendaq-dev` image.  Native openDAQ libraries and the pinned
-openDAQ source are taken from a sibling [cl-opendaq](https://github.com/adolenc/cl-opendaq)
-checkout by default (`make bindings` there builds both), overridable with
-`CL_OPENDAQ_DIR` / `NATIVES_DIR` / `OPENDAQ_SRC_DIR`.
+The host machine needs only Docker: every Java/Maven/Python/CMake step runs
+inside a container, and the build is self-contained.  `make natives` clones
+openDAQ at the pinned ref (`OPENDAQ_REF`) and builds `libcopendaq.so` and its
+runtime modules from source into `bin/<triple>/`; `make bindings` regenerates
+the Java sources from the same checkout's C headers.  Running the bindings
+never requires either step — the `NativeLoader` downloads the pinned prebuilt
+release archives on first use — so `make test` works even without `make
+natives` (it falls back to that download).  Override `OPENDAQ_REPO_URL` /
+`OPENDAQ_REF` / `NATIVES_DIR` to build against a different openDAQ.
 
 ### Makefile
 
 ```bash
 make docker-image  # build the dev image (JDK + Maven + python3)
+make natives       # build libcopendaq.so + modules from openDAQ source -> bin/<triple>/
 make bindings      # regenerate src/generated/java from the openDAQ C headers
 make build         # compile everything
 make test          # run the JUnit test suite against the simulator
@@ -287,6 +292,9 @@ make package       # build target/opendaq-java-*.jar
 make example NAME=StreamReaderExample   # compile and run one example
 make repl-shell    # interactive shell inside the dev container
 ```
+
+`make natives` builds a second image (`Dockerfile.natives`) carrying the C++
+toolchain; it is the only step that needs it.
 
 ### Folder structure
 

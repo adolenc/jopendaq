@@ -17,7 +17,7 @@ family) stay raw: the caller passes the slot.
 
 Usage:
     python3 tools/generate_low_level_bindings.py \
-        --opendaq-repo ../cl-opendaq/tmp/openDAQ --output-dir src/generated/java
+        --opendaq-repo tmp/openDAQ --output-dir src/generated/java
 """
 
 from __future__ import annotations
@@ -329,8 +329,8 @@ def render_error_codes(error_codes: list[tuple[int, str]]) -> str:
 def generate(opendaq_repo: Path, output_dir: Path) -> None:
     model = Model(opendaq_repo)
 
-    lowlevel_dir = output_dir / "org" / "opendaq" / "lowlevel"
-    public_dir = output_dir / "org" / "opendaq"
+    lowlevel_dir = output_dir / "com" / "opendaq" / "lowlevel"
+    public_dir = output_dir / "com" / "opendaq"
     if lowlevel_dir.exists():
         shutil.rmtree(lowlevel_dir)
     lowlevel_dir.mkdir(parents=True, exist_ok=True)

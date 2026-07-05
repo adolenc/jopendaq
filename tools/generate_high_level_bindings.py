@@ -27,7 +27,7 @@ idiom):
 
 Usage:
     python3 tools/generate_high_level_bindings.py \
-        --opendaq-repo ../cl-opendaq/tmp/openDAQ --output-dir src/generated/java
+        --opendaq-repo tmp/openDAQ --output-dir src/generated/java
 """
 
 from __future__ import annotations
@@ -733,7 +733,7 @@ class Generator:
 def generate(opendaq_repo: Path, output_dir: Path) -> None:
     model = Model(opendaq_repo)
     generator = Generator(model)
-    public_dir = output_dir / "org" / "opendaq"
+    public_dir = output_dir / "com" / "opendaq"
     public_dir.mkdir(parents=True, exist_ok=True)
 
     # Clear previously generated high-level classes (identified by the header)

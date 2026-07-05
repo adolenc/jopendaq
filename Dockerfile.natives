@@ -1,0 +1,40 @@
+# Builder image for compiling the openDAQ native libraries from source.
+#
+# `make natives` runs this image to clone openDAQ at the pinned ref, build the
+# C bindings plus the reference device / function-block modules with CMake, and
+# drop the resulting shared libraries into bin/<triple>/.  It is kept separate
+# from the lean dev image (Dockerfile) so running tests and examples does not
+# have to pull in the whole C++ toolchain.
+#
+# Ubuntu 22.04 matches the runner openDAQ's own release binaries are built on,
+# so the libraries link against a glibc old enough to load in the newer dev
+# image (and on most end-user machines).
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# The build toolchain (git, Ninja, a C/C++ compiler, lld, python3 for the CMake
+# helper scripts) plus openDAQ's own build dependencies.  The second block
+# mirrors openDAQ's .github/packages/apt.txt -- keep it in sync if a new openDAQ
+# ref adds packages there.  CMake is installed separately below.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates curl git \
+        build-essential ninja-build pkg-config python3 \
+        lld \
+        mono-runtime \
+        libmono-system-json-microsoft4.0-cil \
+        libmono-system-data4.0-cil \
+        libx11-dev libxi-dev libxcursor-dev libxrandr-dev \
+        libgl-dev libudev-dev libfreetype6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# openDAQ requires CMake >= 3.24; Ubuntu 22.04's apt ships 3.22, so install an
+# official CMake build.  A 3.x release keeps compatibility with the older
+# cmake_minimum_required() calls in openDAQ's vendored dependencies.
+ARG CMAKE_VERSION=3.31.6
+RUN curl -fsSL "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" \
+      | tar -xz --strip-components=1 -C /usr/local \
+    && cmake --version
+
+WORKDIR /workspace
