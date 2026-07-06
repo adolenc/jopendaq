@@ -1,14 +1,17 @@
 # Development workflow for the openDAQ Java bindings.
 #
-# The Java/Maven/Python steps run in the java-opendaq-dev container, so the host
-# needs Docker for them.  `make natives` is the exception: it builds the openDAQ
-# runtime from source with the host's C/C++ toolchain (CMake, a compiler, git),
-# exactly like cl-opendaq's `make bindings` -- no container involved.  The build
-# is self-contained, cloning openDAQ at the pinned ref with no sibling checkout:
+# The Java/Maven steps run in the java-opendaq-dev container, so the host needs
+# Docker for them.  `make natives` and `make bindings` are the exceptions and run
+# directly on the host: `make natives` builds the openDAQ runtime from source with
+# the host's C/C++ toolchain (CMake, a compiler, git), and `make bindings` runs
+# the generators with the host's python3 (standard library only) -- exactly like
+# cl-opendaq's `make bindings`, no container involved.  Both clone openDAQ at the
+# pinned ref, self-contained with no sibling checkout:
 #
 #   make natives    build libcopendaq.so + friends from source into bin/<triple>/
 #                   (needs CMake + a C/C++ toolchain on the host)
 #   make bindings   regenerate src/generated/java from the openDAQ C headers
+#                   (needs python3 on the host)
 #   make test       run the JUnit suite against the bin/<triple>/ natives
 #                   (build them with `make natives` first)
 #
@@ -113,11 +116,8 @@ natives-jar:
 
 # Regenerate src/generated/java from the openDAQ C binding headers.
 bindings: clone-opendaq
-	mkdir -p $(M2_CACHE)
-	$(DOCKER_RUN) $(PYTHON) tools/generate_low_level_bindings.py \
-	  --opendaq-repo tmp/openDAQ --output-dir src/generated/java
-	$(DOCKER_RUN) $(PYTHON) tools/generate_high_level_bindings.py \
-	  --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+	$(PYTHON) tools/generate_low_level_bindings.py --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+	$(PYTHON) tools/generate_high_level_bindings.py --opendaq-repo tmp/openDAQ --output-dir src/generated/java
 
 build:
 	mkdir -p $(M2_CACHE)
