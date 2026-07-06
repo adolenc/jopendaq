@@ -31,12 +31,12 @@ one-shot compile without leaving a background build server running.
 
 ## From a local build (dev container)
 
-scala-cli is not part of the base dev image, so the ports run in a dedicated
-`java-opendaq-examples` image (the dev image plus scala-cli and the Clojure
-CLI). Build it once, then run any example by name:
+The `java-opendaq-dev` image bundles scala-cli and the Clojure CLI alongside the
+JDK, so the ports run in the same container as the Java build. Build the image
+once, then run any example by name:
 
 ```bash
-make examples-image                                # once
+make docker-image                                  # once
 make scala-example NAME=StreamReaderExample
 ```
 

@@ -71,9 +71,12 @@ DOCKER_RUN := docker run --rm \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image examples-image clone-opendaq natives natives-jar bindings \
+.PHONY: docker-image clone-opendaq natives natives-jar bindings \
         build test package example clojure-example scala-example repl-shell clean
 
+# One image with every tool the containerised targets need: the JDK + Maven for
+# the Java build/test targets and the Clojure CLI + scala-cli for the example
+# ports.  Build it once; every docker-backed target below uses it.
 docker-image:
 	docker build -t $(DOCKER_IMAGE) .
 
@@ -141,15 +144,16 @@ example:
 # ---------------------------------------------------------------------------
 # Clojure / Scala example ports (examples/clojure, examples/scala).
 #
-# These run in the java-opendaq-examples image (the dev image plus the Clojure
-# CLI and scala-cli -- build it once with `make examples-image`).  Both put the
-# two published jars on the classpath -- the main jar and the natives jar the
-# loader extracts from -- exactly like the "downloaded release jars" flow in the
-# example READMEs, so the jopendaq-*.jar files must be present in the repo root
-# (build them with `make package` + `make natives natives-jar` and copy them up,
-# or download them from a release).  HOME/COURSIER_CACHE point into the mounted
-# .cache/ so the Clojure and Scala runtimes download themselves only once.
-EXAMPLES_IMAGE ?= java-opendaq-examples
+# These run in the same $(DOCKER_IMAGE) image (which bundles the Clojure CLI and
+# scala-cli alongside the JDK -- build it once with `make docker-image`).  Both
+# put the two published jars on the classpath -- the main jar and the natives jar
+# the loader extracts from -- exactly like the "downloaded release jars" flow in
+# the example READMEs, so the jopendaq-*.jar files must be present in the repo
+# root (build them with `make package` + `make natives natives-jar` and copy them
+# up, or download them from a release).  Unlike DOCKER_RUN, the natives are not
+# mounted -- the examples exercise the classpath natives jar -- and
+# HOME/COURSIER_CACHE point into the mounted .cache/ so the Clojure and Scala
+# runtimes download themselves only once.
 MAIN_JAR := jopendaq-$(PROJECT_VERSION).jar
 NATIVES_CP_JAR := jopendaq-$(PROJECT_VERSION)-natives-$(OPENDAQ_RUNTIME_TRIPLE).jar
 
@@ -162,10 +166,7 @@ DOCKER_RUN_EXAMPLES := docker run --rm \
   -e HOME=/workspace/.cache/lang-home \
   -e COURSIER_CACHE=/workspace/.cache/coursier \
   -w /workspace \
-  $(EXAMPLES_IMAGE)
-
-examples-image:
-	docker build -t $(EXAMPLES_IMAGE) -f examples/Dockerfile .
+  $(DOCKER_IMAGE)
 
 # Run one Clojure example, e.g.:  make clojure-example NAME=StreamReaderExample
 clojure-example:

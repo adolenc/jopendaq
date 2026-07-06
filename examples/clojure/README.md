@@ -26,12 +26,12 @@ Swap `StreamReaderExample` for any other file here.
 
 ## From a local build (dev container)
 
-The Clojure CLI is not part of the base dev image, so the ports run in a
-dedicated `java-opendaq-examples` image (the dev image plus the Clojure CLI and
-scala-cli). Build it once, then run any example by name:
+The `java-opendaq-dev` image bundles the Clojure CLI and scala-cli alongside the
+JDK, so the ports run in the same container as the Java build. Build the image
+once, then run any example by name:
 
 ```bash
-make examples-image                                  # once
+make docker-image                                    # once
 make clojure-example NAME=StreamReaderExample
 ```
 
