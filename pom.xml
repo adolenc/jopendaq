@@ -40,7 +40,7 @@
   <build>
     <plugins>
       <!-- The generated low-level and high-level bindings live outside
-           src/main/java, mirroring cl-opendaq's generated/ folder. -->
+           src/main/java. -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>

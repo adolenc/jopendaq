@@ -4,9 +4,8 @@
 # Docker for them.  `make natives` and `make bindings` are the exceptions and run
 # directly on the host: `make natives` builds the openDAQ runtime from source with
 # the host's C/C++ toolchain (CMake, a compiler, git), and `make bindings` runs
-# the generators with the host's python3 (standard library only) -- exactly like
-# cl-opendaq's `make bindings`, no container involved.  Both clone openDAQ at the
-# pinned ref, self-contained with no sibling checkout:
+# the generators with the host's python3 (standard library only). Both clone
+# openDAQ at the pinned ref, self-contained with no sibling checkout:
 #
 #   make natives    build libcopendaq.so + friends from source into bin/<triple>/
 #                   (needs CMake + a C/C++ toolchain on the host)
@@ -36,8 +35,7 @@ NATIVES_JAR := target/jopendaq-$(PROJECT_VERSION)-natives-$(OPENDAQ_RUNTIME_TRIP
 USER_SPEC := $(shell id -u):$(shell id -g)
 
 # openDAQ CMake configuration -- the C bindings plus the reference device and
-# function-block modules, everything else off.  Identical to the flags
-# cl-opendaq's `make bindings` builds its runtime with.
+# function-block modules, everything else off.  
 OPENDAQ_CMAKE_ARGS := \
   -DOPENDAQ_GENERATE_C_BINDINGS=ON \
   -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF \
@@ -92,8 +90,7 @@ clone-opendaq:
 	fi
 
 # Build the openDAQ native libraries from source into bin/<triple>/, using the
-# host's C/C++ toolchain (CMake, a compiler, git) -- the same way cl-opendaq
-# builds its runtime.
+# host's C/C++ toolchain (CMake, a compiler, git)
 natives: clone-opendaq
 	mkdir -p $(NATIVES_DIR)
 	cmake -S $(OPENDAQ_SRC_DIR) -B $(OPENDAQ_BUILD_DIR) $(OPENDAQ_CMAKE_ARGS)
