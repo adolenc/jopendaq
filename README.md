@@ -1,20 +1,14 @@
 # openDAQ Java bindings
 
-Java bindings for interacting with [openDAQ](https://opendaq.com/) devices,
-built on the Java Foreign Function & Memory API (Panama) over the openDAQ
-flat C API — no JNI code to compile, works with stock JDK 22+.  Prebuilt
-native openDAQ binaries for x64 Linux, x64 Windows, and ARM macOS ship as
-per-platform `natives-<platform>` jars; add the one for your OS to the
-classpath and the bindings extract it on first use (no network access).
-
-Because the API is plain Java classes, the bindings are directly usable from
-any JVM language — Clojure, Scala, Kotlin, JRuby, ...
+Java bindings for interacting with [openDAQ](https://opendaq.com/) devices.
+Prebuilt native openDAQ binaries for x64 Linux, x64 Windows, and ARM macOS ship as
+per-platform `natives-<platform>` jars, available on the releases page. Requires JDK 22+.
 
 ## Quickstart
 
-Put the main jar and the `natives-<platform>` jar for your OS on the classpath
-— download them from the [releases page](https://github.com/adolenc/jopendaq/releases),
-or build them locally (`make package` + `make natives natives-jar`). Then:
+Put the main `jopendaq-<version>.jar` and the `jopendaq-<version>-natives-<platform>.jar` for your OS from the
+[releases page](https://github.com/adolenc/jopendaq/releases) in the current directory.
+Then create a file `Quickstart.java` with the following contents:
 
 ```java
 import com.opendaq.*;
@@ -41,12 +35,11 @@ public class Quickstart {
 }
 ```
 
-Run with `--enable-native-access=ALL-UNNAMED` (the bindings use the FFM API):
+Run it with the following command (replace `<version>` and `<platform>` with actual
+version and platform, and on Windows use `;` instead of `:`):
 
 ```bash
-java --enable-native-access=ALL-UNNAMED \
-  -cp jopendaq-0.1.0.jar:jopendaq-0.1.0-natives-linux-x86_64.jar:. \
-  Quickstart
+java --enable-native-access=ALL-UNNAMED -cp jopendaq-<version>.jar:jopendaq-<version>-natives-<platform>.jar:. Quickstart
 ```
 
 This gives you 100 samples from the simulator device set to run at 100 Hz, a
@@ -57,72 +50,12 @@ library can find and load the native openDAQ libraries correctly:
 Daq.healthcheck();
 ```
 
-See the [`examples/`](./examples/) folder for more example programs — every
-common flow from device discovery to function blocks, search filters, events,
-and hand-built signals.
-
-### From Clojure
-
-```clojure
-(import '(com.opendaq Instance Channel StreamReader))
-
-(def instance (Instance.))
-(def device (.addDevice instance "daqref://device0"))
-(def channel (.asType (.findComponent instance "Dev/RefDev0/IO/AI/RefCh0") Channel))
-(def reader (StreamReader. (first (.getSignals channel))))
-
-(.setPropertyValue device "GlobalSampleRate" 100)
-(.setPropertyValue channel "Frequency" 0.5)
-(seq (.read reader 100 2000))
-```
-
-### From Scala
-
-```scala
-import com.opendaq.*
-
-val instance = Instance()
-val device = instance.addDevice("daqref://device0")
-val channel = instance.findComponent("Dev/RefDev0/IO/AI/RefCh0").asType(classOf[Channel])
-val reader = StreamReader(channel.getSignals.get(0))
-
-device.setPropertyValue("GlobalSampleRate", 100)
-channel.setPropertyValue("Frequency", 0.5)
-val samples = reader.read(100, 2000)
-```
-
-### Native binaries
-
-The native openDAQ libraries ship as ordinary jars — one per platform,
-published as `jopendaq-<version>-natives-<platform>.jar` on the
-[releases page](https://github.com/adolenc/jopendaq/releases) (a Maven
-dependency later).  The `<platform>` names — `linux-x86_64`, `osx-aarch_64`,
-`windows-x86_64` — match Netty's [`os-maven-plugin`](https://github.com/trustin/os-maven-plugin)
-classifier, so once these are on Maven you can depend on the natives jar as
-`natives-${os.detected.classifier}` and get the right one for the build host
-with no per-OS profile.  Put the one for your OS on the classpath alongside the
-main jar; there is no runtime download.  On first use the loader extracts the
-libraries out of the jar into a per-user cache under `~/.cache/java-opendaq/`
-(`%LOCALAPPDATA%\cache\java-opendaq\` on Windows), keyed by the build's openDAQ
-commit, and reuses it thereafter.
-
-The loader looks for the libraries in this order:
-
-1. the directory named by the `OPENDAQ_JAVA_NATIVE_DIR` environment variable
-   (or the `opendaq.native.dir` system property) — a loose `bin/<platform>/`
-   directory, for dev builds and packagers;
-2. the `natives-<platform>` jar on the classpath, extracted into the cache.
-
-If neither is present the loader fails with a message telling you to add the
-`natives-<platform>` jar.  To build the jars yourself run `make natives`
-(compiles the libraries) then `make natives-jar` (packages them); CI builds all
-three platforms and attaches them to a release.
+See the [`examples/`](./examples/) folder for more example programs, including
+translations into Clojure and Scala.
 
 ## Some details
 
-The library is composed of two packages, mirroring the layered design of the
-[cl-opendaq](https://github.com/adolenc/cl-opendaq) bindings it is derived
-from:
+The library is composed of two packages:
 
 - `com.opendaq.lowlevel` contains low-level bindings that closely mirror the
   C API through `java.lang.foreign` method handles: one class of checked
@@ -134,6 +67,9 @@ from:
   (`Channel extends FunctionBlock extends Folder extends Component extends
   PropertyObject`), with methods keeping their openDAQ names
   (`getSignals()`, `setPropertyValue(...)`).
+
+The library uses Pa the Java Foreign Function & Memory API (Panama) over the openDAQ
+flat C API, so it requires JDK 22+.
 
 Wrappers own their native reference and register a `java.lang.ref.Cleaner`
 action that releases it exactly once when the wrapper is garbage collected,
@@ -173,17 +109,17 @@ records.  Container getters use the C headers' element annotations, so e.g.
 
 A few methods on `DaqObject` and `Daq` help you move between types:
 
-- `obj.asType(Signal.class)` — cast to a more specific wrapper.  A real
+- `obj.asType(Signal.class)` - cast to a more specific wrapper.  A real
   `queryInterface` (an object's interfaces live at different vtable offsets),
   so an unsupported target throws; test first with `isA`.
-- `obj.isA(Channel.class)` — true when the object implements the interface;
+- `obj.isA(Channel.class)` - true when the object implements the interface;
   never throws.
-- `obj.unbox()` / `Daq.unbox(value)` — the natural Java value of a boxed
+- `obj.unbox()` / `Daq.unbox(value)` - the natural Java value of a boxed
   scalar or container, discovered from the object itself at runtime; elements
   with no Java form stay wrappers for `asType`.  Idempotent on native values.
-- `Daq.componentType(obj)` — the most-derived component interface the object
+- `Daq.componentType(obj)` - the most-derived component interface the object
   implements (`Channel.class`, `Signal.class`, ...), or null.
-- `Daq.domainTimeConverter(source)` — a `LongFunction<Instant>` mapping
+- `Daq.domainTimeConverter(source)` - a `LongFunction<Instant>` mapping
   domain ticks to absolute timestamps (`source` is a signal, data descriptor,
   or multi reader); `Daq.domainTickToInstant(source, tick)` for one-offs.
 
@@ -194,7 +130,7 @@ and anything else (object, struct) as a wrapper.
 
 ### openDAQ object construction
 
-Types with a canonical create function are plain Java constructors —
+Types with a canonical create function are plain Java constructors -
 `new Instance()`, `new Ratio(1, 2)`, `new StreamReader(signal)`,
 `new DataPacket(descriptor, count, offset)`.  Builder-backed types also take
 the builder as a constructor argument (`new Instance(builder)`), and for
@@ -246,7 +182,7 @@ SearchFilter.createCustomSearchFilter(
     new FunctionObject(params -> false));
 ```
 
-openDAQ invokes the lambda — from Java or from native code — with the params
+openDAQ invokes the lambda - from Java or from native code - with the params
 decoded to natural Java values (scalars and containers unboxed, anything else
 wrapped for `asType`); a `FunctionObject`'s return value is boxed back for
 the caller the same way.  An exception thrown inside the lambda is reported
@@ -261,10 +197,10 @@ Readers are built through their openDAQ builders so read types and event
 handling can default sensibly (`FLOAT64` values, `INT64` domain, scaled
 mode).  The read methods allocate and return typed Java arrays:
 
-- `streamReader.read(count, timeoutMs)` — `double[]`;
+- `streamReader.read(count, timeoutMs)` - `double[]`;
   `readMatrix` for dimensioned ("2-D") signals like FFT spectra, `readAny`
   for other read types (typed by the reader's value read type).
-- `streamReader.readWithDomain(count, timeoutMs)` — a `SamplesWithDomain`
+- `streamReader.readWithDomain(count, timeoutMs)` - a `SamplesWithDomain`
   record pairing the values with one domain tick per sample.
 - `new BlockReader(signal, blockSize)` reads `(blocks x blockSize)` matrices;
   `new TailReader(signal, historySize)` the last N samples;
@@ -284,7 +220,7 @@ The Java/Maven/Python steps run in the `java-opendaq-dev` container, so the
 host needs Docker for them.  The build is self-contained: `make natives` clones
 openDAQ at the pinned ref (`OPENDAQ_REF`) and builds `libcopendaq.so` and its
 runtime modules from source into `bin/<triple>/`, using the host's C/C++
-toolchain (CMake ≥ 3.24, a compiler, git) directly — the same way cl-opendaq
+toolchain (CMake ≥ 3.24, a compiler, git) directly - the same way cl-opendaq
 builds its runtime.  `make natives-jar` then packages `bin/<triple>/` into a
 publishable `natives-<triple>` jar.  `make bindings` regenerates the Java
 sources from the same checkout's C headers.  `make test` runs against the
@@ -312,15 +248,15 @@ it needs a C/C++ build toolchain (CMake ≥ 3.24, a compiler, git, and the
 
 ### Folder structure
 
-- `src/main/java/` — hand-written runtime: object lifetime (`DaqObject`),
+- `src/main/java/` - hand-written runtime: object lifetime (`DaqObject`),
   boxing (`Box`), callbacks (`Callbacks`), sample buffers (`SampleArrays`),
   native loading (`NativeLoader`), FFI plumbing (`Ffi`)
-- `src/generated/java/` — autogenerated low-level and high-level bindings
+- `src/generated/java/` - autogenerated low-level and high-level bindings
   (committed, like cl-opendaq's `generated/`)
-- `tools/` — the binding generators and the hand-written class parts they
+- `tools/` - the binding generators and the hand-written class parts they
   inject (`tools/manual/*.java.inc`); `tools/parse_bindings.py` is the
   generic C-header parser shared with cl-opendaq
-- `examples/` — stand-alone example programs, ports of cl-opendaq's examples;
+- `examples/` - stand-alone example programs, ports of cl-opendaq's examples;
   `examples/java/` plus line-for-line ports in `examples/clojure/` and
   `examples/scala/`
-- `src/test/java/` — JUnit tests, ports of cl-opendaq's FiveAM suites
+- `src/test/java/` - JUnit tests, ports of cl-opendaq's FiveAM suites
