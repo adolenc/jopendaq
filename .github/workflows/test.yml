@@ -1,0 +1,101 @@
+name: Tests
+
+# Runs the JUnit suite on every push and pull request.  Most of the suite drives
+# the real native openDAQ runtime -- the reference-device simulator
+# (daqref://device0), the stream readers, and the core type/object bindings --
+# so CI needs the native libraries present.  Rather than build openDAQ from
+# source, it downloads the prebuilt `natives-linux-x86_64` jar published by the
+# release workflow, extracts its `.so` libraries into bin/linux-x86_64/, points
+# the loader at them via OPENDAQ_JAVA_NATIVE_DIR, and runs `mvn test` -- mirroring
+# `make test`.
+#
+# By default the natives are pulled from the release matching the project version
+# in pom.xml (tag v<version>); override with the release_tag input.  Cutting a new
+# release (with fresh natives) is what keeps CI in step with the openDAQ ref
+# pinned in the Makefile.
+
+'on':
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to pull the natives jar from (default: v<pom version>)."
+        required: false
+        type: string
+
+# A newer push to the same branch/PR supersedes an in-flight run.
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Where the loader picks up the natives (bin/<triple>/), via OPENDAQ_JAVA_NATIVE_DIR.
+  NATIVES_DIR: bin/linux-x86_64
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22'
+          cache: maven
+
+      # Pull the prebuilt natives jar for this platform from the release and
+      # unpack its libraries (core libs + the reference device/function-block
+      # modules the simulator tests need) into bin/<triple>/.
+      - name: Download openDAQ natives from the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+        run: |
+          tag="$INPUT_TAG"
+          if [ -z "$tag" ]; then
+            version="$(grep -m1 '<version>' pom.xml | sed -E 's|.*<version>(.*)</version>.*|\1|')"
+            version="${version%-SNAPSHOT}"   # a release is never a snapshot
+            tag="v${version}"
+          fi
+          echo "Fetching natives-linux-x86_64 jar from release $tag"
+
+          rm -rf dist "$NATIVES_DIR"
+          mkdir -p dist "$NATIVES_DIR"
+          gh release download "$tag" \
+            --pattern 'jopendaq-*-natives-linux-x86_64.jar' \
+            --dir dist
+          jar="$(ls dist/jopendaq-*-natives-linux-x86_64.jar | head -n1)"
+
+          echo "Extracting .so libraries from $(basename "$jar")"
+          unzip -j -o "$jar" 'com/opendaq/natives/linux-x86_64/*.so' -d "$NATIVES_DIR"
+          ls -1 "$NATIVES_DIR"
+
+          # Sanity: the core libraries must be present.
+          for stem in daqcoretypes daqcoreobjects opendaq copendaq; do
+            if ! ls "$NATIVES_DIR" | grep -q "$stem"; then
+              echo "Natives jar is missing a library matching *$stem*." >&2
+              exit 1
+            fi
+          done
+
+      # Point the loader at the extracted natives (as `make test` does) and run
+      # the suite.  --enable-native-access is already set on surefire's argLine.
+      - name: Run tests
+        shell: bash
+        env:
+          OPENDAQ_JAVA_NATIVE_DIR: ${{ github.workspace }}/${{ env.NATIVES_DIR }}
+        run: mvn -B test
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+          if-no-files-found: ignore
