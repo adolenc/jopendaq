@@ -87,16 +87,81 @@ jobs:
             echo "sha=$sha"
           } >> "$GITHUB_OUTPUT"
 
+  # Regenerate src/generated/java from the openDAQ ref being released and commit
+  # it back onto the dispatched branch, so the checked-in bindings never drift
+  # from the natives.  The same freshly generated tree is handed to the main-jar
+  # build below (via the generated-bindings artifact), so the published jar is
+  # compiled from exactly the bindings committed here -- the two stay in sync.
+  bindings:
+    name: Regenerate and commit bindings
+    runs-on: ubuntu-latest
+    needs: resolve
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Check out the branch itself so the regenerated bindings can be
+          # committed back to it.
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Clone openDAQ (headers for the generators)
+        shell: bash
+        run: |
+          rm -rf "$OPENDAQ_SOURCE_DIR"
+          mkdir -p "$(dirname "$OPENDAQ_SOURCE_DIR")"
+          git clone "${{ needs.resolve.outputs.repo }}" "$OPENDAQ_SOURCE_DIR"
+          git -C "$OPENDAQ_SOURCE_DIR" checkout --force "${{ needs.resolve.outputs.ref }}"
+      - name: Regenerate bindings
+        shell: bash
+        run: |
+          # Same generators as `make bindings`, but against the resolved openDAQ
+          # ref rather than the Makefile default.  Pure Python, standard library.
+          python3 tools/generate_low_level_bindings.py \
+            --opendaq-repo "$OPENDAQ_SOURCE_DIR" --output-dir src/generated/java
+          python3 tools/generate_high_level_bindings.py \
+            --opendaq-repo "$OPENDAQ_SOURCE_DIR" --output-dir src/generated/java
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-bindings
+          path: src/generated/java
+          if-no-files-found: error
+      - name: Commit regenerated bindings
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # `git add <dir>` stages additions, edits, and deletions under it, so
+          # the commit reflects the regeneration exactly.
+          git add src/generated/java
+          if git diff --cached --quiet; then
+            echo "Committed bindings already match openDAQ ${{ needs.resolve.outputs.ref }} -- nothing to commit."
+            exit 0
+          fi
+          git commit -m "Regenerate bindings for openDAQ ${{ needs.resolve.outputs.ref }} (${{ needs.resolve.outputs.sha }})"
+          git push origin "HEAD:${{ github.ref_name }}"
+
   main-jar:
     name: Build main jar
     runs-on: ubuntu-latest
-    needs: resolve
+    needs: [resolve, bindings]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '22'
+      # Build from the bindings the `bindings` job just generated and committed,
+      # so the published jar matches the checked-in src/generated/java exactly.
+      # Clear the checked-out copy first so any files the regeneration dropped
+      # don't linger.
+      - name: Use the freshly generated bindings
+        shell: bash
+        run: rm -rf src/generated/java
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated-bindings
+          path: src/generated/java
       - name: Set project version
         shell: bash
         run: mvn -q -B versions:set -DnewVersion="${{ needs.resolve.outputs.version }}" -DgenerateBackupPoms=false
@@ -228,8 +293,17 @@ jobs:
     needs: [resolve, main-jar, natives-jar]
     steps:
       - uses: actions/checkout@v4
+      # Only the jar artifacts are release assets; the generated-bindings
+      # artifact is consumed by main-jar / committed by the bindings job, not
+      # published here.
       - uses: actions/download-artifact@v4
         with:
+          pattern: main-jar
+          path: dist
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: natives-*
           path: dist
           merge-multiple: true
       - name: List assets
