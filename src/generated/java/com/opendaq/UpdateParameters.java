@@ -52,6 +52,20 @@ public class UpdateParameters extends PropertyObject {
     }
 
     /**
+     * Gets the removeUnusedDevices flag. When true, connected devices not mentioned in the loading config will be removed.
+     * &#64;param remove The current value of the removeUnusedDevices flag.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUpdateParameters_getRemoveUnusedDevices()}.
+     */
+    public boolean getRemoveUnusedDevices() {
+        try {
+            return DaqUpdateParameters.getRemoveUnusedDevices(requireLivePointer());
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Sets the device update options object that allows for specifying how a device and its subdevices are to be updated.
      * &#64;param options The device update options object.
      *
@@ -63,6 +77,20 @@ public class UpdateParameters extends PropertyObject {
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(options);
+        }
+    }
+
+    /**
+     * Sets the removeUnusedDevices flag. When set to true, connected devices not mentioned in the loading config will be removed.
+     * &#64;param mode The new value for the removeUnusedDevices flag.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUpdateParameters_setRemoveUnusedDevices()}.
+     */
+    public void setRemoveUnusedDevices(boolean remove) {
+        try {
+            DaqUpdateParameters.setRemoveUnusedDevices(requireLivePointer(), remove);
+        } finally {
+            Reference.reachabilityFence(this);
         }
     }
 

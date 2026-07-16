@@ -87,15 +87,16 @@ public class ComponentPrivate extends BaseObject {
     /**
      * Called by parent component to notify this component about parent's active state change.
      * &#64;param parentActive True if parent is active.
+     * &#64;param onUpdate True if the call is triggered from config update, false if the call is triggered by a change of the active state.
      * The component updates its internal parentActive flag and recomputes its effective active state.
      * If the effective active state changes, triggers an AttributeChanged event.
      * Container components (folders, devices) propagate this call to their children.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentPrivate_setParentActive()}.
      */
-    public void setParentActive(boolean parentActive) {
+    public void setParentActive(boolean parentActive, boolean onUpdate) {
         try {
-            DaqComponentPrivate.setParentActive(requireLivePointer(), parentActive);
+            DaqComponentPrivate.setParentActive(requireLivePointer(), parentActive, onUpdate);
         } finally {
             Reference.reachabilityFence(this);
         }

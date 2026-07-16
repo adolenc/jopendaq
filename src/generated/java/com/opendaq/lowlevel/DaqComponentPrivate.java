@@ -26,7 +26,7 @@ public final class DaqComponentPrivate {
     private static final MethodHandle MH_setComponentConfig =
         Ffi.downcallOrNull("daqComponentPrivate_setComponentConfig", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setParentActive =
-        Ffi.downcallOrNull("daqComponentPrivate_setParentActive", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
+        Ffi.downcallOrNull("daqComponentPrivate_setParentActive", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE, JAVA_BYTE));
     private static final MethodHandle MH_triggerComponentCoreEvent =
         Ffi.downcallOrNull("daqComponentPrivate_triggerComponentCoreEvent", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_unlockAllAttributes =
@@ -78,9 +78,9 @@ public final class DaqComponentPrivate {
     }
 
     /** Called by parent component to notify this component about parent's active state change.  Calls {@code daqComponentPrivate_setParentActive()}. */
-    public static void setParentActive(MemorySegment self, boolean parentActive) {
+    public static void setParentActive(MemorySegment self, boolean parentActive, boolean onUpdate) {
         try {
-            int err = (int) Ffi.require(MH_setParentActive, "daqComponentPrivate_setParentActive").invokeExact(Ffi.orNull(self), (byte) (parentActive ? 1 : 0));
+            int err = (int) Ffi.require(MH_setParentActive, "daqComponentPrivate_setParentActive").invokeExact(Ffi.orNull(self), (byte) (parentActive ? 1 : 0), (byte) (onUpdate ? 1 : 0));
             Ffi.checkError(err, "daqComponentPrivate_setParentActive");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

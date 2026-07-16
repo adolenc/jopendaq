@@ -20,8 +20,12 @@ public final class DaqUpdateParameters {
         Ffi.downcallOrNull("daqUpdateParameters_getDeviceUpdateOptions", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqUpdateParameters_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_getRemoveUnusedDevices =
+        Ffi.downcallOrNull("daqUpdateParameters_getRemoveUnusedDevices", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setDeviceUpdateOptions =
         Ffi.downcallOrNull("daqUpdateParameters_setDeviceUpdateOptions", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setRemoveUnusedDevices =
+        Ffi.downcallOrNull("daqUpdateParameters_setRemoveUnusedDevices", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
 
     /** &#64;ingroup opendaq_update_parameters  Calls {@code daqUpdateParameters_createUpdateParameters()}. */
     public static MemorySegment createUpdateParameters() {
@@ -50,11 +54,29 @@ public final class DaqUpdateParameters {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets the removeUnusedDevices flag. When true, connected devices not mentioned in the loading config will be removed.  Calls {@code daqUpdateParameters_getRemoveUnusedDevices()}. */
+    public static boolean getRemoveUnusedDevices(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment removeSlot = arena.allocate(JAVA_BYTE);
+            int err = (int) Ffi.require(MH_getRemoveUnusedDevices, "daqUpdateParameters_getRemoveUnusedDevices").invokeExact(Ffi.orNull(self), removeSlot);
+            Ffi.checkError(err, "daqUpdateParameters_getRemoveUnusedDevices");
+            return removeSlot.get(JAVA_BYTE, 0) != 0;
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Sets the device update options object that allows for specifying how a device and its subdevices are to be updated.  Calls {@code daqUpdateParameters_setDeviceUpdateOptions()}. */
     public static void setDeviceUpdateOptions(MemorySegment self, MemorySegment options) {
         try {
             int err = (int) Ffi.require(MH_setDeviceUpdateOptions, "daqUpdateParameters_setDeviceUpdateOptions").invokeExact(Ffi.orNull(self), Ffi.orNull(options));
             Ffi.checkError(err, "daqUpdateParameters_setDeviceUpdateOptions");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Sets the removeUnusedDevices flag. When set to true, connected devices not mentioned in the loading config will be removed.  Calls {@code daqUpdateParameters_setRemoveUnusedDevices()}. */
+    public static void setRemoveUnusedDevices(MemorySegment self, boolean remove) {
+        try {
+            int err = (int) Ffi.require(MH_setRemoveUnusedDevices, "daqUpdateParameters_setRemoveUnusedDevices").invokeExact(Ffi.orNull(self), (byte) (remove ? 1 : 0));
+            Ffi.checkError(err, "daqUpdateParameters_setRemoveUnusedDevices");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

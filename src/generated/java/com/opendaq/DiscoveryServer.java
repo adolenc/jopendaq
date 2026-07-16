@@ -40,6 +40,24 @@ public class DiscoveryServer extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqDiscoveryServer_createMdnsDiscoveryServerWithOptions()}.
+     */
+    public static DiscoveryServer createMdnsDiscoveryServerWithOptions(Logger logger, java.util.Map<?, ?> options) {
+        return DaqObject.wrap(create$createMdnsDiscoveryServerWithOptions(logger, options), DiscoveryServer.class);
+    }
+
+    private static MemorySegment create$createMdnsDiscoveryServerWithOptions(Logger logger, java.util.Map<?, ?> options) {
+        try {
+            MemorySegment options$d = (options == null ? MemorySegment.NULL : Box.boxDictOwned(options));
+            try {
+                return DaqDiscoveryServer.createMdnsDiscoveryServerWithOptions((logger == null ? MemorySegment.NULL : logger.requireLivePointer()), options$d);
+            } finally { Ffi.releaseRef(options$d); }
+        } finally {
+            Reference.reachabilityFence(logger);
+        }
+    }
+
+    /**
      * Calls the openDAQ C function {&#64;code daqDiscoveryServer_registerService()}.
      */
     public void registerService(String id, PropertyObject config, DeviceInfo deviceInfo) {

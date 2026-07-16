@@ -16,6 +16,8 @@ public final class DaqDiscoveryServer {
 
     private static final MethodHandle MH_createMdnsDiscoveryServer =
         Ffi.downcallOrNull("daqDiscoveryServer_createMdnsDiscoveryServer", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createMdnsDiscoveryServerWithOptions =
+        Ffi.downcallOrNull("daqDiscoveryServer_createMdnsDiscoveryServerWithOptions", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqDiscoveryServer_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_registerService =
@@ -31,6 +33,16 @@ public final class DaqDiscoveryServer {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createMdnsDiscoveryServer, "daqDiscoveryServer_createMdnsDiscoveryServer").invokeExact(objSlot, Ffi.orNull(logger));
             Ffi.checkError(err, "daqDiscoveryServer_createMdnsDiscoveryServer");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqDiscoveryServer_createMdnsDiscoveryServerWithOptions()}. */
+    public static MemorySegment createMdnsDiscoveryServerWithOptions(MemorySegment logger, MemorySegment options) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createMdnsDiscoveryServerWithOptions, "daqDiscoveryServer_createMdnsDiscoveryServerWithOptions").invokeExact(objSlot, Ffi.orNull(logger), Ffi.orNull(options));
+            Ffi.checkError(err, "daqDiscoveryServer_createMdnsDiscoveryServerWithOptions");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
