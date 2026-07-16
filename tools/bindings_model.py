@@ -178,7 +178,7 @@ class Param:
     base_type: str
     value_type: str | None = None      # daqList element / daqDict value annotation
     key_type: str | None = None        # daqDict key annotation
-    default_value: str | None = None   # C default literal from [defaultValue(...)]
+    default_value: str | None = None   # C default literal from DAQ_DEFAULT_VALUE(...)
     struct_pointee: bool = False       # out slot whose pointee is a struct (not auto-wrappable)
 
 

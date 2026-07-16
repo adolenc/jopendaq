@@ -12,11 +12,12 @@ Design (mirroring the reference Common Lisp high-level layer, adapted to Java
 idiom):
 
   * methods keep their C stem verbatim (getName/setName/...) as instance
-    methods; trailing parameters with C [defaultValue(...)] annotations gain
+    methods; trailing parameters with C DAQ_DEFAULT_VALUE(...) annotations gain
     trimmed overloads
   * out-parameters become return values; strings, booleans, enums, lists and
-    dicts convert to natural Java types (containers per their templateType
-    annotations); other interfaces come back wrapped
+    dicts convert to natural Java types (containers per their
+    DAQ_LIST_ELEMENT_TYPE / DAQ_DICT_TEMPLATE_TYPE annotations); other
+    interfaces come back wrapped
   * daqBaseObject/boxed-primitive arguments accept plain Java values (boxed
     at the call site), interface arguments take the wrapper class
   * each type's canonical create function becomes a Java constructor, its
@@ -131,19 +132,19 @@ BOXED_PRIMITIVE_BASES = {
     "daqRatio", "daqComplexNumber",
 }
 
-# templateType element names with a natural Java form: name -> (java type,
-# converter template applied to an owned element pointer).
+# Template-type element names (daq-prefixed C types) with a natural Java form:
+# name -> (java type, converter template applied to an owned element pointer).
 PRIMITIVE_ELEMENT_TYPES = {
-    "String": ("String", "p -> (String) Wrap.unboxOwned(p)"),
-    "Int": ("Long", "p -> (Long) Wrap.unboxOwned(p)"),
-    "Integer": ("Long", "p -> (Long) Wrap.unboxOwned(p)"),
-    "Bool": ("Boolean", "p -> (Boolean) Wrap.unboxOwned(p)"),
-    "Boolean": ("Boolean", "p -> (Boolean) Wrap.unboxOwned(p)"),
-    "Float": ("Double", "p -> (Double) Wrap.unboxOwned(p)"),
-    "Ratio": ("RatioValue", "p -> (RatioValue) Wrap.unboxOwned(p)"),
-    "ComplexNumber": ("ComplexValue", "p -> (ComplexValue) Wrap.unboxOwned(p)"),
-    "BaseObject": ("Object", "Wrap::unboxOwned"),
-    "Number": ("Object", "Wrap::unboxOwned"),
+    "daqString": ("String", "p -> (String) Wrap.unboxOwned(p)"),
+    "daqInt": ("Long", "p -> (Long) Wrap.unboxOwned(p)"),
+    "daqInteger": ("Long", "p -> (Long) Wrap.unboxOwned(p)"),
+    "daqBool": ("Boolean", "p -> (Boolean) Wrap.unboxOwned(p)"),
+    "daqBoolean": ("Boolean", "p -> (Boolean) Wrap.unboxOwned(p)"),
+    "daqFloat": ("Double", "p -> (Double) Wrap.unboxOwned(p)"),
+    "daqRatio": ("RatioValue", "p -> (RatioValue) Wrap.unboxOwned(p)"),
+    "daqComplexNumber": ("ComplexValue", "p -> (ComplexValue) Wrap.unboxOwned(p)"),
+    "daqBaseObject": ("Object", "Wrap::unboxOwned"),
+    "daqNumber": ("Object", "Wrap::unboxOwned"),
 }
 
 
@@ -294,13 +295,12 @@ class Generator:
 
     def element_conversion(self, annotated: str | None) -> tuple[str, str]:
         """(java element type, owned-pointer converter expr) for a container
-        templateType name."""
+        template-type annotation (a daq-prefixed C type name)."""
         if annotated is None:
             return "Object", "Wrap::unboxOwned"
-        name = annotated.removesuffix("Ptr")
-        if name in PRIMITIVE_ELEMENT_TYPES:
-            return PRIMITIVE_ELEMENT_TYPES[name]
-        c_name = "daq" + name
+        c_name = annotated.removesuffix("Ptr")
+        if c_name in PRIMITIVE_ELEMENT_TYPES:
+            return PRIMITIVE_ELEMENT_TYPES[c_name]
         if c_name in self.model.enums:
             enum_java = self.model.enums[c_name].java_name
             return enum_java, f"p -> {enum_java}.fromValue(((Long) Wrap.unboxOwned(p)).intValue())"
