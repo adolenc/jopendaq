@@ -1,18 +1,21 @@
 # Development workflow for the openDAQ Java bindings.
 #
-# The Java/Maven steps run in the java-opendaq-dev container, so the host needs
-# Docker for them.  `make natives` and `make bindings` are the exceptions and run
-# directly on the host: `make natives` builds the openDAQ runtime from source with
-# the host's C/C++ toolchain (CMake, a compiler, git), and `make bindings` runs
-# the generators with the host's python3 (standard library only). Both clone
-# openDAQ at the pinned ref, self-contained with no sibling checkout:
+# The bindings are generated from the openDAQ API spec (opendaq.json) of one
+# release of the opendaq-bindings-nightly repository, and run against the C
+# bindings libraries of that same release.  opendaq-nightly.lock says which;
+# nothing here builds or even clones openDAQ.
 #
-#   make natives    build libcopendaq.so + friends from source into bin/<triple>/
-#                   (needs CMake + a C/C++ toolchain on the host)
-#   make bindings   regenerate src/generated/java from the openDAQ C headers
-#                   (needs python3 on the host)
-#   make test       run the JUnit suite against the bin/<triple>/ natives
-#                   (build them with `make natives` first)
+# The Java/Maven steps run in the java-opendaq-dev container, so the host needs
+# Docker for them.  `make bindings`, `make natives` and `make bump-nightly` are
+# the exceptions and run directly on the host with python3 (standard library
+# only):
+#
+#   make bindings      regenerate src/generated/java from the pinned spec
+#   make natives       download the pinned native libraries into bin/<triple>/
+#   make bump-nightly TAG=<release>
+#                      pin another nightly release, then `make bindings`
+#   make test          run the JUnit suite against the bin/<triple>/ natives
+#                      (fetch them with `make natives` first)
 #
 # End users who only run the bindings never need `make natives`: they add the
 # published natives-<triple> jar for their OS to the classpath and the loader
@@ -20,40 +23,27 @@
 
 DOCKER_IMAGE ?= java-opendaq-dev
 OPENDAQ_RUNTIME_TRIPLE ?= linux-x86_64
-OPENDAQ_REPO_URL ?= https://github.com/adolenc/openDAQ.git
-OPENDAQ_REF ?= c-bindings-docstrings
-OPENDAQ_SRC_DIR ?= $(CURDIR)/tmp/openDAQ
-OPENDAQ_BUILD_DIR ?= $(CURDIR)/tmp/build
 NATIVES_DIR ?= $(CURDIR)/bin/$(OPENDAQ_RUNTIME_TRIPLE)
 PYTHON ?= python3
-JOBS ?= $(shell nproc 2>/dev/null || echo 4)
 M2_CACHE := $(CURDIR)/.m2
 GENERATED_DIR := $(CURDIR)/src/generated/java
 PROJECT_VERSION := $(shell grep -m1 '<version>' pom.xml | sed -E 's|.*<version>(.*)</version>.*|\1|')
 NATIVES_JAR := target/jopendaq-$(PROJECT_VERSION)-natives-$(OPENDAQ_RUNTIME_TRIPLE).jar
+# Staged per platform, so that the jar of one never picks up another's libraries.
+NATIVES_JAR_STAGE := target/natives-jar/$(OPENDAQ_RUNTIME_TRIPLE)
+NIGHTLY_TAG := $(shell $(PYTHON) -c "import json; print(json.load(open('opendaq-nightly.lock'))['tag'])" 2>/dev/null)
+
+# The nightly names its platforms differently from the Maven os classifiers.
+NIGHTLY_TRIPLE_linux-x86_64 := linux-x64
+NIGHTLY_TRIPLE_osx-aarch_64 := darwin-arm64
+NIGHTLY_TRIPLE_windows-x86_64 := windows-x64
+NIGHTLY_TRIPLE := $(NIGHTLY_TRIPLE_$(OPENDAQ_RUNTIME_TRIPLE))
 
 USER_SPEC := $(shell id -u):$(shell id -g)
 
-# openDAQ CMake configuration -- the C bindings plus the reference device and
-# function-block modules, everything else off.  
-OPENDAQ_CMAKE_ARGS := \
-  -DOPENDAQ_GENERATE_C_BINDINGS=ON \
-  -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF \
-  -DOPENDAQ_GENERATE_DELPHI_BINDINGS=OFF \
-  -DOPENDAQ_GENERATE_CSHARP_BINDINGS=OFF \
-  -DOPENDAQ_ENABLE_TESTS=OFF \
-  -DOPENDAQ_ENABLE_TEST_UTILS=OFF \
-  -DOPENDAQ_ENABLE_ACCESS_CONTROL=OFF \
-  -DOPENDAQ_ENABLE_NATIVE_STREAMING=ON \
-  -DDAQMODULES_OPENDAQ_CLIENT_MODULE=ON \
-  -DDAQMODULES_REF_DEVICE_MODULE=ON \
-  -DDAQMODULES_REF_FB_MODULE=ON \
-  -DDAQMODULES_REF_FB_MODULE_ENABLE_RENDERER=OFF \
-  -DBOOST_LOCALE_ENABLE_ICU=OFF
-
 # Everything below runs in the dev container as the calling user, with the repo
-# mounted at /workspace and Maven's repository cached in .m2/.  Locally-built
-# natives in bin/<triple>/ are mounted read-only and pointed at by the loader
+# mounted at /workspace and Maven's repository cached in .m2/.  Natives fetched
+# into bin/<triple>/ are mounted read-only and pointed at by the loader
 # via OPENDAQ_JAVA_NATIVE_DIR; XDG_CACHE_HOME is redirected into the persisted
 # .cache/ so the loader's per-user native cache survives across container runs.
 NATIVES_MOUNT := $(if $(wildcard $(NATIVES_DIR)/*.so),\
@@ -69,7 +59,7 @@ DOCKER_RUN := docker run --rm \
   -w /workspace \
   $(DOCKER_IMAGE)
 
-.PHONY: docker-image clone-opendaq natives natives-jar bindings \
+.PHONY: docker-image natives natives-jar bindings bump-nightly \
         build test package example clojure-example scala-example repl-shell clean
 
 # One image with every tool the containerised targets need: the JDK + Maven for
@@ -78,46 +68,44 @@ DOCKER_RUN := docker run --rm \
 docker-image:
 	docker build -t $(DOCKER_IMAGE) .
 
-# Clone the pinned openDAQ source (shared by `natives` and `bindings`).  A full
-# clone + checkout --force resolves a branch, tag, or raw commit sha alike.
-clone-opendaq:
-	@if [ ! -d "$(OPENDAQ_SRC_DIR)/.git" ]; then \
-	  rm -rf "$(OPENDAQ_SRC_DIR)"; \
-	  git clone $(OPENDAQ_REPO_URL) $(OPENDAQ_SRC_DIR); \
-	  git -C $(OPENDAQ_SRC_DIR) checkout --force $(OPENDAQ_REF); \
-	else \
-	  echo "openDAQ source already present at $(OPENDAQ_SRC_DIR)"; \
-	fi
+# Download the pinned native libraries for OPENDAQ_RUNTIME_TRIPLE into
+# bin/<triple>/, verified against the checksums of the release's manifest.
+natives:
+	@test -n "$(NIGHTLY_TRIPLE)" || { echo "No nightly platform for $(OPENDAQ_RUNTIME_TRIPLE)."; exit 1; }
+	@set -e; \
+	spec=$$($(PYTHON) tools/fetch_nightly.py --natives $(NIGHTLY_TRIPLE)); \
+	mkdir -p $(NATIVES_DIR); \
+	cp -a "$$(dirname "$$spec")/natives/$(NIGHTLY_TRIPLE)/." $(NATIVES_DIR)/; \
+	ls -1 $(NATIVES_DIR)
 
-# Build the openDAQ native libraries from source into bin/<triple>/, using the
-# host's C/C++ toolchain (CMake, a compiler, git)
-natives: clone-opendaq
-	mkdir -p $(NATIVES_DIR)
-	cmake -S $(OPENDAQ_SRC_DIR) -B $(OPENDAQ_BUILD_DIR) $(OPENDAQ_CMAKE_ARGS)
-	cmake --build $(OPENDAQ_BUILD_DIR) -j$(JOBS)
-	cp -a $(OPENDAQ_BUILD_DIR)/bin/*.so $(NATIVES_DIR)/
-
-# Package the built bin/<triple>/ libraries into a natives-<triple> classifier
+# Package the bin/<triple>/ libraries into a natives-<triple> classifier
 # jar (resources under com/opendaq/natives/<triple>/ with an index.txt file list
 # and a tag.txt cache key), which the NativeLoader extracts at runtime.  This is
 # what CI publishes to the release for each platform.
 natives-jar:
 	@if [ -z "$$(ls $(NATIVES_DIR)/ 2>/dev/null)" ]; then \
 	  echo "No native libraries in $(NATIVES_DIR) -- run 'make natives' first."; exit 1; fi
-	rm -rf target/natives-jar
-	mkdir -p target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)
-	cp -a $(NATIVES_DIR)/. target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/
-	ls -1 $(NATIVES_DIR) > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/index.txt
-	git -C $(OPENDAQ_SRC_DIR) rev-parse --short HEAD \
-	  > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/tag.txt 2>/dev/null \
-	  || echo "$(PROJECT_VERSION)" > target/natives-jar/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/tag.txt
-	$(DOCKER_RUN) jar --create --file $(NATIVES_JAR) -C target/natives-jar .
+	mkdir -p $(NATIVES_JAR_STAGE)/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)
+	cp -a $(NATIVES_DIR)/. $(NATIVES_JAR_STAGE)/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/
+	ls -1 $(NATIVES_DIR) > $(NATIVES_JAR_STAGE)/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/index.txt
+	echo "$(NIGHTLY_TAG)" > $(NATIVES_JAR_STAGE)/com/opendaq/natives/$(OPENDAQ_RUNTIME_TRIPLE)/tag.txt
+	$(DOCKER_RUN) jar --create --file $(NATIVES_JAR) -C $(NATIVES_JAR_STAGE) .
 	@echo "wrote $(NATIVES_JAR)"
 
-# Regenerate src/generated/java from the openDAQ C binding headers.
-bindings: clone-opendaq
-	$(PYTHON) tools/generate_low_level_bindings.py --opendaq-repo tmp/openDAQ --output-dir src/generated/java
-	$(PYTHON) tools/generate_high_level_bindings.py --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+# Regenerate src/generated/java from the spec of the pinned nightly.
+bindings:
+	@set -e; \
+	spec=$$($(PYTHON) tools/fetch_nightly.py); \
+	$(PYTHON) tools/generate_low_level_bindings.py --spec "$$spec" --output-dir $(GENERATED_DIR); \
+	$(PYTHON) tools/generate_high_level_bindings.py --spec "$$spec" --output-dir $(GENERATED_DIR); \
+	echo "regenerated from $$(basename "$$(dirname "$$spec")")"
+
+# Move the pin to another nightly and regenerate:
+#   make bump-nightly TAG=nightly-20261110-0e29cce-10aaf38
+bump-nightly:
+	@test -n "$(TAG)" || { echo "usage: make bump-nightly TAG=<release tag>"; exit 1; }
+	$(PYTHON) tools/fetch_nightly.py --pin $(TAG) > /dev/null
+	$(MAKE) bindings
 
 build:
 	mkdir -p $(M2_CACHE)
