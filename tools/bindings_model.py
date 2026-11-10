@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """bindings_model.py - Shared model for the Java binding generators.
 
-Loads the openDAQ C API description produced by parse_bindings.py (the same
-generic parser the Common Lisp bindings use) and resolves it into a typed
+Loads the binding records spec_bindings.py reads out of the openDAQ API spec,
+opendaq.json (the same loader the Common Lisp bindings use), and resolves them into a typed
 model both generate_low_level_bindings.py and generate_high_level_bindings.py
 consume: a type table mapping C types onto java.lang.foreign layouts and Java
 carrier types, and a function model with each parameter classified as an
@@ -19,7 +19,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-import parse_bindings
+import spec_bindings
 
 
 # ---------------------------------------------------------------------------
@@ -103,9 +103,22 @@ def receiver_class_name(receiver: str) -> str:
     return "Daq" + stripped[0].upper() + stripped[1:]
 
 
+# The C handles that are plain `void` rather than an opaque struct: any object
+# can be passed where one is expected.
+UNTYPED_HANDLES = {"daqBaseObject", "daqUnknown"}
+
+# IUnknown and IBaseObject are not classes of the generated hierarchy: DaqObject
+# does the reference counting, and daqBaseObject is the hierarchy's fixed root.
+ROOT_INTERFACES = {"daqUnknown", "daqBaseObject"}
+
+# Enums whose C name carries the "daqC" prefix of the fundamental value types
+# (the plain name is taken by an interface: ICoreType is daqCoreType).
+ENUM_NAME_OVERRIDES = {"daqCCoreType": "CoreType"}
+
+
 def enum_java_name(c_name: str) -> str:
     """daqSampleType -> SampleType."""
-    return strip_daq(c_name)
+    return ENUM_NAME_OVERRIDES.get(c_name) or strip_daq(c_name)
 
 
 # ---------------------------------------------------------------------------
@@ -212,11 +225,8 @@ class Function:
 class Model:
     """The full resolved binding model."""
 
-    def __init__(self, opendaq_repo: Path):
-        # Normalize the parser's dataclasses into the plain-dict shape of its
-        # JSONL output (None fields and zero pointer depths dropped).
-        records = [json.loads(json.dumps(r, cls=parse_bindings.DataclassEncoder))
-                   for r in parse_bindings.parse_repo(opendaq_repo)]
+    def __init__(self, spec: Path):
+        records = spec_bindings.load_records(spec)
         self.typedefs: dict[str, dict] = {}
         self.interfaces: dict[str, str] = {}      # name -> parent
         self.interface_docs: dict[str, str] = {}
@@ -231,6 +241,8 @@ class Model:
             if kind == "typedef":
                 self.typedefs.setdefault(record["name"], record)
             elif kind == "interface":
+                if record["name"] in ROOT_INTERFACES:
+                    continue
                 self.interfaces[record["name"]] = record["parent"]
                 if record.get("docstring"):
                     self.interface_docs.setdefault(record["name"], record["docstring"])
@@ -272,7 +284,7 @@ class Model:
         category = record["category"]
         if category in {"opaque", "callback"}:
             return True
-        if name == "daqBaseObject":
+        if name in UNTYPED_HANDLES:
             return True
         if category == "alias":
             if record.get("pointer_depth", 0) > 0:
@@ -312,7 +324,7 @@ class Model:
             return JType("struct", "Ffi.INTF_ID", "MemorySegment", c_base=name)
         if category == "alias":
             base = record.get("base_type")
-            if name == "daqBool":
+            if name == "daqCBool":
                 if depth > 0:
                     return JType("pointer", "ADDRESS", "MemorySegment", c_base=name)
                 return JType("bool", "JAVA_BYTE", "boolean", c_base=name)
@@ -367,7 +379,7 @@ class Model:
         if depth == 0:
             return "in"
         if depth == 1 and (self._effective_category(base) in {"opaque", "callback"}
-                           or base == "daqBaseObject"):
+                           or base in UNTYPED_HANDLES):
             return "in"
         if base == "void":
             return "in"

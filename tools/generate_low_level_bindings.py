@@ -17,7 +17,7 @@ family) stay raw: the caller passes the slot.
 
 Usage:
     python3 tools/generate_low_level_bindings.py \
-        --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+        --spec tmp/nightly/<tag>/opendaq.json --output-dir src/generated/java
 """
 
 from __future__ import annotations
@@ -326,8 +326,8 @@ def render_error_codes(error_codes: list[tuple[int, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def generate(opendaq_repo: Path, output_dir: Path) -> None:
-    model = Model(opendaq_repo)
+def generate(spec: Path, output_dir: Path) -> None:
+    model = Model(spec)
 
     lowlevel_dir = output_dir / "com" / "opendaq" / "lowlevel"
     public_dir = output_dir / "com" / "opendaq"
@@ -354,12 +354,12 @@ def generate(opendaq_repo: Path, output_dir: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--opendaq-repo", type=Path, required=True,
-                        help="Path to the openDAQ repository (containing bindings/c/include/).")
+    parser.add_argument("--spec", type=Path, required=True,
+                        help="Path to opendaq.json, the openDAQ API spec.")
     parser.add_argument("--output-dir", type=Path,
                         default=Path(__file__).resolve().parents[1] / "src" / "generated" / "java")
     args = parser.parse_args()
-    generate(args.opendaq_repo, args.output_dir)
+    generate(args.spec, args.output_dir)
     return 0
 
 
