@@ -22,7 +22,7 @@ class CoreTypesTest {
 
     @Test
     void primitives() {
-        BaseObject baseObject = DaqObject.wrap(DaqBaseObject.create(), BaseObject.class);
+        BaseObject baseObject = DaqObject.wrap(DaqBaseObject.createBaseObject(), BaseObject.class);
         assertNotNull(baseObject);
 
         Ratio wrappedRatio = DaqObject.wrap(DaqRatio.createRatio(8, 12), Ratio.class);
@@ -180,7 +180,7 @@ class CoreTypesTest {
         EventArgs eventArgs = new EventArgs(10, "test_event");
         boolean[] called = {false};
         EventHandler handler = new EventHandler((sender, args) -> called[0] = true);
-        BaseObject sender = DaqObject.wrap(DaqBaseObject.create(), BaseObject.class);
+        BaseObject sender = DaqObject.wrap(DaqBaseObject.createBaseObject(), BaseObject.class);
 
         assertEquals(0, event.getSubscriberCount());
         assertEquals(10, eventArgs.getEventId());
@@ -199,7 +199,7 @@ class CoreTypesTest {
         String[] captured = {null};
         EventHandler handler = event.addHandler((sender, args) ->
             captured[0] = args.asType(EventArgs.class).getEventName());
-        BaseObject sender = DaqObject.wrap(DaqBaseObject.create(), BaseObject.class);
+        BaseObject sender = DaqObject.wrap(DaqBaseObject.createBaseObject(), BaseObject.class);
         EventArgs eventArgs = new EventArgs(42, "fn_event");
 
         assertEquals(1, event.getSubscriberCount());
@@ -216,7 +216,7 @@ class CoreTypesTest {
         boolean[] b = {false};
         EventHandler handlerA = event.addHandler((s, args) -> a[0] = true);
         event.addHandler((s, args) -> b[0] = true);
-        BaseObject sender = DaqObject.wrap(DaqBaseObject.create(), BaseObject.class);
+        BaseObject sender = DaqObject.wrap(DaqBaseObject.createBaseObject(), BaseObject.class);
         EventArgs eventArgs = new EventArgs(1, "e");
 
         assertEquals(2, event.getSubscriberCount());

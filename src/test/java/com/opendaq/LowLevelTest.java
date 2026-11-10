@@ -5,6 +5,7 @@ import java.lang.foreign.MemorySegment;
 
 import org.junit.jupiter.api.Test;
 import com.opendaq.lowlevel.DaqBaseObject;
+import com.opendaq.lowlevel.DaqUnknown;
 import com.opendaq.lowlevel.DaqBoolean;
 import com.opendaq.lowlevel.DaqDict;
 import com.opendaq.lowlevel.DaqInteger;
@@ -98,7 +99,7 @@ class LowLevelTest {
 
     @Test
     void referenceCountingRoundTrip() {
-        MemorySegment obj = DaqBaseObject.create();
+        MemorySegment obj = DaqBaseObject.createBaseObject();
         assertEquals(2, Ffi.addRef(obj));
         assertEquals(1, Ffi.releaseRef(obj));
         assertEquals(0, Ffi.releaseRef(obj));
@@ -112,13 +113,13 @@ class LowLevelTest {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment id = arena.allocate(Ffi.INTF_ID);
             DaqInteger.getInterfaceId(id);
-            MemorySegment queried = DaqBaseObject.queryInterface(integer, id);
+            MemorySegment queried = DaqUnknown.queryInterface(integer, id);
             assertNotEquals(MemorySegment.NULL, queried);
             Ffi.releaseRef(queried);
 
             // An unsupported interface fails cleanly instead of corrupting.
             DaqString.getInterfaceId(id);
-            assertThrows(OpenDaqException.class, () -> DaqBaseObject.queryInterface(integer, id));
+            assertThrows(OpenDaqException.class, () -> DaqUnknown.queryInterface(integer, id));
         }
         Ffi.releaseRef(integer);
         Ffi.clearErrorInfo();

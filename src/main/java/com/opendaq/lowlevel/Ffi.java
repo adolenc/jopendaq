@@ -93,17 +93,17 @@ public final class Ffi {
         // void daqClearErrorInfo(void);
         static final MethodHandle CLEAR = downcall("daqClearErrorInfo",
             FunctionDescriptor.ofVoid());
-        // daqErrCode daqString_getCharPtr(daqString* self, daqConstCharPtr* value);
+        // daqErrCode daqString_getCharPtr(daqString* self, daqCConstCharPtr* value);
         static final MethodHandle STRING_GET_CHAR_PTR = downcall("daqString_getCharPtr",
             FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS));
-        // daqErrCode daqString_createString(daqString** obj, daqConstCharPtr str);
+        // daqErrCode daqString_createString(daqString** obj, daqCConstCharPtr str);
         static final MethodHandle STRING_CREATE = downcall("daqString_createString",
             FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS));
-        // int daqBaseObject_releaseRef(daqBaseObject* self);
-        static final MethodHandle RELEASE_REF = downcall("daqBaseObject_releaseRef",
+        // int daqUnknown_releaseRef(daqUnknown* self);
+        static final MethodHandle RELEASE_REF = downcall("daqUnknown_releaseRef",
             FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS));
-        // int daqBaseObject_addRef(daqBaseObject* self);
-        static final MethodHandle ADD_REF = downcall("daqBaseObject_addRef",
+        // int daqUnknown_addRef(daqUnknown* self);
+        static final MethodHandle ADD_REF = downcall("daqUnknown_addRef",
             FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS));
     }
 
