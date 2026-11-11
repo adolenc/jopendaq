@@ -336,6 +336,14 @@ def generate(spec: Path, output_dir: Path) -> None:
     lowlevel_dir.mkdir(parents=True, exist_ok=True)
     public_dir.mkdir(parents=True, exist_ok=True)
 
+    # The enums live among the high-level classes, so they cannot be cleared by
+    # removing a directory: drop the ones a previous run of this generator wrote
+    # (identified by the header), or an enum openDAQ removed would stay forever.
+    for existing in public_dir.glob("*.java"):
+        with existing.open(encoding="utf-8") as stream:
+            if "generate_low_level_bindings" in stream.readline():
+                existing.unlink()
+
     for receiver, functions in sorted(model.functions_by_receiver().items()):
         class_name = receiver_class_name(receiver)
         path = lowlevel_dir / f"{class_name}.java"
