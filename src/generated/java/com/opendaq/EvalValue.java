@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Dynamic expression evaluator
+ *
  * Provides dynamic evaluation of expressions. Expression is passed as an argument to a
  * factory function. Expression is evaluated at runtime when result value is requested.
  *
@@ -78,6 +79,7 @@ public class EvalValue extends BaseObject {
      * Clones the object and attaches an owner.
      * &#64;param owner The owner to attach to the cloned eval value.
      * &#64;param[out] clonedValue The cloned object.
+     *
      * When the expression contains reference to some property object, then the expression cannot be
      * evaluated unless an owner is attached to eval value. However, the object can be cloned with the
      * specified owner attached. The client can then evaluate the cloned object.
@@ -96,6 +98,7 @@ public class EvalValue extends BaseObject {
     /**
      * Gets the expression.
      * &#64;param[out] eval The expression.
+     *
      * Expression is passed as a parameter to the factory function.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEvalValue_getEval()}.
@@ -110,6 +113,7 @@ public class EvalValue extends BaseObject {
 
     /**
      * Returns the parse error code.
+     *
      * When an eval value object is created, the expression is passed as an argument to the factory
      * function. Parsing of the expression can fail, but the factory function will always succeed. Use this
      * function to check if the parsing of the expression succeeded without evaluating the expression.
@@ -127,6 +131,7 @@ public class EvalValue extends BaseObject {
     /**
      * Returns the names of all properties referenced by the eval value.
      * &#64;param[out] propertyReferences The names of referenced properties.
+     *
      * Referenced properties are all occurrences matching the '"%" propref' pattern in the evaluation string.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEvalValue_getPropertyReferences()}.
@@ -145,6 +150,7 @@ public class EvalValue extends BaseObject {
      * &#64;retval OPENDAQ_ERR_CALCFAILED when calculation failed.
      * &#64;retval OPENDAQ_ERR_RESOLVEFAILED when reference resolution failed
      * &#64;retval OPENDAQ_ERR_PARSEFAILED when expression parsing failed
+     *
      * When this method is called for the first time, the object will trigger
      * execution and return result.
      *

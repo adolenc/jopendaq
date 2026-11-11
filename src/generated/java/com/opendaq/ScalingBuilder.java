@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Configuration component of Scaling objects. Contains setter methods that allow for Scaling parameter configuration, and a `build` method that builds the Scaling object.
+ * Configuration component of Scaling objects. Contains setter methods that allow for Scaling
+ * parameter configuration, and a `build` method that builds the Scaling object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqScalingBuilder} interface.
  */
@@ -37,7 +38,8 @@ public class ScalingBuilder extends BaseObject {
     }
 
     /**
-     * Scaling builder copy factory that creates a configurable Scaling object from a non-configurable one.
+     * Scaling builder copy factory that creates a configurable Scaling object from a
+     * non-configurable one.
      * &#64;param scalingToCopy The scaling of which configuration should be copied.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_createScalingBuilderFromExisting()}.
@@ -120,7 +122,8 @@ public class ScalingBuilder extends BaseObject {
     }
 
     /**
-     * Gets the list of parameters that are used to calculate the scaling in conjunction with the input data.
+     * Gets the list of parameters that are used to calculate the scaling in conjunction with the
+     * input data.
      * &#64;param[out] parameters The list of parameters. All elements are Number types.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_getParameters()}.
@@ -134,7 +137,8 @@ public class ScalingBuilder extends BaseObject {
     }
 
     /**
-     * Gets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.
+     * Gets the type of the scaling that determines how the scaling parameters should be interpreted
+     * and how the scaling should be calculated.
      * &#64;param[out] type The type of the scaling.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_getScalingType()}.
@@ -168,6 +172,7 @@ public class ScalingBuilder extends BaseObject {
     /**
      * Sets the scaling's input data type.
      * &#64;param type The input data type.
+     *
      * The input data type corresponds to the raw data passed through the signal path in
      * data packets.
      *
@@ -186,6 +191,7 @@ public class ScalingBuilder extends BaseObject {
     /**
      * Sets the scaling's output data type.
      * &#64;param type The output data type
+     *
      * The output data type corresponds to the type specified in the value descriptor of
      * a signal, and is the type in which said signal's data should be read in after having
      * the scaling applied to it.
@@ -203,7 +209,8 @@ public class ScalingBuilder extends BaseObject {
     }
 
     /**
-     * Gets the list of parameters that are used to calculate the scaling in conjunction with the input data.
+     * Gets the list of parameters that are used to calculate the scaling in conjunction with the
+     * input data.
      * &#64;param parameters The list of parameters. All elements are Number types.
      * &#64;retval OPENDAQ_ERR_FROZEN if the object is frozen.
      *
@@ -223,7 +230,8 @@ public class ScalingBuilder extends BaseObject {
     }
 
     /**
-     * Sets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.
+     * Sets the type of the scaling that determines how the scaling parameters should be interpreted
+     * and how the scaling should be calculated.
      * &#64;param type The type of the scaling.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScalingBuilder_setScalingType()}.

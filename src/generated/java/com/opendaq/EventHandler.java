@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_events
- * &#64;defgroup types_event_handler EventHandler
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqEventHandler} interface.
+ * Wraps the openDAQ {&#64;code daqEventHandler} interface.
  */
 public class EventHandler extends BaseObject {
 
@@ -25,7 +22,12 @@ public class EventHandler extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqEventHandler_createEventHandler()}.
+     * Creates an event handler that calls a C function.
+     * &#64;param call The function to call with the sender and the arguments of the event.
+     *
+     * C++ creates event handlers from callables through templates, which have no exported symbol; this factory is provided by the C bindings.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEventHandler_createEventHandler()}.
      */
     public static EventHandler createEventHandler(MemorySegment call) {
         return DaqObject.wrap(create$createEventHandler(call), EventHandler.class);

@@ -13,8 +13,10 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Interface for managing device network configuration information and settings.
+ *
  * The interface is typically used by the discovery server, if present, to obtain the necessary
  * information for advertising the device's network configuration capabilities and handling related requests.
+ *
  * The device must be designated as the root device to enable the use of this interface's methods.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDeviceNetworkConfig} interface.
@@ -57,7 +59,8 @@ public class DeviceNetworkConfig extends BaseObject {
 
     /**
      * Retrieves the currently active configuration of a specified network interface.
-     * &#64;param ifaceName The name of the network interface adapter as registered in the operating system. Typically, this is a short symbolic identifier for the adapter, e.g. "eth0".
+     * &#64;param ifaceName The name of the network interface adapter as registered in the operating system.
+     * Typically, this is a short symbolic identifier for the adapter, e.g. "eth0".
      * &#64;param[out] config The property object containing the active configuration of the network interface.
      * &#64;retval OPENDAQ_ERR_NOTIMPLEMENTED if the device does not support retrieving network configurations.
      *
@@ -76,8 +79,10 @@ public class DeviceNetworkConfig extends BaseObject {
 
     /**
      * Submits a new configuration parameters to a specified network interface.
-     * &#64;param ifaceName The name of the network interface adapter as registered in the operating system. Typically, this is a short symbolic identifier for the adapter, e.g. "eth0".
-     * &#64;param config The property object with new configuration parameters to submit. The format of the properties matches that used in INetworkInterface.
+     * &#64;param ifaceName The name of the network interface adapter as registered in the operating system.
+     * Typically, this is a short symbolic identifier for the adapter, e.g. "eth0".
+     * &#64;param config The property object with new configuration parameters to submit.
+     * The format of the properties matches that used in INetworkInterface.
      * &#64;retval OPENDAQ_ERR_NOTIMPLEMENTED if the device does not support network configuration management.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceNetworkConfig_submitNetworkConfiguration()}.

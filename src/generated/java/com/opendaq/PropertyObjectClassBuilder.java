@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * The builder interface of Property object classes. Allows for their modification and building of Property object classes.
+ * The builder interface of Property object classes. Allows for their modification and building of
+ * Property object classes.
+ *
  * The configuration interface allows for modifying the list of properties, the class's name, parent, and the
  * sorting order of properties. To build the Class, the `build` method is used.
  *
@@ -69,6 +71,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
      * &#64;param property The property to be added.
      * &#64;retval OPENDAQ_ERR_ALREADYEXISTS if a property with the same name already added to the class.
      * &#64;retval OPENDAQ_ERR_INVALIDTYPE if the property is an object type and is not atomic.
+     *
      * The default value of object-type properties that are added to a class are frozen once added.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectClassBuilder_addProperty()}.
@@ -229,6 +232,7 @@ public class PropertyObjectClassBuilder extends BaseObject {
     /**
      * Sets a custom order of properties as defined in the list of property names.
      * &#64;param orderedPropertyNames A list of names of properties. The order of the list is applied to the class's properties.
+     *
      * The list should contain names of properties available in the class. When retrieving the class's properties, they will
      * be sorted in the order in which the names appear in the provided list. Any class properties not in the custom order are
      * kept in insertion order at the end of the class's list of properties.

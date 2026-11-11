@@ -28,7 +28,7 @@ public final class DaqUserInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Returns the user's password, which can either be in plain text or hashed using the Bcrypt algorithm. Hashed passwords should follow the Modular Crypt Format. For security purposes, hashed passwords are preferred.  Calls {@code daqUserInternal_getPasswordHash()}. */
+    /** Returns the user's password, which can either be in plain text or hashed using the Bcrypt algorithm.  Calls {@code daqUserInternal_getPasswordHash()}. */
     public static MemorySegment getPasswordHash(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment passwordHashSlot = arena.allocate(ADDRESS);

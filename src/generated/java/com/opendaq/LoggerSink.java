@@ -12,7 +12,16 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqLoggerSink} interface.
+ * Represents the object that actually writes the log messages to the target.
+ * Each Logger Sink is responsible for only single target: file, console etc.
+ *
+ * Logger Sink allows to set up a threshold log severity level, so the messages with lower level
+ * will not be written to the target.
+ *
+ * Additionally, it provides the ability to customize format for messages written to the target,
+ * see `setPattern` method.
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqLoggerSink} interface.
  */
 public class LoggerSink extends BaseObject {
 
@@ -72,18 +81,9 @@ public class LoggerSink extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_createWinDebugLoggerSink()}.
-     */
-    public static LoggerSink createWinDebugLoggerSink() {
-        return DaqObject.wrap(create$createWinDebugLoggerSink(), LoggerSink.class);
-    }
-
-    private static MemorySegment create$createWinDebugLoggerSink() {
-        return DaqLoggerSink.createWinDebugLoggerSink();
-    }
-
-    /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_flush()}.
+     * Triggers writing out the messages from temporary buffers to the target.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerSink_flush()}.
      */
     public void flush() {
         try {
@@ -94,7 +94,10 @@ public class LoggerSink extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_getLevel()}.
+     * Gets the minimal severity level of messages to be written to the target.
+     * &#64;param[out] level The log severity level of the sink.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerSink_getLevel()}.
      */
     public LogLevel getLevel() {
         try {
@@ -105,7 +108,10 @@ public class LoggerSink extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_setLevel()}.
+     * Sets the minimal severity level of messages to be written to the target.
+     * &#64;param level The log severity level of the sink.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerSink_setLevel()}.
      */
     public void setLevel(LogLevel level) {
         try {
@@ -116,7 +122,10 @@ public class LoggerSink extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_setPattern()}.
+     * Sets the custom formatter pattern for the sink.
+     * &#64;param pattern The formatter pattern string.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerSink_setPattern()}.
      */
     public void setPattern(String pattern) {
         try {
@@ -130,7 +139,11 @@ public class LoggerSink extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqLoggerSink_shouldLog()}.
+     * Checks whether the messages with given log severity level will be written to the target or not.
+     * &#64;param level The severity level of messages.
+     * &#64;param[out] willLog True if the messages with &#64;p level will be written to the target; false otherwise.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerSink_shouldLog()}.
      */
     public boolean shouldLog(LogLevel level) {
         try {

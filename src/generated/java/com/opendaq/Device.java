@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents an openDAQ device. The device contains a list of signals and physical channels. Some devices support adding function blocks, or connecting to devices. The list of available function blocks/devices can be obtained via the `getAvailable` functions, and added via the `add` functions.
+ * Represents an openDAQ device. The device contains a list of signals and physical channels.
+ * Some devices support adding function blocks, or connecting to devices. The list of available
+ * function blocks/devices can be obtained via the `getAvailable` functions, and added
+ * via the `add` functions.
+ *
  * Devices can be split up into three different types, with each devices supporting one or more:
  * 1. Physical devices
  * Physical devices provide access to physical channels. They measure real-world data and send
@@ -28,9 +32,11 @@ import com.opendaq.lowlevel.*;
  * and configured. The calculation of function blocks is done on the device itself. The dictionary
  * of available function block types can be obtained via `getAvailableFunctionBlockTypes`. They
  * can then be added via `addFunctionBlock`.
+ *
  * All devices also provide access to their Device information, containing metadata such as the
  * device's serial number, location... They can also be queried for their current domain values
  * (time) through its device domain.
+ *
  * As each device is a property object, a device has access to all Property object methods, allowing
  * each device to expose a list of custom properties such as sample rate, scaling factor and many
  * others. By default, openDAQ devices have the UserName and Location string Properties.
@@ -73,8 +79,12 @@ public class Device extends Folder {
     /**
      * Connects to a device at the given connection string and returns it.
      * &#64;param[out] device The added device.
-     * &#64;param connectionString The connection string containing the address of the device. In example an IPv4/IPv6 address. The connection string can be found in the Device Info objects returned by `getAvailableDevices`.
-     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate, port to use for 3rd party communication, number of channels to generate, or other device specific settings. Can be created from its corresponding Device type object. In case of a null value, it will use the default configuration.
+     * &#64;param connectionString The connection string containing the address of the device. In example an
+     * IPv4/IPv6 address. The connection string can be found in the Device Info objects returned by
+     * `getAvailableDevices`.
+     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate,
+     * port to use for 3rd party communication, number of channels to generate, or other device specific settings. Can be
+     * created from its corresponding Device type object. In case of a null value, it will use the default configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_addDevice()}.
      */
@@ -96,11 +106,19 @@ public class Device extends Folder {
     }
 
     /**
-     * Connects to multiple devices in parallel using the provided connection strings and returns the connected devices. Each connection is established concurrently to improve performance when handling multiple devices. The additions, in turn, are performed sequentially in the order specified by connectionArgs.
-     * &#64;param[out] devices A dictionary that maps each connection string to the corresponding added device object. If a device connection or addition attempt fails, the value will be `nullptr` for that entry.
-     * &#64;param connectionArgs A dictionary where each key is a connection string identifying the target device (e.g., IPv4/IPv6), and each value is a configuration object that customizes the connection. The configuration may specify parameters such as maximum sample rate, communication port, number of channels, or other device-specific settings. A `nullptr` value indicates that the default configuration should be used.
-     * &#64;param errCodes An optional dictionary used to populate error codes for failed connection or addition attempts. For each failed attempt, the key is the connection string, and the value contains the error code.
-     * &#64;param errorInfos An optional dictionary used to populate detailed error info for failed connection or addition attempts. For each failed attempt, the key is the connection string, and the value contains the error info object.
+     * Connects to multiple devices in parallel using the provided connection strings and returns the connected devices.
+     * Each connection is established concurrently to improve performance when handling multiple devices. The additions, in turn,
+     * are performed sequentially in the order specified by connectionArgs.
+     * &#64;param[out] devices A dictionary that maps each connection string to the corresponding added device object.
+     * If a device connection or addition attempt fails, the value will be `nullptr` for that entry.
+     * &#64;param connectionArgs A dictionary where each key is a connection string identifying the target device
+     * (e.g., IPv4/IPv6), and each value is a configuration object that customizes the connection.
+     * The configuration may specify parameters such as maximum sample rate, communication port, number of channels,
+     * or other device-specific settings. A `nullptr` value indicates that the default configuration should be used.
+     * &#64;param[in,out] errCodes An optional dictionary used to populate error codes for failed connection or addition attempts.
+     * For each failed attempt, the key is the connection string, and the value contains the error code.
+     * &#64;param[in,out] errorInfos An optional dictionary used to populate detailed error info for failed connection or addition attempts.
+     * For each failed attempt, the key is the connection string, and the value contains the error info object.
      * &#64;return OPENDAQ_PARTIAL_SUCCESS if at least one device was successfully created and added, but not all of them;
      * OPENDAQ_ERR_GENERALERROR if no devices were created or added;
      * OPENDAQ_IGNORED if adding the devices from modules is not allowed within the device.
@@ -137,7 +155,8 @@ public class Device extends Folder {
     /**
      * Creates and adds a function block to the device with the provided unique ID and returns it.
      * &#64;param[out] functionBlock The added function block.
-     * &#64;param typeId The unique ID of the function block. Can be obtained from its corresponding Function Block Info object.
+     * &#64;param typeId The unique ID of the function block. Can be obtained from its corresponding Function Block Info
+     * object.
      * &#64;param config A config object to configure a function block with custom settings specific to that function block type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_addFunctionBlock()}.
@@ -180,10 +199,15 @@ public class Device extends Folder {
     }
 
     /**
-     * Connects to a streaming at the given connection string, adds it as a streaming source of device and returns created streaming object.
+     * Connects to a streaming at the given connection string, adds it as a streaming source of device
+     * and returns created streaming object.
      * &#64;param[out] streaming The added streaming source.
-     * &#64;param connectionString The connection string containing the address of the streaming. In example an IPv4/IPv6 address. The connection string can be found in the Server Capability objects returned by `getInfo().getServerCapabilities()`.
-     * &#64;param config A config object to configure a streaming connection. This object can contain properties like various connection timeouts or other streaming protocol specific settings. Can be created from its corresponding Streaming type object. In case of a null value, it will use the default configuration.
+     * &#64;param connectionString The connection string containing the address of the streaming. In example an
+     * IPv4/IPv6 address. The connection string can be found in the Server Capability objects returned by
+     * `getInfo().getServerCapabilities()`.
+     * &#64;param config A config object to configure a streaming connection. This object can contain properties like
+     * various connection timeouts or other streaming protocol specific settings. Can be created from its corresponding
+     * Streaming type object. In case of a null value, it will use the default configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_addStreaming()}.
      */
@@ -205,8 +229,10 @@ public class Device extends Folder {
     }
 
     /**
-     * Creates config object that can be used when adding a device. Contains Device and Streaming default configuration for all available Device/Streaming types. Also contains general add-device configuration settings.
+     * Creates config object that can be used when adding a device. Contains Device and Streaming default configuration
+     * for all available Device/Streaming types. Also contains general add-device configuration settings.
      * &#64;param[out] defaultConfig The configuration object containing default settings for adding a device.
+     *
      * The default config object is organized to always have 3 object-type properties:
      * - "General" Contains general properties such as "AutomaticallyConnectStreaming"
      * - "Device": Contains a child object-type property for each available device type, with the key of each property
@@ -242,6 +268,7 @@ public class Device extends Folder {
     /**
      * Gets a list of available devices, containing their Device Info.
      * &#64;param[out] availableDevices The list of available devices.
+     *
      * The getAvailableDevices most often runs a discovery client, querying for available devices that
      * a device module can connect to. The replies are formed into Device Info objects and inserted to the
      * list of available devices.
@@ -288,6 +315,7 @@ public class Device extends Folder {
      * Gets a flat list of the device's physical channels.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] channels The flat list of channels.
+     *
      * If searchFilter is not provided, the returned list contains only visible channels and does not include those of
      * child devices.
      *
@@ -360,6 +388,7 @@ public class Device extends Folder {
      * Gets a list of child devices that the device is connected to.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] devices The list of devices.
+     *
      * If searchFilter is not provided, the returned list contains only visible devices and does not include those of
      * child devices.
      *
@@ -380,7 +409,8 @@ public class Device extends Folder {
     }
 
     /**
-     * Gets the device's domain data. It allows for querying the device for its domain (time) values.
+     * Gets the device's domain data. It allows for querying the device for its
+     * domain (time) values.
      * &#64;param[out] domain The device domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getDomain()}.
@@ -397,6 +427,7 @@ public class Device extends Folder {
      * Gets the list of added function blocks.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] functionBlocks The list of added function blocks.
+     *
      * If searchFilter is not provided, the returned list contains only visible function blocks and does not include those of
      * child function blocks, devices, or channels.
      *
@@ -417,7 +448,8 @@ public class Device extends Folder {
     }
 
     /**
-     * Gets the device info. It contains data about the device such as the device's serial number, location, and connection string.
+     * Gets the device info. It contains data about the device such as the device's
+     * serial number, location, and connection string.
      * &#64;param[out] info The device info.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getInfo()}.
@@ -433,6 +465,7 @@ public class Device extends Folder {
     /**
      * Gets a folder containing channels.
      * &#64;param[out] inputsOutputsFolder The folder that contains channels.
+     *
      * The InputsOutputs folder can contain other folders that themselves contain channels.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getInputsOutputsFolder()}.
@@ -447,12 +480,14 @@ public class Device extends Folder {
 
     /**
      * Retrieves a chunk of the log file with the provided ID.
+     *
      * This function extracts a specified portion (or the entire content) of the log file, starting at the given offset.
      * If the size and offset are not specified, it will attempt to return the entire log file by default.
      * &#64;param[out] log A string which stores requested log chunk.
      * &#64;param id Rhe ID of the log file to retrieve.
      * &#64;param size The size of the log chunk to retrieve in bytes. Defaults to -1, which means it will return all remaining bytes from the offset.
      * &#64;param offset The offset, in bytes, from where the log chunk should be read. Defaults to 0 (start of the file).
+     *
      * If size is set to -1, and offset is 0, the entire log file will be returned.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getLog()}.
@@ -510,8 +545,10 @@ public class Device extends Folder {
      * Gets a list of the device's signals.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] signals The flat list of signals.
+     *
      * If searchFilter is not provided, the returned list contains only visible signals and does not include those of
      * child function blocks, devices, or channels.
+     *
      * Device signals are most often domain signals shared by other signals that belong to channels and/or function blocks.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getSignals()}.
@@ -534,6 +571,7 @@ public class Device extends Folder {
      * Gets a list of the signals that belong to the device.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] signals The flat list of signals.
+     *
      * The list includes visible signals that belong to visible channels, function blocks, or sub devices
      * of the device.
      *
@@ -556,6 +594,7 @@ public class Device extends Folder {
     /**
      * Gets the sync component of the device.
      * &#64;param[out] sync The sync component.
+     * &#64;deprecated ISyncComponent and getSyncComponent are deprecated and will be removed in a future release.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getSyncComponent()}.
      */
@@ -568,8 +607,24 @@ public class Device extends Folder {
     }
 
     /**
+     * Gets the synchronization object of the device.
+     * &#64;param[out] sync The synchronization object.
+     * &#64;return OPENDAQ_IGNORED if the device has no clock; sync is set to nullptr.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getSynchronization()}.
+     */
+    public Synchronization getSynchronization() {
+        try {
+            return DaqObject.wrap(DaqDevice.getSynchronization(requireLivePointer()), Synchronization.class);
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Gets the number of ticks passed since the device's absolute origin.
      * &#64;param[out] ticks The number of ticks.
+     *
      * To scale the ticks into a domain unit, the Device's Domain should be used.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_getTicksSinceOrigin()}.
@@ -620,7 +675,9 @@ public class Device extends Folder {
     }
 
     /**
-     * Lock a device with a session user. Once locked, no properties of the device can be changed via the protocol layer. Only the same user who locked the device can unlock it. If no user was specified when the device was locked, any user will be able to unlock it.
+     * Lock a device with a session user. Once locked, no properties of the device can be changed via the protocol layer.
+     * Only the same user who locked the device can unlock it. If no user was specified when the device was locked, any user
+     * will be able to unlock it.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_lock()}.
      */
@@ -720,7 +777,8 @@ public class Device extends Folder {
     }
 
     /**
-     * Unlock a device with a session user. A device can only be unlocked by the same user who locked it. If no user was specified when the device was locked, any user will be able to unlock it.
+     * Unlock a device with a session user. A device can only be unlocked by the same user who locked it.
+     * If no user was specified when the device was locked, any user will be able to unlock it.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDevice_unlock()}.
      */

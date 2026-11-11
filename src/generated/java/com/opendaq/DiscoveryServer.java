@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_utility
- * &#64;addtogroup opendaq_discovery_service Discovery service
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqDiscoveryServer} interface.
+ * Wraps the openDAQ {&#64;code daqDiscoveryServer} interface.
  */
 public class DiscoveryServer extends BaseObject {
 

@@ -12,12 +12,16 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * The builder interface of Properties. Allows for construction of Properties through the `build` method.
+ * The builder interface of Properties. Allows for construction of Properties through the `build`
+ * method.
+ *
  * Contains setters for the Property fields. The setters take as parameters openDAQ objects, even if
  * the value must always evaluate to, for example, a boolean. This allows for EvalValue objects to be
  * set instead of a static value.
+ *
  * The EvalValue objects can evaluate to Boolean, String, List, Unit, and Property types. and can thus be
  * used when such types are expected from the getters.
+ *
  * The Property can be built by calling the `build` method.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPropertyBuilder} interface.
@@ -32,6 +36,7 @@ public class PropertyBuilder extends BaseObject {
     /**
      * Creates an Property builder object with only the name field configured.
      * &#64;param name The name of the Property.
+     *
      * The default Value type is `ctUndefined`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createPropertyBuilder()}.
@@ -51,6 +56,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates a boolean Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The boolean default value. Can be an EvalValue.
+     *
      * The Property Value type is `ctBool`. Note that the defaultValue parameter can be EvalValue.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createBoolPropertyBuilder()}.
@@ -73,10 +79,13 @@ public class PropertyBuilder extends BaseObject {
      * Creates a dictionary Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The dictionary default value.
+     *
      * The Property Value type is `ctDict`. The dictionary passed as default value must have homogeneous key
      * and value lists (all dictionary keys/values must be of the same type).
+     *
      * The Property's Item type field will be set according to defaultValue dictionary Item type. The same goes for
      * the Key type.
+     *
      * TODO: defaultValue can be an EvalValue once dictionaries are supported.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createDictPropertyBuilder()}.
@@ -99,6 +108,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates an Enumeration Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The default structure value.
+     *
      * The Property Value type is `ctEnumeration`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createEnumerationPropertyBuilder()}.
@@ -122,6 +132,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates a floating point value Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The float default value. Can be an EvalValue
+     *
      * The Property Value type is `ctFloat`. Note that the defaultValue parameter can be EvalValue.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createFloatPropertyBuilder()}.
@@ -141,9 +152,11 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Creates a function- or procedure-type Property builder object. Requires the a CallableInfo object to specify the argument type/count and function return type.
+     * Creates a function- or procedure-type Property builder object. Requires the a CallableInfo object
+     * to specify the argument type/count and function return type.
      * &#64;param name The name of the Property.
      * &#64;param callableInfo Information about the callable argument type/count and return type.
+     *
      * The Property Value type is `ctFunction` or `ctProc`, depending on if `callableInfo` contains information
      * on the return type or not.
      *
@@ -168,6 +181,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates an integer Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The integer default value. Can be an EvalValue.
+     *
      * The Property Value type is `ctInt`. Note that the defaultValue parameter can be EvalValue.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createIntPropertyBuilder()}.
@@ -190,8 +204,10 @@ public class PropertyBuilder extends BaseObject {
      * Creates a list Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The list default value. Can be an EvalValue.
+     *
      * The Property Value type is `ctList`. Note that the defaultValue parameter can be EvalValue.
      * The list passed as `defaultValue` must be homogeneous.
+     *
      * The Property's Item type field will be set according to defaultValue list type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createListPropertyBuilder()}.
@@ -214,9 +230,11 @@ public class PropertyBuilder extends BaseObject {
      * Creates an object-type Property builder object with a specified name and default value..
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The Property object default value.
+     *
      * The Property Value type is `ctObject`. Object properties cannot be have any metadata other than
      * their name, description, and default value configured. The PropertyObject default value can only
      * be a base PropertyObject type (not a descendant type).
+     *
      * If the defaultValue is not specified, it will automatically be configured to an empty Property Object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createObjectPropertyBuilder()}.
@@ -240,7 +258,9 @@ public class PropertyBuilder extends BaseObject {
      * Creates a ratio Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The ratio default value.
+     *
      * The Property Value type is `ctRatio`.
+     *
      * TODO: defaultValue can be an EvalValue once ratios are supported.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createRatioPropertyBuilder()}.
@@ -260,7 +280,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Creates a Reference Property builder object that points at a property specified in the `referencedProperty` parameter.
+     * Creates a Reference Property builder object that points at a property specified in the `referencedProperty`
+     * parameter.
      * &#64;param name The name of the Property.
      * &#64;param referencedPropertyEval The evaluation expression that evaluates to another property.
      *
@@ -282,10 +303,12 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Creates a Selection Property builder object with a list of selection values. The default value is an integer index into the default selected value.
+     * Creates a Selection Property builder object with a list of selection values. The default value
+     * is an integer index into the default selected value.
      * &#64;param name The name of the Property.
      * &#64;param selectionValues The list of selectable values.
      * &#64;param defaultValue The default index into the list of selection values.
+     *
      * The Property Value type is `ctInt`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createSelectionPropertyBuilder()}.
@@ -308,10 +331,12 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Creates a Selection Property builder object with a dictionary of selection values. The default value is an integer key into the provided dictionary.
+     * Creates a Selection Property builder object with a dictionary of selection values. The default value
+     * is an integer key into the provided dictionary.
      * &#64;param name The name of the Property.
      * &#64;param selectionValues The dictionary of selectable values. The key type must be `ctInt`.
      * &#64;param defaultValue The default key into the list of selection values.
+     *
      * The Property Value type is `ctInt`. The key type of the Selection values dictionary must be `ctInt`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createSparseSelectionPropertyBuilder()}.
@@ -337,6 +362,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates a string Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The integer default value. Can be an EvalValue.
+     *
      * The Property Value type is `ctString`. Note that the defaultValue parameter can be EvalValue.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createStringPropertyBuilder()}.
@@ -359,6 +385,7 @@ public class PropertyBuilder extends BaseObject {
      * Creates a Struct Property builder object with a specified name and default value.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The default structure value.
+     *
      * The Property Value type is `ctStruct`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_createStructPropertyBuilder()}.
@@ -393,7 +420,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Gets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.
+     * Gets the Callable information objects of the Property that specifies the argument and return types
+     * of the callable object stored as the Property value.
      * &#64;param[out] callable The Callable info object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_getCallableInfo()}.
@@ -450,8 +478,10 @@ public class PropertyBuilder extends BaseObject {
 
     /**
      * Gets the integer value selection flag for selection properties with valueType == ctInt.
+     *
      * When true, the property stores the actual selected integer value (IntegerValueSelection).
      * When false (default), the property stores the index of the selected entry (IndexSelection).
+     *
      * This flag is ignored for sparse selection properties and for selection properties
      * with a valueType other than ctInt.
      * &#64;param isIntegerValueSelection The current value of the flag.
@@ -607,7 +637,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Gets the list of Suggested values. Contains values that are the optimal gettings for the corresponding Property value. These values, however, are not enforced when getting a new Property value.
+     * Gets the list of Suggested values. Contains values that are the optimal gettings for the corresponding
+     * Property value. These values, however, are not enforced when getting a new Property value.
      * &#64;param[out] values The Suggested values of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_getSuggestedValues()}.
@@ -677,7 +708,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.
+     * Sets the Callable information objects of the Property that specifies the argument and return types
+     * of the callable object stored as the Property value.
      * &#64;param callable The Callable info object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setCallableInfo()}.
@@ -696,6 +728,7 @@ public class PropertyBuilder extends BaseObject {
     /**
      * Sets the coercer of the Property.
      * &#64;param coercer The coercer.
+     *
      * Used to coerce a value written to the corresponding Property value to the constraints specified by the coercer.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setCoercer()}.
@@ -712,7 +745,9 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Default value of the Property. The Default value must always be configured for a Property to be in a valid state. Exceptions are Function/Procedure and Reference properties. The function will freeze default value if it is freezable.
+     * Sets the Default value of the Property. The Default value must always be configured for a Property to be
+     * in a valid state. Exceptions are Function/Procedure and Reference properties.
+     * The function will freeze default value if it is freezable.
      * &#64;param value The Default value of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setDefaultValue()}.
@@ -751,8 +786,10 @@ public class PropertyBuilder extends BaseObject {
 
     /**
      * Sets the integer value selection flag for selection properties with valueType == ctInt.
+     *
      * When true, the property stores the actual selected integer value (IntegerValueSelection).
      * When false (default), the property stores the index of the selected entry (IndexSelection).
+     *
      * This flag is ignored for sparse selection properties and for selection properties
      * with a valueType other than ctInt.
      * &#64;param isIntegerValueSelection True to store the selected value; false to store the selection index.
@@ -808,7 +845,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Name of the Property. The names of Properties in a Property object must be unique. The name is used as the key to the corresponding Property value when getting/setting the value.
+     * Sets the Name of the Property. The names of Properties in a Property object must be unique.
+     * The name is used as the key to the corresponding Property value when getting/setting the value.
      * &#64;param name The Name of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setName()}.
@@ -897,6 +935,7 @@ public class PropertyBuilder extends BaseObject {
     /**
      * Used to determine whether the Property is a read-only property or not.
      * &#64;param readOnly True if the Property is a read-only property; false otherwise.
+     *
      * Read-only Property values can still be modified by using the `PropertyObjectProtected` interface methods.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setReadOnly()}.
@@ -915,8 +954,10 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and `Is referenced` getters will return the value of the `Referenced property`.
+     * Sets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and
+     * `Is referenced` getters will return the value of the `Referenced property`.
      * &#64;param propertyEval The referenced property.
+     *
      * If the Property is not bound to a Property object this call will not be able to return the Referenced property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setReferencedProperty()}.
@@ -933,7 +974,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the list or dictionary of selection values. If the list/dictionary is not empty, the property is a Selection property, and must have the Value type `ctInt`.
+     * Sets the list or dictionary of selection values. If the list/dictionary is not empty, the property
+     * is a Selection property, and must have the Value type `ctInt`.
      * &#64;param values The list/dictionary of possible selection values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setSelectionValues()}.
@@ -952,7 +994,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the list of Suggested values. Contains values that are the optimal settings for the corresponding Property value. These values, however, are not enforced when setting a new Property value.
+     * Sets the list of Suggested values. Contains values that are the optimal settings for the corresponding
+     * Property value. These values, however, are not enforced when setting a new Property value.
      * &#64;param values The Suggested values of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setSuggestedValues()}.
@@ -990,6 +1033,7 @@ public class PropertyBuilder extends BaseObject {
     /**
      * Sets the validator of the Property.
      * &#64;param validator The validator.
+     *
      * Used to validate whether a value written to the corresponding Property value is valid or not.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setValidator()}.
@@ -1006,7 +1050,8 @@ public class PropertyBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Value type of the Property. Values written to the corresponding Property value must be of the same type.
+     * Sets the Value type of the Property. Values written to the corresponding Property value
+     * must be of the same type.
      * &#64;param type The value type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyBuilder_setValueType()}.

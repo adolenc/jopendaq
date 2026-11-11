@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * The configuration component of input ports. Provides access to Input port owners to internal components of the input port.
+ * The configuration component of input ports. Provides access to Input port owners
+ * to internal components of the input port.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqInputPortConfig} interface.
  */
@@ -111,6 +112,7 @@ public class InputPortConfig extends InputPort {
 
     /**
      * Gets called when a packet was enqueued in a connection.
+     *
      * The notification is called on the same thread that enqueued the packet.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInputPortConfig_notifyPacketEnqueuedOnThisThread()}.
@@ -125,6 +127,7 @@ public class InputPortConfig extends InputPort {
 
     /**
      * Gets called when a packet was enqueued in a connection.
+     *
      * The notification is scheduled.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInputPortConfig_notifyPacketEnqueuedWithScheduler()}.
@@ -183,6 +186,7 @@ public class InputPortConfig extends InputPort {
     /**
      * Sets requires signal flag of the input port.
      * &#64;param requiresSignal True if the input port requires a signal to be connected; false otherwise.
+     *
      * If an input port requires a signal, then the input port must have a signal connected otherwise
      * the owner of the input port (function block) should report an error.
      *

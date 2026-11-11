@@ -14,24 +14,55 @@ public final class DaqErrorInfo {
 
     private DaqErrorInfo() {}
 
+    private static final MethodHandle MH_clearErrorInfo =
+        Ffi.downcallOrNull("daqErrorInfo_clearErrorInfo", FunctionDescriptor.ofVoid());
     private static final MethodHandle MH_createErrorInfo =
         Ffi.downcallOrNull("daqErrorInfo_createErrorInfo", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_extendErrorInfo =
+        Ffi.downcallOrNull("daqErrorInfo_extendErrorInfo", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_getErrorCode =
+        Ffi.downcallOrNull("daqErrorInfo_getErrorCode", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getErrorInfo =
+        Ffi.downcallOrNull("daqErrorInfo_getErrorInfo", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_getErrorInfoList =
+        Ffi.downcallOrNull("daqErrorInfo_getErrorInfoList", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_getErrorInfoMessage =
+        Ffi.downcallOrNull("daqErrorInfo_getErrorInfoMessage", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_getFileLine =
         Ffi.downcallOrNull("daqErrorInfo_getFileLine", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getFileName =
         Ffi.downcallOrNull("daqErrorInfo_getFileName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getFormattedMessage =
+        Ffi.downcallOrNull("daqErrorInfo_getFormattedMessage", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqErrorInfo_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getMessage =
         Ffi.downcallOrNull("daqErrorInfo_getMessage", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getPreviousErrorCode =
+        Ffi.downcallOrNull("daqErrorInfo_getPreviousErrorCode", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getSource =
         Ffi.downcallOrNull("daqErrorInfo_getSource", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setErrorCode =
+        Ffi.downcallOrNull("daqErrorInfo_setErrorCode", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT));
+    private static final MethodHandle MH_setErrorInfo =
+        Ffi.downcallOrNull("daqErrorInfo_setErrorInfo", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_setFileLine =
         Ffi.downcallOrNull("daqErrorInfo_setFileLine", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG));
     private static final MethodHandle MH_setFileName =
         Ffi.downcallOrNull("daqErrorInfo_setFileName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setMessage =
         Ffi.downcallOrNull("daqErrorInfo_setMessage", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setPreviousErrorCode =
+        Ffi.downcallOrNull("daqErrorInfo_setPreviousErrorCode", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT));
     private static final MethodHandle MH_setSource =
         Ffi.downcallOrNull("daqErrorInfo_setSource", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+
+    /** Calls {@code daqErrorInfo_clearErrorInfo()}. */
+    public static void clearErrorInfo() {
+        try {
+            Ffi.require(MH_clearErrorInfo, "daqErrorInfo_clearErrorInfo").invokeExact();
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
 
     /** Calls {@code daqErrorInfo_createErrorInfo()}. */
     public static MemorySegment createErrorInfo() {
@@ -43,7 +74,52 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_getFileLine()}. */
+    /** Calls {@code daqErrorInfo_extendErrorInfo()}. */
+    public static void extendErrorInfo(MemorySegment errorInfo) {
+        try {
+            Ffi.require(MH_extendErrorInfo, "daqErrorInfo_extendErrorInfo").invokeExact(Ffi.orNull(errorInfo));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the error code.  Calls {@code daqErrorInfo_getErrorCode()}. */
+    public static int getErrorCode(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment errorCodeSlot = arena.allocate(JAVA_INT);
+            int err = (int) Ffi.require(MH_getErrorCode, "daqErrorInfo_getErrorCode").invokeExact(Ffi.orNull(self), errorCodeSlot);
+            Ffi.checkError(err, "daqErrorInfo_getErrorCode");
+            return errorCodeSlot.get(JAVA_INT, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqErrorInfo_getErrorInfo()}. */
+    public static MemorySegment getErrorInfo() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment errorInfoSlot = arena.allocate(ADDRESS);
+            Ffi.require(MH_getErrorInfo, "daqErrorInfo_getErrorInfo").invokeExact(errorInfoSlot);
+            return errorInfoSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqErrorInfo_getErrorInfoList()}. */
+    public static MemorySegment getErrorInfoList() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment errorInfoListSlot = arena.allocate(ADDRESS);
+            Ffi.require(MH_getErrorInfoList, "daqErrorInfo_getErrorInfoList").invokeExact(errorInfoListSlot);
+            return errorInfoListSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqErrorInfo_getErrorInfoMessage()}. */
+    public static MemorySegment getErrorInfoMessage() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment errorMessageSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getErrorInfoMessage, "daqErrorInfo_getErrorInfoMessage").invokeExact(errorMessageSlot);
+            Ffi.checkError(err, "daqErrorInfo_getErrorInfoMessage");
+            return errorMessageSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the line number in the file where the error occurred.  Calls {@code daqErrorInfo_getFileLine()}. */
     public static long getFileLine(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment fileLineSlot = arena.allocate(JAVA_LONG);
@@ -53,7 +129,7 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_getFileName()}. */
+    /** Gets the file name where the error occurred.  Calls {@code daqErrorInfo_getFileName()}. */
     public static MemorySegment getFileName(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment fileNameSlot = arena.allocate(ADDRESS);
@@ -63,7 +139,24 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_getMessage()}. */
+    /** Gets a formatted error message containing the error description, file name, and line number.  Calls {@code daqErrorInfo_getFormattedMessage()}. */
+    public static MemorySegment getFormattedMessage(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment messageSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getFormattedMessage, "daqErrorInfo_getFormattedMessage").invokeExact(Ffi.orNull(self), messageSlot);
+            Ffi.checkError(err, "daqErrorInfo_getFormattedMessage");
+            return messageSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqErrorInfo_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqErrorInfo_getInterfaceId").invokeExact(Ffi.orNull(intfId));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the message of the error.  Calls {@code daqErrorInfo_getMessage()}. */
     public static MemorySegment getMessage(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment messageSlot = arena.allocate(ADDRESS);
@@ -73,7 +166,17 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_getSource()}. */
+    /** Gets the error code of the preceding error in the chain.  Calls {@code daqErrorInfo_getPreviousErrorCode()}. */
+    public static int getPreviousErrorCode(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment prevErrCodeSlot = arena.allocate(JAVA_INT);
+            int err = (int) Ffi.require(MH_getPreviousErrorCode, "daqErrorInfo_getPreviousErrorCode").invokeExact(Ffi.orNull(self), prevErrCodeSlot);
+            Ffi.checkError(err, "daqErrorInfo_getPreviousErrorCode");
+            return prevErrCodeSlot.get(JAVA_INT, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the source of the error.  Calls {@code daqErrorInfo_getSource()}. */
     public static MemorySegment getSource(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment sourceSlot = arena.allocate(ADDRESS);
@@ -83,7 +186,22 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_setFileLine()}. */
+    /** Sets the error code.  Calls {@code daqErrorInfo_setErrorCode()}. */
+    public static void setErrorCode(MemorySegment self, int errorCode) {
+        try {
+            int err = (int) Ffi.require(MH_setErrorCode, "daqErrorInfo_setErrorCode").invokeExact(Ffi.orNull(self), errorCode);
+            Ffi.checkError(err, "daqErrorInfo_setErrorCode");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqErrorInfo_setErrorInfo()}. */
+    public static void setErrorInfo(MemorySegment errorInfo) {
+        try {
+            Ffi.require(MH_setErrorInfo, "daqErrorInfo_setErrorInfo").invokeExact(Ffi.orNull(errorInfo));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Sets the line number in the file where the error occurred.  Calls {@code daqErrorInfo_setFileLine()}. */
     public static void setFileLine(MemorySegment self, long fileLine) {
         try {
             int err = (int) Ffi.require(MH_setFileLine, "daqErrorInfo_setFileLine").invokeExact(Ffi.orNull(self), fileLine);
@@ -91,7 +209,7 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_setFileName()}. */
+    /** Sets the file name where the error occurred.  Calls {@code daqErrorInfo_setFileName()}. */
     public static void setFileName(MemorySegment self, MemorySegment fileName) {
         try {
             int err = (int) Ffi.require(MH_setFileName, "daqErrorInfo_setFileName").invokeExact(Ffi.orNull(self), Ffi.orNull(fileName));
@@ -99,7 +217,7 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_setMessage()}. */
+    /** Sets the message of the error.  Calls {@code daqErrorInfo_setMessage()}. */
     public static void setMessage(MemorySegment self, MemorySegment message) {
         try {
             int err = (int) Ffi.require(MH_setMessage, "daqErrorInfo_setMessage").invokeExact(Ffi.orNull(self), Ffi.orNull(message));
@@ -107,7 +225,15 @@ public final class DaqErrorInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqErrorInfo_setSource()}. */
+    /** Sets whether this error was caused by a previous error.  Calls {@code daqErrorInfo_setPreviousErrorCode()}. */
+    public static void setPreviousErrorCode(MemorySegment self, int prevErrCode) {
+        try {
+            int err = (int) Ffi.require(MH_setPreviousErrorCode, "daqErrorInfo_setPreviousErrorCode").invokeExact(Ffi.orNull(self), prevErrCode);
+            Ffi.checkError(err, "daqErrorInfo_setPreviousErrorCode");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Sets the source of the error.  Calls {@code daqErrorInfo_setSource()}. */
     public static void setSource(MemorySegment self, MemorySegment source) {
         try {
             int err = (int) Ffi.require(MH_setSource, "daqErrorInfo_setSource").invokeExact(Ffi.orNull(self), Ffi.orNull(source));

@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Configuration component of Device info objects. Contains setter methods that are available until the object is frozen.
+ * Configuration component of Device info objects. Contains setter methods that
+ * are available until the object is frozen.
+ *
  * Device info config contains functions that allow for the configuration of Device info objects.
  * The implementation of `config` also implements the `freeze` function that freezes the object making it
  * immutable. Once frozen, the setter methods fail as the object can no longer be modified.
@@ -64,8 +66,10 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the asset ID of the device. Represents a user writable alphanumeric character sequence uniquely identifying a component.
+     * Sets the asset ID of the device. Represents a user writable alphanumeric character
+     * sequence uniquely identifying a component.
      * &#64;param id The asset ID of the device.
+     *
      * The ID is provided by the integrator or user of the device. It contains typically an identifier
      * in a branch, use case or user specific naming scheme. This could be for example a reference to
      * an electric scheme.
@@ -118,7 +122,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the address of the user manual. It may be a pathname in the file system or a URL (Web address)
+     * Sets the address of the user manual.
+     * It may be a pathname in the file system or a URL (Web address)
      * &#64;param deviceManual The manual of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setDeviceManual()}.
@@ -152,7 +157,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets a device type as an object providing type id, name, short description and default device configuration.
+     * Sets a device type as an object providing type id, name, short description and
+     * default device configuration.
      * &#64;param[out] deviceType The device type object
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setDeviceType()}.
@@ -235,7 +241,9 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the unique identifier of the company that manufactured the device. This identifier should be a fully qualified domain name; however, it may be a GUID or similar construct that ensures global uniqueness.
+     * Sets the unique identifier of the company that manufactured the device.
+     * This identifier should be a fully qualified domain name;
+     * however, it may be a GUID or similar construct that ensures global uniqueness.
      * &#64;param manufacturerUri The manufacturer uri of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setManufacturerUri()}.
@@ -303,7 +311,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the platform of the device. The platform specifies whether real hardware is used or if the device is simulated.
+     * Sets the platform of the device. The platform specifies whether real hardware
+     * is used or if the device is simulated.
      * &#64;param platform The platform of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setPlatform()}.
@@ -320,7 +329,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the position of the device. The position specifies the position within a given system. For example in which slot or slice the device is in.
+     * Sets the position of the device. The position specifies the position within a
+     * given system. For example in which slot or slice the device is in.
      * &#64;param position The position of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setPosition()}.
@@ -351,7 +361,9 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the globally unique resource identifier provided by the manufacturer. The recommended syntax of the ProductInstanceUri is: &lt;ManufacturerUri&gt;/&lt;any string&gt; where &lt;any string&gt; is unique among all instances using the same ManufacturerUri.
+     * Sets the globally unique resource identifier provided by the manufacturer.
+     * The recommended syntax of the ProductInstanceUri is: &lt;ManufacturerUri&gt;/&lt;any string&gt;
+     * where &lt;any string&gt; is unique among all instances using the same ManufacturerUri.
      * &#64;param productInstanceUri The product instance uri of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setProductInstanceUri()}.
@@ -368,7 +380,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the incremental counter indicating the number of times the configuration data has been modified.
+     * Sets the incremental counter indicating the number of times the configuration
+     * data has been modified.
      * &#64;param revisionCounter The revision counter of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setRevisionCounter()}.
@@ -416,7 +429,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the system type. The system type can, for example, be LayeredSystem, StandaloneSystem, or RackSystem.
+     * Sets the system type. The system type can, for example, be LayeredSystem,
+     * StandaloneSystem, or RackSystem.
      * &#64;param type The system type of the device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setSystemType()}.
@@ -433,7 +447,8 @@ public class DeviceInfoConfig extends DeviceInfo {
     }
 
     /**
-     * Sets the system UUID that represents a unique ID of a system. All devices in a system share this UUID.
+     * Sets the system UUID that represents a unique ID of a system. All devices in a system
+     * share this UUID.
      * &#64;param uuid The unique ID of a system.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoConfig_setSystemUuid()}.
@@ -452,6 +467,7 @@ public class DeviceInfoConfig extends DeviceInfo {
     /**
      * Sets the name of the current user of the device.
      * &#64;param[out] userName The location of the device.
+     *
      * If the info object is obtained from a device that is already added (not through discovery),
      * the username string value matches that of the device's "userName" property.
      *

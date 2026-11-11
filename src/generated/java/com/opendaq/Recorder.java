@@ -12,7 +12,10 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Recorders represent objects which record input data to a persistent storage medium such as a file, database, or cloud storage bucket. Recorders implement the `IRecorder` interface and may expose additional properties for configuring the storage (such as file type, storage location, etc.). tags.
+ * Recorders represent objects which record input data to a persistent storage medium such
+ * as a file, database, or cloud storage bucket. Recorders implement the `IRecorder` interface and
+ * may expose additional properties for configuring the storage (such as file type, storage
+ * location, etc.). tags.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqRecorder} interface.
  */
@@ -24,7 +27,8 @@ public class Recorder extends BaseObject {
     }
 
     /**
-     * Checks whether data from connected signals is currently being recorded to the persistent storage medium.
+     * Checks whether data from connected signals is currently being recorded to the
+     * persistent storage medium.
      * &#64;param isRecording A pointer to a boolean which is populated with the recording state.
      * &#64;retval OPENDAQ_SUCCESS if the recording status was successfully returned.
      *
@@ -41,7 +45,8 @@ public class Recorder extends BaseObject {
     /**
      * Starts recording data from connected signals to the persistent storage medium.
      * &#64;retval OPENDAQ_SUCCESS if the recording successfully started.
-     * &#64;retval OPENDAQ_ERR_INVALIDSTATE if the recording has already been started and the implementation chooses to treat this scenario as an error.
+     * &#64;retval OPENDAQ_ERR_INVALIDSTATE if the recording has already been started and the
+     * implementation chooses to treat this scenario as an error.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqRecorder_startRecording()}.
      */
@@ -56,7 +61,8 @@ public class Recorder extends BaseObject {
     /**
      * Stops recording data from connected signals to the persistent storage medium.
      * &#64;retval OPENDAQ_SUCCESS if the recording successfully stopped.
-     * &#64;retval OPENDAQ_ERR_INVALIDSTATE if the recording is not started and the implementation chooses to treat this scenario as an error.
+     * &#64;retval OPENDAQ_ERR_INVALIDSTATE if the recording is not started and the implementation
+     * chooses to treat this scenario as an error.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqRecorder_stopRecording()}.
      */

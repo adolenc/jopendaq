@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Acts as a container for channels and other io folders.
+ *
  * Every device has an IO folder, which allows only other IO folders and
  * channels as children.
  *

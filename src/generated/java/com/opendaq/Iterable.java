@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * An iterable object can construct iterators and use them to iterate through items.
+ *
  * Use this interface to get the start and end iterators. Use iterators to iterate through
  * available items. Containers such as lists and dictionaries usually implement this interface.
  *

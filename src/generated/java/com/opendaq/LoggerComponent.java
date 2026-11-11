@@ -12,9 +12,12 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Logs messages produced by a specific part of openDAC SDK. The messages are written into the &#64;ref ILoggerSink "Logger Sinks" associated with the Logger Component object.
+ * Logs messages produced by a specific part of openDAC SDK. The messages are written
+ * into the &#64;ref ILoggerSink "Logger Sinks" associated with the Logger Component object.
+ *
  * The set of associated sinks is initialized on the Logger Component object creation and cannot be
  * changed after.
+ *
  * Logger Component allows to set up a threshold log severity level, so the messages with lower level
  * will not be registered.
  * Additionally, it provides the ability to trigger writing out messages stored in temporary buffers or
@@ -65,7 +68,8 @@ public class LoggerComponent extends BaseObject {
     }
 
     /**
-     * Sets the minimum severity level of messages to be automatically written to the associated sinks bypassing the temporary buffers.
+     * Sets the minimum severity level of messages to be automatically written to the associated
+     * sinks bypassing the temporary buffers.
      * &#64;param level The severity level of messages.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerComponent_flushOnLevel()}.
@@ -101,6 +105,24 @@ public class LoggerComponent extends BaseObject {
     public String getName() {
         try {
             return Ffi.readDaqStringAndRelease(DaqLoggerComponent.getName(requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Logs a message with the provided source location and severity level.
+     * &#64;param location The source location.
+     * &#64;param msg The message.
+     * &#64;param level The severity level of the message.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLoggerComponent_logMessage()}.
+     */
+    public void logMessage(MemorySegment location, String msg, LogLevel level) {
+        try {
+            try (Arena arena = Arena.ofConfined()) {
+                DaqLoggerComponent.logMessage(requireLivePointer(), Ffi.orNull(location), (msg == null ? MemorySegment.NULL : arena.allocateFrom(msg)), level);
+            }
         } finally {
             Reference.reachabilityFence(this);
         }

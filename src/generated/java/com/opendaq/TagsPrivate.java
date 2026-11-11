@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Private interface to component tags. Allows for adding/removing tags.
+ *
  * Modifying the tags of a component might have unintended sideffects and should in most cases only be done
  * by the component owner module.
  *

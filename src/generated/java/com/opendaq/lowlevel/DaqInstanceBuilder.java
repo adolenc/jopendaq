@@ -379,7 +379,7 @@ public final class DaqInstanceBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets The Logger level for a specific component of the Instance. Log messages related to that component will be processed according to the specified log level.  Calls {@code daqInstanceBuilder_setComponentLogLevel()}. */
+    /** Sets The Logger level for a specific component of the Instance. Log messages related to  Calls {@code daqInstanceBuilder_setComponentLogLevel()}. */
     public static void setComponentLogLevel(MemorySegment self, MemorySegment component, LogLevel logLevel) {
         try {
             int err = (int) Ffi.require(MH_setComponentLogLevel, "daqInstanceBuilder_setComponentLogLevel").invokeExact(Ffi.orNull(self), Ffi.orNull(component), logLevel.value());
@@ -387,7 +387,7 @@ public final class DaqInstanceBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Context object of the instance. This overwrites other context related settings such as logger, scheduler and module manager settings.  Calls {@code daqInstanceBuilder_setContext()}. */
+    /** Sets the Context object of the instance. This overwrites other context related  Calls {@code daqInstanceBuilder_setContext()}. */
     public static void setContext(MemorySegment self, MemorySegment context) {
         try {
             int err = (int) Ffi.require(MH_setContext, "daqInstanceBuilder_setContext").invokeExact(Ffi.orNull(self), Ffi.orNull(context));
@@ -411,7 +411,7 @@ public final class DaqInstanceBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Logger global log level for the Instance. All log messages with a severity level equal to or higher than the specified level will be processed.  Calls {@code daqInstanceBuilder_setGlobalLogLevel()}. */
+    /** Sets the Logger global log level for the Instance. All log messages with a severity  Calls {@code daqInstanceBuilder_setGlobalLogLevel()}. */
     public static void setGlobalLogLevel(MemorySegment self, LogLevel logLevel) {
         try {
             int err = (int) Ffi.require(MH_setGlobalLogLevel, "daqInstanceBuilder_setGlobalLogLevel").invokeExact(Ffi.orNull(self), logLevel.value());
@@ -427,7 +427,7 @@ public final class DaqInstanceBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the custom Logger for the Instance. This logger will be used for logging messages related to the Instance and its components. When configured, the `Logger sink` will be ignored, as it is in use only with the default Instance logger.  Calls {@code daqInstanceBuilder_setLogger()}. */
+    /** Sets the custom Logger for the Instance. This logger will be used for logging messages related to the Instance and its components.  Calls {@code daqInstanceBuilder_setLogger()}. */
     public static void setLogger(MemorySegment self, MemorySegment logger) {
         try {
             int err = (int) Ffi.require(MH_setLogger, "daqInstanceBuilder_setLogger").invokeExact(Ffi.orNull(self), Ffi.orNull(logger));
@@ -459,7 +459,7 @@ public final class DaqInstanceBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the connection string for a device that replaces the default openDAQ root device. When the instance is created, a connection to the device with the given connection string will be established, and the device will be placed at the root of the component tree structure.  Calls {@code daqInstanceBuilder_setRootDevice()}. */
+    /** Sets the connection string for a device that replaces the default openDAQ root device.  Calls {@code daqInstanceBuilder_setRootDevice()}. */
     public static void setRootDevice(MemorySegment self, MemorySegment connectionString, MemorySegment config) {
         try {
             int err = (int) Ffi.require(MH_setRootDevice, "daqInstanceBuilder_setRootDevice").invokeExact(Ffi.orNull(self), Ffi.orNull(connectionString), Ffi.orNull(config));

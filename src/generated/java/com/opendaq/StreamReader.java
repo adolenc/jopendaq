@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A signal data reader that abstracts away reading of signal packets by keeping an internal read-position and automatically advances it on subsequent reads.
+ * A signal data reader that abstracts away reading of signal packets by keeping an
+ * internal read-position and automatically advances it on subsequent reads.
  * &#64;remark Currently only supports scalar sample-types and RangeInt64
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqStreamReader} interface.

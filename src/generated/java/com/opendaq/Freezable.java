@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Transforms a mutable object to an immutable object.
+ *
  * If an object supports IFreezable interface, it is possible to transform it to immutable object.
  * Once the object is frozen, it should not allow to change any of its properties or internal state.
  *
@@ -26,7 +27,8 @@ public class Freezable extends BaseObject {
     }
 
     /**
-     * Makes the object frozen/immutable. It should return OPENDAQ_IGNORED value if the object is already frozen.
+     * Makes the object frozen/immutable.
+     * It should return OPENDAQ_IGNORED value if the object is already frozen.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFreezable_freeze()}.
      */

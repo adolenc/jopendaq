@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Component type objects. Contains setter methods to configure the Component type parameters, and a `build` method that builds the object.
+ * Builder component of Component type objects. Contains setter methods to configure the Component type parameters, and a
+ * `build` method that builds the object.
+ *
  * Depending on the set "Type" builder parameter, a different Component type is created - eg. Streaming type,
  * Device type, Function block type, or Server type
  *
@@ -93,6 +95,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Builds and returns a Component type object using the currently set values of the Builder.
      * &#64;param[out] componentType The built Component type.
+     *
      * Depending on the set "sort" builder parameter, a different Component type is created - eg. Streaming type,
      * Device type, Function block type, or Server type
      *
@@ -118,8 +121,10 @@ public class ComponentTypeBuilder extends BaseObject {
     }
 
     /**
-     * Gets the default configuration object that will be cloned and passed to users by the built Component type when requested.
+     * Gets the default configuration object that will be cloned and passed to users
+     * by the built Component type when requested.
      * &#64;param[out] defaultConfig The default configuration object.
+     *
      * Configuration objects are property object with user-defined key-value pairs.
      * For example: Port=1000, OutputRate=5000, ...
      *
@@ -136,6 +141,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Gets the description of a component type.
      * &#64;param[out] description The description of a component type.
+     *
      * A short description of a component type and the associated configuration parameters it offers.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_getDescription()}.
@@ -151,6 +157,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Gets the unique component type id.
      * &#64;param[out] id The unique id of a component type.
+     *
      * Unique id should not be presented on the UI.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_getId()}.
@@ -166,6 +173,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Gets the user-friendly name of a component type.
      * &#64;param[out] name The user-friendly name of a component type.
+     *
      * Name is usually presented on the UI. Does not have to be unique.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_getName()}.
@@ -179,7 +187,8 @@ public class ComponentTypeBuilder extends BaseObject {
     }
 
     /**
-     * Gets the component type sort. Can be either Streaming, Function block, Device, or Server. Depending on the setting, the corresponding Component type object will be built.
+     * Gets the component type sort. Can be either Streaming, Function block, Device, or Server.
+     * Depending on the setting, the corresponding Component type object will be built.
      * &#64;param sort The sort of the component type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_getTypeSort()}.
@@ -209,8 +218,10 @@ public class ComponentTypeBuilder extends BaseObject {
     }
 
     /**
-     * Sets the default configuration object that will be cloned and passed to users by the built Component type when requested.
+     * Sets the default configuration object that will be cloned and passed to users
+     * by the built Component type when requested.
      * &#64;param defaultConfig The default configuration object.
+     *
      * Configuration objects are property object with user-defined key-value pairs.
      * For example: Port=1000, OutputRate=5000, ...
      *
@@ -230,6 +241,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Sets the description of a component type.
      * &#64;param description The description of a component type.
+     *
      * A short description of a component type and the associated configuration parameters it offers.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setDescription()}.
@@ -250,6 +262,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Sets the unique component type id.
      * &#64;param id The unique id of a component type.
+     *
      * Unique id should not be presented on the UI.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setId()}.
@@ -270,6 +283,7 @@ public class ComponentTypeBuilder extends BaseObject {
     /**
      * Sets the user-friendly name of a component type.
      * &#64;param name The user-friendly name of a component type.
+     *
      * Name is usually presented on the UI. Does not have to be unique.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setName()}.
@@ -288,7 +302,8 @@ public class ComponentTypeBuilder extends BaseObject {
     }
 
     /**
-     * Sets the component type sort. Can be either Streaming, Function block, Device, or Server. Depending on the setting, the corresponding Component type object will be built.
+     * Sets the component type sort. Can be either Streaming, Function block, Device, or Server.
+     * Depending on the setting, the corresponding Component type object will be built.
      * &#64;param sort The sort of the component type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentTypeBuilder_setTypeSort()}.

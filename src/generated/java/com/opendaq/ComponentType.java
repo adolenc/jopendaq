@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Provides information about the component types.
+ *
  * Is a Struct core type, and has access to Struct methods internally. Note that the Default config is not part of
  * the Struct fields.
  *
@@ -26,8 +27,10 @@ public class ComponentType extends BaseObject {
     }
 
     /**
-     * The function clones and returns default configuration. On each call, we need to create new object, because we want that each instance of the component has its own configuration object.
+     * The function clones and returns default configuration. On each call, we need to create new object,
+     * because we want that each instance of the component has its own configuration object.
      * &#64;param[out] defaultConfig Newly created configuration object.
+     *
      * Configuration objects are property object with user-defined key-value pairs.
      * For example: Port=1000, OutputRate=5000, ...
      *
@@ -44,6 +47,7 @@ public class ComponentType extends BaseObject {
     /**
      * Gets the description of a component type.
      * &#64;param[out] description The description of a component type.
+     *
      * A short description of a component type and the associated configuration parameters it offers.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentType_getDescription()}.
@@ -59,6 +63,7 @@ public class ComponentType extends BaseObject {
     /**
      * Gets the unique component type id.
      * &#64;param[out] id The unique id of a component type.
+     *
      * Unique id should not be presented on the UI.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentType_getId()}.
@@ -88,6 +93,7 @@ public class ComponentType extends BaseObject {
     /**
      * Gets the user-friendly name of a component type.
      * &#64;param[out] name The user-friendly name of a component type.
+     *
      * Name is usually presented on the UI. Does not have to be unique.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentType_getName()}.

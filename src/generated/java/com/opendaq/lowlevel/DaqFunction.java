@@ -18,8 +18,10 @@ public final class DaqFunction {
         Ffi.downcallOrNull("daqFunction_call", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createFunction =
         Ffi.downcallOrNull("daqFunction_createFunction", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqFunction_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
 
-    /** Calls {@code daqFunction_call()}. */
+    /** Calls the stored callback.  Calls {@code daqFunction_call()}. */
     public static MemorySegment call(MemorySegment self, MemorySegment params, MemorySegment result) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment resultSlot = arena.allocate(ADDRESS);
@@ -37,6 +39,13 @@ public final class DaqFunction {
             int err = (int) Ffi.require(MH_createFunction, "daqFunction_createFunction").invokeExact(objSlot, Ffi.orNull(value));
             Ffi.checkError(err, "daqFunction_createFunction");
             return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqFunction_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqFunction_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

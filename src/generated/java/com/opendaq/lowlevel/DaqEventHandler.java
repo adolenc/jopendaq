@@ -21,7 +21,7 @@ public final class DaqEventHandler {
     private static final MethodHandle MH_handleEvent =
         Ffi.downcallOrNull("daqEventHandler_handleEvent", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
 
-    /** Calls {@code daqEventHandler_createEventHandler()}. */
+    /** Creates an event handler that calls a C function.  Calls {@code daqEventHandler_createEventHandler()}. */
     public static MemorySegment createEventHandler(MemorySegment call) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);

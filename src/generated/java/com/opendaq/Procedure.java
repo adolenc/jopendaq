@@ -12,7 +12,25 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqProcedure} interface.
+ * Holds a callback function without return value.
+ *
+ * Represents a callable object without return value. The openDAQ SDK uses this interface when
+ * it needs to make a call back to the client.
+ *
+ * Although the implementation of this interface is provided by openDAQ, C++ and other
+ * bindings provide their implementation which allows passing function as a lambda
+ * functions and other constructs.
+ *
+ * Available factories:
+ * &#64;code
+ * // Creates a new Procedure object. Throws exception if not successful.
+ * IFunction* Procedure_Create(ProcCall value)
+ *
+ * // Creates a new Procedure object. Returns error code if not successful.
+ * ErrCode createProcedure(IFuncObject** obj, ProcCall value)
+ * &#64;endcode
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqProcedure} interface.
  */
 public class Procedure extends BaseObject {
 
@@ -33,7 +51,14 @@ public class Procedure extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqProcedure_dispatch()}.
+     * Calls the stored callback.
+     * &#64;param params Parameters passed to the callback.
+     *
+     * If the callback expects no parameters, the `params` parameter has to be `nullptr`. If it
+     * expects a single parameter, pass any openDAQ object as the `params` parameter.
+     * If it expects multiple parameters, pass an IList&lt;IBaseObject&gt; as the `params` parameter.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProcedure_dispatch()}.
      */
     public void dispatch(Object params) {
         try {

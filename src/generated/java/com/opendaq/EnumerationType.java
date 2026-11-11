@@ -12,13 +12,16 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Enumeration types define the enumerator names and values of Enumerations with a name matching that of the Enumeration type.
+ * Enumeration types define the enumerator names and values of Enumerations with a name matching
+ * that of the Enumeration type.
+ *
  * An Enumeration type provides a String-type name, a list of enumerator names (list of Strings) and
  * a list of enumerator values (list of Integer objects). To use Enumeration types for creating Enumeration
  * objects, they must be added to the Type Manager. Alternatively, if an Enumeration is created without
  * a matching Enumeration type in the manager, a default Enumeration type is generated based on the
  * enumerator names and values of the created Enumeration object. This generated Enumeration type is then
  * added to the Type Manager.
+ *
  * The enumerator values are represented as a list of Integer objects. These values can be explicitly specified
  * during Enumeration type creation, or only the first enumerator value can be specified, with the rest
  * automatically assigned in ascending order, starting from that value (or from the default '0' value if not
@@ -69,7 +72,8 @@ public class EnumerationType extends TypeObject {
 
     /**
      * Gets the enumerator names and values as a Dictionary.
-     * &#64;param[out] dictionary The Dictionary object with enumerator names as keys, and enumerator values as its values.
+     * &#64;param[out] dictionary The Dictionary object with enumerator names as keys, and enumerator values
+     * as its values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEnumerationType_getAsDictionary()}.
      */

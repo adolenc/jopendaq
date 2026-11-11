@@ -164,7 +164,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property default value in an as either a BaseObject or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getDefaultValueUnresolved()}. */
+    /** Gets the Property default value in an as either a BaseObject or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getDefaultValueUnresolved()}. */
     public static MemorySegment getDefaultValueUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valueSlot = arena.allocate(ADDRESS);
@@ -184,7 +184,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property description in an as either a String or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getDescriptionUnresolved()}. */
+    /** Gets the Property description in an as either a String or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getDescriptionUnresolved()}. */
     public static MemorySegment getDescriptionUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment descriptionSlot = arena.allocate(ADDRESS);
@@ -271,7 +271,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property max value in an as either a Number or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getMaxValueUnresolved()}. */
+    /** Gets the Property max value in an as either a Number or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getMaxValueUnresolved()}. */
     public static MemorySegment getMaxValueUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment maxSlot = arena.allocate(ADDRESS);
@@ -291,7 +291,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property min value in an as either a Number or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getMinValueUnresolved()}. */
+    /** Gets the Property min value in an as either a Number or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getMinValueUnresolved()}. */
     public static MemorySegment getMinValueUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment minSlot = arena.allocate(ADDRESS);
@@ -311,7 +311,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property read-only field in an as either a Boolean or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getReadOnlyUnresolved()}. */
+    /** Gets the Property read-only field in an as either a Boolean or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getReadOnlyUnresolved()}. */
     public static MemorySegment getReadOnlyUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment readOnlySlot = arena.allocate(ADDRESS);
@@ -331,7 +331,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property referenced property in an as either a Property or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getReferencedPropertyUnresolved()}. */
+    /** Gets the Property referenced property in an as either a Property or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getReferencedPropertyUnresolved()}. */
     public static MemorySegment getReferencedPropertyUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment propertyEvalSlot = arena.allocate(ADDRESS);
@@ -351,7 +351,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property selection values in an as either a Dictionary of Int-BaseObject pairs, List of BaseObjects, or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getSelectionValuesUnresolved()}. */
+    /** Gets the Property selection values in an as either a Dictionary of Int-BaseObject pairs, List of BaseObjects,  Calls {@code daqPropertyInternal_getSelectionValuesUnresolved()}. */
     public static MemorySegment getSelectionValuesUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valuesSlot = arena.allocate(ADDRESS);
@@ -381,7 +381,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property suggested values in an as either a List of BaseObjects or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getSuggestedValuesUnresolved()}. */
+    /** Gets the Property suggested values in an as either a List of BaseObjects or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getSuggestedValuesUnresolved()}. */
     public static MemorySegment getSuggestedValuesUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valuesSlot = arena.allocate(ADDRESS);
@@ -401,7 +401,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property unit in an as either a String (TODO: as an IUnit once supported) or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getUnitUnresolved()}. */
+    /** Gets the Property unit in an as either a String (TODO: as an IUnit once supported)  Calls {@code daqPropertyInternal_getUnitUnresolved()}. */
     public static MemorySegment getUnitUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment unitSlot = arena.allocate(ADDRESS);
@@ -451,7 +451,7 @@ public final class DaqPropertyInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Property visible field in an as either a Boolean or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.  Calls {@code daqPropertyInternal_getVisibleUnresolved()}. */
+    /** Gets the Property visible field in an as either a Boolean or unresolved EvalValue. The EvalValue  Calls {@code daqPropertyInternal_getVisibleUnresolved()}. */
     public static MemorySegment getVisibleUnresolved(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment visibleSlot = arena.allocate(ADDRESS);

@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Loads all available modules in a implementation-defined manner. User can also side-load custom modules via `addModule` call.
+ * Loads all available modules in a implementation-defined manner.
+ * User can also side-load custom modules via `addModule` call.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqModuleManager} interface.
  */
@@ -84,6 +85,7 @@ public class ModuleManager extends BaseObject {
     /**
      * Returns a dictionary of module IDs and the respective public keys of their vendors.
      * &#64;param[out] vendorKeys key (IString) - module ID, value (IString) - public vendor key
+     *
      * Used to identify which authenticator/certificate was used to authenticate the module.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManager_getVendorKeys()}.
@@ -100,6 +102,7 @@ public class ModuleManager extends BaseObject {
      * Loads and adds a single module from the given absolute file system path.
      * &#64;param path The absolute path to the module file.
      * &#64;param[out] module The resulting loaded and added module object.
+     *
      * This function should be used only after the default modules have been loaded using `loadModules`.
      * The specified path must exist and reference a file with the proper extension.
      *
@@ -117,7 +120,8 @@ public class ModuleManager extends BaseObject {
     }
 
     /**
-     * Loads all modules from the directory path specified during manager construction. The Context is passed to all loaded modules for internal use.
+     * Loads all modules from the directory path specified during manager construction. The
+     * Context is passed to all loaded modules for internal use.
      * &#64;param context The Context containing the Logger, Scheduler, Property Object Class Manager and Module Manager
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManager_loadModules()}.
@@ -151,11 +155,12 @@ public class ModuleManager extends BaseObject {
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManager_setModuleAuthenticator()}.
      */
-    public void setModuleAuthenticator(MemorySegment authenticator) {
+    public void setModuleAuthenticator(ModuleAuthenticator authenticator) {
         try {
-            DaqModuleManager.setModuleAuthenticator(requireLivePointer(), Ffi.orNull(authenticator));
+            DaqModuleManager.setModuleAuthenticator(requireLivePointer(), (authenticator == null ? MemorySegment.NULL : authenticator.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
+            Reference.reachabilityFence(authenticator);
         }
     }
 

@@ -33,10 +33,14 @@ public final class DaqServerCapability {
         Ffi.downcallOrNull("daqServerCapability_getPort", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getPrefix =
         Ffi.downcallOrNull("daqServerCapability_getPrefix", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getProtocolGroupId =
+        Ffi.downcallOrNull("daqServerCapability_getProtocolGroupId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getProtocolId =
         Ffi.downcallOrNull("daqServerCapability_getProtocolId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getProtocolName =
         Ffi.downcallOrNull("daqServerCapability_getProtocolName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getProtocolSecurityLevel =
+        Ffi.downcallOrNull("daqServerCapability_getProtocolSecurityLevel", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getProtocolType =
         Ffi.downcallOrNull("daqServerCapability_getProtocolType", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getProtocolVersion =
@@ -129,6 +133,16 @@ public final class DaqServerCapability {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets the id of the protocol group supported by the device. Should not contain spaces or special characters except for '_' and '-'.  Calls {@code daqServerCapability_getProtocolGroupId()}. */
+    public static MemorySegment getProtocolGroupId(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment protocolGroupIdSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getProtocolGroupId, "daqServerCapability_getProtocolGroupId").invokeExact(Ffi.orNull(self), protocolGroupIdSlot);
+            Ffi.checkError(err, "daqServerCapability_getProtocolGroupId");
+            return protocolGroupIdSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Gets the id of the protocol supported by the device. Should not contain spaces or special characters except for '_' and '-'.  Calls {@code daqServerCapability_getProtocolId()}. */
     public static MemorySegment getProtocolId(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
@@ -146,6 +160,16 @@ public final class DaqServerCapability {
             int err = (int) Ffi.require(MH_getProtocolName, "daqServerCapability_getProtocolName").invokeExact(Ffi.orNull(self), protocolNameSlot);
             Ffi.checkError(err, "daqServerCapability_getProtocolName");
             return protocolNameSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the security level of the protocol.  Calls {@code daqServerCapability_getProtocolSecurityLevel()}. */
+    public static MemorySegment getProtocolSecurityLevel(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment securityLevelSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getProtocolSecurityLevel, "daqServerCapability_getProtocolSecurityLevel").invokeExact(Ffi.orNull(self), securityLevelSlot);
+            Ffi.checkError(err, "daqServerCapability_getProtocolSecurityLevel");
+            return securityLevelSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

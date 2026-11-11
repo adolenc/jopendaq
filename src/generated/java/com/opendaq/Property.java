@@ -12,21 +12,28 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Defines a set of metadata that describes the values held by a Property object stored under the key equal to the property's name.
+ * Defines a set of metadata that describes the values held by a Property object stored
+ * under the key equal to the property's name.
+ *
  * A property can be added to a Property object or a Property object class. Once added to either, the
  * Property is frozen and can no longer be changed. Adding a Property to a Property object allows for
  * its corresponding value to be get/set. Similarly, when a Property object is created using a Property
  * object class to which a Property was added, corresponding values can be get/set.
+ *
  * When retrieving a Property from a Property object, the returned Property is bound to the Property object.
  * Property metadata fields can reference another Property/Value of the bound Property object. Most Property
  * fields can contain an EvalValue that is evaluated once the corresponding Property field's getter is called.
  * For more information on using EvalValues and binding Properties, see the below section "EvalValue fields and
  * Property binding".
+ *
  * Below we define the types of fields available and highlight some special property types, and what fields
  * are expected for a specific type of property.
+ *
  * Generally, the mandatory fields of a Property are Name, Value type, and Default value.
  * &#64;subsection objects_property_fields Property metadata fields
+ *
  * A Property can define the following fields:
+ *
  * - &lt;b&gt;Name:&lt;/b&gt; The name of the property. Within a Property object or Property object class, no two properties
  * can have the same name. A Property value is linked to a Property via its name.
  * - &lt;b&gt;Value type:&lt;/b&gt; The type of the corresponding Property value stored in a Property object. The Default
@@ -71,10 +78,12 @@ import com.opendaq.lowlevel.*;
  * - &lt;b&gt;On property value read:&lt;/b&gt; Event triggered when the corresponding Property value is read. Contains a reference
  * to the Property object and allows for overriding the read value.
  * &#64;subsection objects_property_binding EvalValue fields and Property binding
+ *
  * Properties that are retrieved from a Property object are bound to that Property object. This allows for a Property
  * metadata field to access other Properties and their corresponding values of the Property object. Most fields of a
  * Property can be configured with an EvalValue. The EvalValue is evaluated when the property field is retrieved, allowing
  * for its evaluated value to change depending on the state of the Property object.
+ *
  * In an EvalValue expression, other Property object Properties can be referenced with the "%" symbol, while their
  * Property values can be referenced with "$". For example, setting the Visible field to be:
  * `EvalValue(If($showProp == 1))` results in the property being visible only if the Property value of "showProp"
@@ -84,78 +93,100 @@ import com.opendaq.lowlevel.*;
  * list, or dictionary, and its Value type must be Integer. The values of the list/dictionary
  * match the Item type of the property, while the keys of the dictionary must be integers.
  * (matching the Value type).
+ *
  * The Property value of a selection property represents the index or key used to retrieve the
  * Selection value from the list/dictionary. As such, the values written to the corresponding
  * Property value are always integers, but the selected value can be of any type.
+ *
  * To obtain the selected value, we get the corresponding Property value, and use it as the
  * index/key to obtain the value from our list/dictionary of selection values. Alternatively,
  * the Property object provides a Selection property getter method that automaticlly performs
  * the above steps.
+ *
  * Selection properties must have a default value.
  * &#64;subsection objects_property_function Function/Procedure properties
  * Function properties have the Value type Function or Procedure. Functions are callable methods
  * that have an optional return type, while procedures do not return anything. The property
  * value of a Function/Procedure property is a callable object.
+ *
  * To determine the parameter count and types, as well as the return type, the Callable info
  * field must be configured. Callable info contains a list of argument types that need to
  * be passed as arguments when invoking the callable object. If the Property is a Function,
  * the Callable info field also contains the type of the variable returned by the function.
+ *
  * Importantly, Function and Procedure type properties are currently not accessible through the
  * OPC UA layer. Thus, they will not appear on connected-to devices.
+ *
  * Function and Procedure type properties cannot have a default value.
  * &#64;subsection objects_property_reference Reference properties
+ *
  * Reference properties have the Referenced property field configured. The Referenced property
  * contains a pointer to another Property that is part of the same Property object. On such
  * properties, all Property field getters except for the Name, Is referenced, Referenced
  * property, Value type, Key type, and Item type return the metadata fields of the referenced
  * Property. Similarly, the Property object value getters and setters get/set the value of the
  * referenced property.
+ *
  * The Referenced property field is configured with an EvalValue that most often switches
  * between different properties depending on the value of another property. For example the
  * `EvalValue` string "switch($switchProp, 0, %prop1, 1, %prop2)" reads the value of the
  * property named "switchProp" and references the property named "prop1" if the value is 0. If
  * the value is 1, it references "prop2" instead.
+ *
  * A Property can be referenced by only one Property within a Property object.
+ *
  * Reference properties can only have the Name and Referenced property fields configured. Their
  * Value type is always undefined.
  * &#64;subsection objects_property_object_type Object-type properties
+ *
  * Object type properties have the Value type Object. These kinds of properties allow for
  * Properties to be grouped and represented in a hierarchy of nested Property objects. A value
  * of an object-type Property can only be a base Property object. Objects such as Devices or
  * Function blocks that are descendants of the Property object class cannot be set as the
  * Property value.
+ *
  * Object type properties can only have their Name, Description and Default value configured,
  * where the Default value is mandatory.
+ *
  * Object properties, as all other Property types get frozen once added to a Property
  * Object. The notable exception is that locally, the object (default value) is cloned and cached.
  * When the Property value of the Object-type Property is read, the cloned object is returned instead
  * of the default value. This cloned object is not frozen, allowing for the any Properties of
  * the child Property Object to be modified. The same behaviour is applied when a Property Object
  * is created from a Property Object Class - all Object-type properties of the class are cloned.
+ *
  * Notably, a object-type property cannot be replaced via `set property value` (unless using
  * `set protected property value`), but calling `clear property value` will call `clear property value`
  * on all of the object's properties. `clear property value` cannot be called of the object-type
  * property is read-only.
  * &#64;subsection objects_property_containers Container-type properties
+ *
  * Container type properties have the Value type List or Dictionary and must be homogeneous -
  * they can only have the keys and values of the same type. Their Key and Item types are
  * configured to match that of the Property's Default value. Any new Property value must
  * adhere to the original key and item type.
+ *
  * Containers cannot contain Object-type values, Container-type values (List, Dictionary),
  * or Function-type values. Same applies for they Key type of dictionary objects.
+ *
  * Importantly, Container-type properties cannot have empty default values as of now. If the
  * default values are empty, the Key and Item type deduction will not work properly,
  * evaluating the types to be undefined.
+ *
  * Container properties must have a default value.
  * &#64;subsection objects_property_numbers Numerical properties
+ *
  * Numerical properties represent numbers. Their values can be either Integers or Floating
  * point numbers, depending on the configured Value type. Numerical properties can have
  * the Min and Max value fields configured to limit the range of values accepted.
+ *
  * Additionally, Numerical properties they can have a list of Suggested values, indicating the
  * expected values for the Property. Note that the Property system does not enforce that a
  * Property value matches a number in the list of Suggested values.
+ *
  * Numerical properties must have a default value.
  * &#64;subsection objects_property_structs Struct properties
+ *
  * Struct properties represent structures of pre-defined key-value pairs. A Structure property
  * has Value type `ctStruct`. It stores the Structure type of the Struct given as the default value.
  * New Struct values must have the same Struct type as the default.
@@ -174,6 +205,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The boolean default value. Can be an EvalValue.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctBool`. Note that the defaultValue and visible parameters can be EvalValues.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createBoolProperty()}.
@@ -200,10 +232,13 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The dictionary default value.
      * &#64;param visible If true, the Property is visible.  Can be an EvalValue.
+     *
      * The Property Value type is `ctDict`. The visible parameter can be an EvalValue. The dictionary passed as
      * default value must have homogeneous key and value lists.
+     *
      * The Property's Item type field will be set according to defaultValue dictionary Item type. The same goes for
      * the Key type.
+     *
      * TODO: defaultValue can be an EvalValue once dictionaries are supported.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createDictProperty()}.
@@ -230,6 +265,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The default structure value.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctEnumeration`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createEnumerationProperty()}.
@@ -257,6 +293,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The float default value. Can be an EvalValue.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctFloat`. Note that the defaultValue and visible parameters can be EvalValues.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createFloatProperty()}.
@@ -279,10 +316,12 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Creates a function- or procedure-type Property object. Requires the a CallableInfo object to specify the argument type/count and function return type.
+     * Creates a function- or procedure-type Property object. Requires the a CallableInfo object
+     * to specify the argument type/count and function return type.
      * &#64;param name The name of the Property.
      * &#64;param callableInfo Information about the callable argument type/count and return type.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctFunction` or `ctProc`, depending on if `callableInfo` contains information
      * on the return type or not. Note that the visible parameter can be an EvalValue.
      *
@@ -311,6 +350,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The integer default value. Can be an EvalValue.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctInt`. Note that the defaultValue and visible parameters can be EvalValues.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createIntProperty()}.
@@ -337,8 +377,10 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The list default value. Can be an EvalValue.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctList`. Note that the defaultValue and visible parameters can be EvalValues.
      * The list passed as `defaultValue` must be homogeneous.
+     *
      * The Property's Item type field will be set according to defaultValue list type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createListProperty()}.
@@ -364,9 +406,11 @@ public class Property extends BaseObject {
      * Creates an object-type Property object with a default value and optional Visible state.
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The Property object default value.
+     *
      * The Property Value type is `ctObject`. Object properties cannot be have any metadata other than
      * their name, description, and default value configured. The PropertyObject default value can only
      * be a base PropertyObject type (not a descendant type).
+     *
      * If the defaultValue is not specified, it will automatically be configured to an empty Property Object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createObjectProperty()}.
@@ -391,7 +435,9 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The ratio default value.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctRatio`. Note that the visible parameter can be an EvalValue.
+     *
      * TODO: defaultValue can be an EvalValue once ratios are supported.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createRatioProperty()}.
@@ -414,7 +460,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Creates a Reference Property object that points at a property specified in the `referencedProperty` parameter.
+     * Creates a Reference Property object that points at a property specified in the `referencedProperty`
+     * parameter.
      * &#64;param name The name of the Property.
      * &#64;param referencedPropertyEval The evaluation expression that evaluates to another property.
      *
@@ -436,11 +483,13 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Creates a Selection Property object with a list of selection values. The default value is an integer index into the default selected value.
+     * Creates a Selection Property object with a list of selection values. The default value
+     * is an integer index into the default selected value.
      * &#64;param name The name of the Property.
      * &#64;param selectionValues The list of selectable values.
      * &#64;param defaultValue The default index into the list of selection values.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctInt`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createSelectionProperty()}.
@@ -466,11 +515,13 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Creates a Selection Property object with a dictionary of selection values. The default value is an integer key into the provided dictionary.
+     * Creates a Selection Property object with a dictionary of selection values. The default value
+     * is an integer key into the provided dictionary.
      * &#64;param name The name of the Property.
      * &#64;param selectionValues The dictionary of selectable values. The key type must be `ctInt`.
      * &#64;param defaultValue The default key into the list of selection values.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctInt`. The key type of the Selection values dictionary must be `ctInt`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createSparseSelectionProperty()}.
@@ -500,6 +551,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The integer default value. Can be an EvalValue.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctString`. Note that the defaultValue and visible parameters can be EvalValues.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createStringProperty()}.
@@ -526,6 +578,7 @@ public class Property extends BaseObject {
      * &#64;param name The name of the Property.
      * &#64;param defaultValue The default structure value.
      * &#64;param visible If true, the Property is visible. Can be an EvalValue.
+     *
      * The Property Value type is `ctStruct`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_createStructProperty()}.
@@ -549,7 +602,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.
+     * Gets the Callable information objects of the Property that specifies the argument and return types
+     * of the callable object stored as the Property value.
      * &#64;param[out] callable The Callable info object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getCallableInfo()}.
@@ -565,6 +619,7 @@ public class Property extends BaseObject {
     /**
      * Gets the coercer of the Property.
      * &#64;param[out] coercer The coercer.
+     *
      * Used to coerce a value written to the corresponding Property value to the constraints specified by the coercer.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getCoercer()}.
@@ -578,7 +633,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Default value of the Property. The Default value must always be configured for a Property to be in a valid state. Exceptions are Function/Procedure and Reference properties.
+     * Gets the Default value of the Property. The Default value must always be configured for a Property to be
+     * in a valid state. Exceptions are Function/Procedure and Reference properties.
      * &#64;param[out] value The Default value of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getDefaultValue()}.
@@ -620,7 +676,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Item type of the Property. Configured only if the Value type is `ctDict` or `ctList`. If so, the item types of the list/dictionary must match the Property's Item type.
+     * Gets the Item type of the Property. Configured only if the Value type is `ctDict` or `ctList`. If so,
+     * the item types of the list/dictionary must match the Property's Item type.
      * &#64;param[out] type The Item type of list/dictionary properties.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getItemType()}.
@@ -634,7 +691,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Key type of the Property. Configured only if the Value type is `ctDict`. If so, the key type of the dictionary Property values must match the Property's Key type.
+     * Gets the Key type of the Property. Configured only if the Value type is `ctDict`. If so,
+     * the key type of the dictionary Property values must match the Property's Key type.
      * &#64;param[out] type The Key type of dictionary properties.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getKeyType()}.
@@ -676,7 +734,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Name of the Property. The names of Properties in a Property object must be unique. The name is used as the key to the corresponding Property value when getting/setting the value.
+     * Gets the Name of the Property. The names of Properties in a Property object must be unique.
+     * The name is used as the key to the corresponding Property value when getting/setting the value.
      * &#64;param[out] name The Name of the Property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getName()}.
@@ -692,6 +751,7 @@ public class Property extends BaseObject {
     /**
      * Gets the event object that is triggered when the corresponding Property value is read.
      * &#64;param[out] event The On-read event.
+     *
      * The event arguments contain a reference to the property object, as well as a function allowing for the read
      * value to be overridden.
      *
@@ -708,6 +768,7 @@ public class Property extends BaseObject {
     /**
      * Gets the event object that is triggered when a value is written to the corresponding Property value.
      * &#64;param[out] event The On-write event.
+     *
      * The event arguments contain a reference to the property object, as well as a function allowing for the written
      * value to be overridden.
      *
@@ -722,8 +783,10 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the event triggered when a user retrieves the selection values field. Allows for overriding the returned value.
+     * Gets the event triggered when a user retrieves the selection values field. Allows for overriding
+     * the returned value.
      * &#64;param[out] event The `onRead` event triggered when suggested values are read.
+     *
      * There should at any point be a single listener that overrides the returned value. Any listeners are expected
      * to always configure the returned value via the Property metadata read arguments object.
      *
@@ -738,8 +801,10 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the event triggered when a user retrieves the suggested values field. Allows for overriding the returned value.
+     * Gets the event triggered when a user retrieves the suggested values field. Allows for overriding
+     * the returned value.
      * &#64;param[out] event The `onRead` event triggered when suggested values are read.
+     *
      * There should at any point be a single listener that overrides the returned value. Any listeners are expected
      * to always configure the returned value via the Property metadata read arguments object.
      *
@@ -756,6 +821,7 @@ public class Property extends BaseObject {
     /**
      * Gets the type of the Property.
      * &#64;param[out] type The type of the Property.
+     *
      * The type of the Property is a combination of the CoreType and the additional property types.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getPropertyType()}.
@@ -771,6 +837,7 @@ public class Property extends BaseObject {
     /**
      * Used to determine whether the Property is a read-only property or not.
      * &#64;param[out] readOnly True if the Property is a read-only property; false otherwise.
+     *
      * Read-only Property values can still be modified by using the `PropertyObjectProtected` interface methods.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getReadOnly()}.
@@ -784,8 +851,10 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and `Is referenced` getters will return the value of the `Referenced property`.
+     * Gets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and
+     * `Is referenced` getters will return the value of the `Referenced property`.
      * &#64;param[out] property The referenced property.
+     *
      * If the Property is not bound to a Property object this call will not be able to return the Referenced property.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getReferencedProperty()}.
@@ -799,7 +868,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the list or dictionary of selection values. If the list/dictionary is not empty, the property is a Selection property, and must have the Value type `ctInt`.
+     * Gets the list or dictionary of selection values. If the list/dictionary is not empty, the property
+     * is a Selection property, and must have the Value type `ctInt`.
      * &#64;param[out] values The list/dictionary of possible selection values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getSelectionValues()}.
@@ -827,8 +897,10 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the list of Suggested values. Contains values that are the optimal settings for the corresponding Property value. These values, however, are not enforced when setting a new Property value.
+     * Gets the list of Suggested values. Contains values that are the optimal settings for the corresponding
+     * Property value. These values, however, are not enforced when setting a new Property value.
      * &#64;param[out] values The Suggested values of the Property.
+     *
      * Only numerical and string-type properties can have suggested values.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getSuggestedValues()}.
@@ -858,6 +930,7 @@ public class Property extends BaseObject {
     /**
      * Gets the validator of the Property.
      * &#64;param[out] validator The validator.
+     *
      * Used to validate whether a value written to the corresponding Property value is valid or not.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getValidator()}.
@@ -874,6 +947,7 @@ public class Property extends BaseObject {
      * Gets the value of the Property. Available only if the Property is bound to a Property object.
      * &#64;param value The Property value.
      * &#64;return OPENDAQ_ERR_NO_OWNER if the Property is not bound to a Property object.
+     *
      * The call is equivalent to calling `getPropertyValue` on the Property object and all the limitations
      * and implications of that call still apply.
      *
@@ -888,7 +962,8 @@ public class Property extends BaseObject {
     }
 
     /**
-     * Gets the Value type of the Property. Values written to the corresponding Property value must be of the same type.
+     * Gets the Value type of the Property. Values written to the corresponding Property value
+     * must be of the same type.
      * &#64;param[out] type The value type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProperty_getValueType()}.
@@ -919,6 +994,7 @@ public class Property extends BaseObject {
      * Sets the value of the Property. Available only if the Property is bound to a Property object.
      * &#64;param value The Property value.
      * &#64;return OPENDAQ_ERR_NO_OWNER if the Property is not bound to a Property object.
+     *
      * The call is equivalent to calling `getPropertyValue` on the Property object and all the limitations
      * and implications of that call still apply.
      *

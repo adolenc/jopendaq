@@ -63,7 +63,7 @@ public final class DaqCallableInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** A flag indicating if function is marked as const. A const function promises not to modify the state of the device or any other objects under the openDAQ instance.  Calls {@code daqCallableInfo_isConst()}. */
+    /** A flag indicating if function is marked as const. A const function promises not to modify the state  Calls {@code daqCallableInfo_isConst()}. */
     public static boolean isConst(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment constFlagSlot = arena.allocate(JAVA_BYTE);

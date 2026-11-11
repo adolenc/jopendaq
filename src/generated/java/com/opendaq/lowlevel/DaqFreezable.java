@@ -21,7 +21,7 @@ public final class DaqFreezable {
     private static final MethodHandle MH_isFrozen =
         Ffi.downcallOrNull("daqFreezable_isFrozen", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Makes the object frozen/immutable. It should return OPENDAQ_IGNORED value if the object is already frozen.  Calls {@code daqFreezable_freeze()}. */
+    /** Makes the object frozen/immutable.  Calls {@code daqFreezable_freeze()}. */
     public static void freeze(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_freeze, "daqFreezable_freeze").invokeExact(Ffi.orNull(self));

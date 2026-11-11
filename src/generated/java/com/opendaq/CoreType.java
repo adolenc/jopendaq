@@ -2,7 +2,7 @@
 
 package com.opendaq;
 
-/** The openDAQ {@code daqCoreType} enumeration. */
+/** The openDAQ {@code daqCCoreType} enumeration. */
 public enum CoreType {
     BOOL(0),
     INT(1),

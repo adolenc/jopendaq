@@ -15,10 +15,12 @@ import com.opendaq.lowlevel.*;
  * Represents boolean variable as `IBoolean` interface. Use this interface to wrap boolean
  * variable when you need to add the variable to lists, dictionaries and other containers which
  * accept `IBaseObject` interface.
+ *
  * Available factories:
  * &#64;code
  * // Creates a new Boolean. Throws exception if not successful.
  * IBoolean* Boolean_Create(Bool value)
+ *
  * // Creates a new Boolean. Returns error code if not successful.
  * ErrCode createBoolean(IBoolean** obj, Bool value)
  * &#64;endcode
@@ -47,6 +49,7 @@ public class BooleanObject extends BaseObject {
      * Compares stored boolean value to the boolean parameter.
      * &#64;param value Value for comparison.
      * &#64;param[out] equal The result of the comparison.
+     *
      * Call this method to directly compare the object to the boolean parameter.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBoolean_equalsValue()}.
@@ -63,6 +66,7 @@ public class BooleanObject extends BaseObject {
      * Gets a boolean value stored in the object.
      * &#64;param[out] value Stored boolean value.
      * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
      * Call this method to extract the boolean value that is stored in the object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBoolean_getValue()}.

@@ -27,7 +27,7 @@ public final class DaqUpdateParameters {
     private static final MethodHandle MH_setRemoveUnusedDevices =
         Ffi.downcallOrNull("daqUpdateParameters_setRemoveUnusedDevices", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
 
-    /** &#64;ingroup opendaq_update_parameters  Calls {@code daqUpdateParameters_createUpdateParameters()}. */
+    /** Calls {@code daqUpdateParameters_createUpdateParameters()}. */
     public static MemorySegment createUpdateParameters() {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);

@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Reference Domain Info objects. Contains setter methods that allow for Reference Domain Info parameter configuration, and a `build` method that builds the Reference Domain Info.
+ * Builder component of Reference Domain Info objects. Contains setter methods that allow for Reference Domain Info
+ * parameter configuration, and a `build` method that builds the Reference Domain Info.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqReferenceDomainInfoBuilder} interface.
  */
@@ -37,7 +38,8 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     }
 
     /**
-     * Reference Domain Info copy factory that creates a Reference Domain Info builder object from a different Reference Domain Info, copying its parameters.
+     * Reference Domain Info copy factory that creates a Reference Domain Info builder object from a
+     * different Reference Domain Info, copying its parameters.
      * &#64;param referenceDomainInfoToCopy The Reference Domain Info of which configuration should be copied.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_createReferenceDomainInfoBuilderFromExisting()}.
@@ -71,12 +73,17 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     /**
      * Gets the Reference Domain ID.
      * &#64;param[out] referenceDomainId The Reference Domain ID.
+     *
      * If set, gives the common identifier of one domain group.
      * Signals with the same Reference Domain ID share a common synchronization source
      * (all the signals in a group either come from the same device
      * or are synchronized using a protocol, such as PTP, NTP, IRIG, etc.).
      * Those signals can always be read together, implying that a Multi Reader
      * can be used to read the signals if their sampling rates are compatible.
+     * The ID has the form &lt;reference-type&gt;[:&lt;type-specific-identity&gt;]. PTP uses
+     * "ptp:&lt;domain-number&gt;:&lt;grandmaster identity as 16 lowercase hex digits&gt;", eg. "ptp:0:001122fffe334455".
+     * NTP uses "ntp:&lt;server IP address&gt;", eg. "ntp:192.0.2.10".
+     * While the device runs on its own clock, the ID is "local:&lt;device-local-id&gt;".
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_getReferenceDomainId()}.
      */
@@ -89,8 +96,27 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     }
 
     /**
+     * Gets the list of Reference Domain IDs.
+     * &#64;param[out] referenceDomainIds The list of Reference Domain IDs.
+     *
+     * If set, gives the list of Reference Domain IDs of this domain: the applied Reference Domain ID
+     * and the IDs of the other synchronization interfaces that are not Off and whose
+     * SyncSourceStatus is Synced, such as the outputs the device distributes its clock on.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_getReferenceDomainIds()}.
+     */
+    public java.util.List<String> getReferenceDomainIds() {
+        try {
+            return Wrap.list(DaqReferenceDomainInfoBuilder.getReferenceDomainIds(requireLivePointer()), p -> (String) Wrap.unboxOwned(p));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Gets the Reference Domain Offset.
      * &#64;param[out] referenceDomainOffset The Reference Domain Offset.
+     *
      * If set, denotes the offset in ticks that must be added to the domain values of the signal
      * for them to be equal to that of the sync source. The sync source will always have an offset of 0.
      * This offset is changed only if the sync source changes and should be kept at 0 otherwise,
@@ -113,6 +139,7 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     /**
      * Gets the value that indicates the Reference Time Source.
      * &#64;param[out] referenceTimeProtocol The value that indicates the Reference Time Source.
+     *
      * If not set to Unknown, the domain quantity is “time”, and the timestamps are absolute according
      * to the chosen time standard. The possible values are Gps, Tai, and Utc.
      * This field is used to determine if two signals with different Domain IDs can be read
@@ -131,29 +158,19 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     }
 
     /**
-     * Gets the value that indicates if offset is used.
-     * &#64;param[out] usesOffset The value that indicates if offset is used.
-     * If False, a device will contain time jumps due to resync in the domain signal data.
-     *
-     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_getUsesOffset()}.
-     */
-    public UsesOffset getUsesOffset() {
-        try {
-            return DaqReferenceDomainInfoBuilder.getUsesOffset(requireLivePointer());
-        } finally {
-            Reference.reachabilityFence(this);
-        }
-    }
-
-    /**
      * Sets the Reference Domain ID.
      * &#64;param referenceDomainId The Reference Domain ID.
+     *
      * If set, gives the common identifier of one domain group.
      * Signals with the same Reference Domain ID share a common synchronization source
      * (all the signals in a group either come from the same device
      * or are synchronized using a protocol, such as PTP, NTP, IRIG, etc.).
      * Those signals can always be read together, implying that a Multi Reader
      * can be used to read the signals if their sampling rates are compatible.
+     * The ID has the form &lt;reference-type&gt;[:&lt;type-specific-identity&gt;]. PTP uses
+     * "ptp:&lt;domain-number&gt;:&lt;grandmaster identity as 16 lowercase hex digits&gt;", eg. "ptp:0:001122fffe334455".
+     * NTP uses "ntp:&lt;server IP address&gt;", eg. "ntp:192.0.2.10".
+     * While the device runs on its own clock, the ID is "local:&lt;device-local-id&gt;".
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setReferenceDomainId()}.
      * @return this builder, to allow call chaining
@@ -171,8 +188,32 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     }
 
     /**
+     * Sets the list of Reference Domain IDs.
+     * &#64;param referenceDomainIds The list of Reference Domain IDs.
+     *
+     * If set, gives the list of Reference Domain IDs of this domain: the applied Reference Domain ID
+     * and the IDs of the other synchronization interfaces that are not Off and whose
+     * SyncSourceStatus is Synced, such as the outputs the device distributes its clock on.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setReferenceDomainIds()}.
+     * @return this builder, to allow call chaining
+     */
+    public ReferenceDomainInfoBuilder setReferenceDomainIds(java.util.List<?> referenceDomainIds) {
+        try {
+            MemorySegment referenceDomainIds$l = (referenceDomainIds == null ? MemorySegment.NULL : Box.boxListOwned(referenceDomainIds));
+            try {
+                DaqReferenceDomainInfoBuilder.setReferenceDomainIds(requireLivePointer(), referenceDomainIds$l);
+            } finally { Ffi.releaseRef(referenceDomainIds$l); }
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+        return this;
+    }
+
+    /**
      * Sets the Reference Domain Offset.
      * &#64;param referenceDomainOffset The Reference Domain Offset.
+     *
      * If set, denotes the offset in ticks that must be added to the domain values of the signal
      * for them to be equal to that of the sync source. The sync source will always have an offset of 0.
      * This offset is changed only if the sync source changes and should be kept at 0 otherwise,
@@ -200,6 +241,7 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     /**
      * Sets the value that indicates the Reference Time Source.
      * &#64;param referenceTimeProtocol The value that indicates the Reference Time Source.
+     *
      * If not set to Unknown, the domain quantity is “time”, and the timestamps are absolute according
      * to the chosen time standard. The possible values are Gps, Tai, and Utc.
      * This field is used to determine if two signals with different Domain IDs can be read
@@ -213,23 +255,6 @@ public class ReferenceDomainInfoBuilder extends BaseObject {
     public ReferenceDomainInfoBuilder setReferenceTimeProtocol(TimeProtocol referenceTimeProtocol) {
         try {
             DaqReferenceDomainInfoBuilder.setReferenceTimeProtocol(requireLivePointer(), referenceTimeProtocol);
-        } finally {
-            Reference.reachabilityFence(this);
-        }
-        return this;
-    }
-
-    /**
-     * Sets the value that indicates if offset is used.
-     * &#64;param[out] usesOffset The value that indicates if offset is used.
-     * If False, a device will contain time jumps due to resync in the domain signal data.
-     *
-     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReferenceDomainInfoBuilder_setUsesOffset()}.
-     * @return this builder, to allow call chaining
-     */
-    public ReferenceDomainInfoBuilder setUsesOffset(UsesOffset usesOffset) {
-        try {
-            DaqReferenceDomainInfoBuilder.setUsesOffset(requireLivePointer(), usesOffset);
         } finally {
             Reference.reachabilityFence(this);
         }

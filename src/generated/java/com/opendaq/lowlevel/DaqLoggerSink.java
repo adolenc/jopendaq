@@ -23,10 +23,10 @@ public final class DaqLoggerSink {
         Ffi.downcallOrNull("daqLoggerSink_createStdErrLoggerSink", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_createStdOutLoggerSink =
         Ffi.downcallOrNull("daqLoggerSink_createStdOutLoggerSink", FunctionDescriptor.of(JAVA_INT, ADDRESS));
-    private static final MethodHandle MH_createWinDebugLoggerSink =
-        Ffi.downcallOrNull("daqLoggerSink_createWinDebugLoggerSink", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_flush =
         Ffi.downcallOrNull("daqLoggerSink_flush", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqLoggerSink_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getLevel =
         Ffi.downcallOrNull("daqLoggerSink_getLevel", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setLevel =
@@ -76,17 +76,7 @@ public final class DaqLoggerSink {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqLoggerSink_createWinDebugLoggerSink()}. */
-    public static MemorySegment createWinDebugLoggerSink() {
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment objSlot = arena.allocate(ADDRESS);
-            int err = (int) Ffi.require(MH_createWinDebugLoggerSink, "daqLoggerSink_createWinDebugLoggerSink").invokeExact(objSlot);
-            Ffi.checkError(err, "daqLoggerSink_createWinDebugLoggerSink");
-            return objSlot.get(ADDRESS, 0);
-        } catch (Throwable t) { throw Ffi.rethrow(t); }
-    }
-
-    /** Calls {@code daqLoggerSink_flush()}. */
+    /** Triggers writing out the messages from temporary buffers to the target.  Calls {@code daqLoggerSink_flush()}. */
     public static void flush(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_flush, "daqLoggerSink_flush").invokeExact(Ffi.orNull(self));
@@ -94,7 +84,14 @@ public final class DaqLoggerSink {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqLoggerSink_getLevel()}. */
+    /** Calls {@code daqLoggerSink_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqLoggerSink_getInterfaceId").invokeExact(Ffi.orNull(intfId));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the minimal severity level of messages to be written to the target.  Calls {@code daqLoggerSink_getLevel()}. */
     public static LogLevel getLevel(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment levelSlot = arena.allocate(JAVA_INT);
@@ -104,7 +101,7 @@ public final class DaqLoggerSink {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqLoggerSink_setLevel()}. */
+    /** Sets the minimal severity level of messages to be written to the target.  Calls {@code daqLoggerSink_setLevel()}. */
     public static void setLevel(MemorySegment self, LogLevel level) {
         try {
             int err = (int) Ffi.require(MH_setLevel, "daqLoggerSink_setLevel").invokeExact(Ffi.orNull(self), level.value());
@@ -112,7 +109,7 @@ public final class DaqLoggerSink {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqLoggerSink_setPattern()}. */
+    /** Sets the custom formatter pattern for the sink.  Calls {@code daqLoggerSink_setPattern()}. */
     public static void setPattern(MemorySegment self, MemorySegment pattern) {
         try {
             int err = (int) Ffi.require(MH_setPattern, "daqLoggerSink_setPattern").invokeExact(Ffi.orNull(self), Ffi.orNull(pattern));
@@ -120,7 +117,7 @@ public final class DaqLoggerSink {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqLoggerSink_shouldLog()}. */
+    /** Checks whether the messages with given log severity level will be written to the target or not.  Calls {@code daqLoggerSink_shouldLog()}. */
     public static boolean shouldLog(MemorySegment self, LogLevel level) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment willLogSlot = arena.allocate(JAVA_BYTE);

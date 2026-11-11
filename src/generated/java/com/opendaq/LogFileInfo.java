@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_log_file_info
- * &#64;addtogroup opendaq_log_file_info log_file_info
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqLogFileInfo} interface.
+ * Wraps the openDAQ {&#64;code daqLogFileInfo} interface.
  */
 public class LogFileInfo extends BaseObject {
 

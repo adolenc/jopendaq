@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * An immutable structure which describes an openDAQ user. It holds username, password as a hash string and a list of groups assigned to the user.
+ * An immutable structure which describes an openDAQ user. It holds username, password as a hash string
+ * and a list of groups assigned to the user.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqUser} interface.
  */

@@ -12,38 +12,54 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Instance objects. Contains setter methods to configure the Instance parameters, such as Context (Logger, Scheduler, ModuleManager) and RootDevice. Contains a  `build` method that builds the Instance object.
+ * Builder component of Instance objects. Contains setter methods to configure the Instance parameters, such as Context (Logger, Scheduler, ModuleManager) and RootDevice.
+ * Contains a  `build` method that builds the Instance object.
+ *
  * The InstanceBuilder provides a fluent interface for setting various configuration options for an Instance
  * object before its creation. It allows customization of the logger, module manager, scheduler and root device.
  * Once configured, calling the `build` method returns a fully initialized Instance object with the specified settings.
  * &#64;subsection Configuration Methods:
  * The InstanceBuilder provides the following configuration methods:
+ *
  * - **Logger:** The custom Logger for the Instance. This logger will be used for logging messages related to the Instance and its components.
  * If a custom logger is set, the `Logger sink` will be ignored since it is only used with the default Instance logger.
  * If custom logger was not set, builder will generate Instance with default logger.
+ *
  * - **Global log level:** The Logger global log level for the Instance. All log messages with a severity
  * level equal to or higher than the specified level will be processed. Default log level is LogLevel::Default
+ *
  * - **Component log level:** The Logger level for a specific component of the Instance. Log messages related to
  * that component will be processed according to the specified log level. By default, each component uses the global log level.
+ *
  * - **Logger sink:** The logger sink to the default Instance logger. This sink will be responsible for processing log messages,
  * such as writing them to a file or sending them to a remote server. If `Logger` has been set, configuring of the 'Logger sink' has no effect in building Instance.
  * If logger sinks has not been configure, the Instance uses 'default sinks'.
+ *
  * - **Module manager:** The custom ModuleManager for the Instance. When configured, the default module manager path will be ignored.
  * If module manager has not configured, the Instance uses built in manager
+ *
  * - **Module path:** The path for the default ModuleManager of the Instance. If a custom module manager has not been set,
  * this path will be used to load modules. Default module path is empty string
+ *
  * - **Scheduler:** The custom scheduler for the Instance. If set, the number of worker threads will be ignored.
  * If scheduler has not been configured, the Instance uses default schduler.
+ *
  * - **Scheduler worker num:** The number of worker threads in the scheduler of the Instance. if a scheduler has not been set and worker num is 0,
  * which considers as maximum number of concurrent threads.
+ *
  * - **Default root device local ID:** The local id of the default client root device. Has no effect if `Root device` has been congigured.
+ *
  * - **Default root device info:** The information of default root device of the Instance such as serial number. Has no effect if `Root device` has been congigured.
+ *
  * - **Root device:** The connection string of a device that replaces the default openDAQ root device (virtual client).
  * When the instance is created a connection to the device with the given connection string will be established, and the device will be placed at the root of the component tree structure.
  * When configured, the `Default root device local ID` and `Default root device info` will be ignored.
+ *
  * - **Sink log level:** The sink logger level of the default Instance logger. This level is ignored if a custom logger has been configured.
+ *
  * - **Config provider:** The config provider is expanding the local options of instance builder from json file or command lines.
  * If value was set before, provider will override this with new one.
+ *
  * - **Module options:** Local options dictionary of instance builder has `modules` key which contains custom values for modules.
  * By default this dictionary is empty, but can be populated from json file, env variables or command line arguments.
  *
@@ -89,6 +105,7 @@ public class InstanceBuilder extends BaseObject {
     /**
      * Adds a discovery server to the context
      * &#64;param serverName The discovery server to add
+     *
      * openDAQ supports the "mdns" server by default, but must be added to the instance builder to be enabled.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_addDiscoveryServer()}.
@@ -320,9 +337,9 @@ public class InstanceBuilder extends BaseObject {
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_getModuleAuthenticator()}.
      */
-    public MemorySegment getModuleAuthenticator() {
+    public ModuleAuthenticator getModuleAuthenticator() {
         try {
-            return DaqInstanceBuilder.getModuleAuthenticator(requireLivePointer());
+            return DaqObject.wrap(DaqInstanceBuilder.getModuleAuthenticator(requireLivePointer()), ModuleAuthenticator.class);
         } finally {
             Reference.reachabilityFence(this);
         }
@@ -400,7 +417,8 @@ public class InstanceBuilder extends BaseObject {
 
     /**
      * Gets the configuration property object for the default root device of Instance.
-     * &#64;param[out] config The configuraton property object for the root device of Instance. Returns nullptr, for the default configuration property object.
+     * &#64;param[out] config The configuraton property object for the root device of Instance. Returns nullptr, for the default
+     * configuration property object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_getRootDeviceConfig()}.
      */
@@ -472,7 +490,8 @@ public class InstanceBuilder extends BaseObject {
     }
 
     /**
-     * Sets The Logger level for a specific component of the Instance. Log messages related to that component will be processed according to the specified log level.
+     * Sets The Logger level for a specific component of the Instance. Log messages related to
+     * that component will be processed according to the specified log level.
      * &#64;param component The name of Instance component
      * &#64;param logLevel The log level of Instance component
      *
@@ -492,7 +511,8 @@ public class InstanceBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Context object of the instance. This overwrites other context related settings such as logger, scheduler and module manager settings.
+     * Sets the Context object of the instance. This overwrites other context related
+     * settings such as logger, scheduler and module manager settings.
      * &#64;param context The Context object for instance.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setContext()}.
@@ -545,7 +565,8 @@ public class InstanceBuilder extends BaseObject {
     }
 
     /**
-     * Sets the Logger global log level for the Instance. All log messages with a severity level equal to or higher than the specified level will be processed.
+     * Sets the Logger global log level for the Instance. All log messages with a severity
+     * level equal to or higher than the specified level will be processed.
      * &#64;param logLevel The Logger global level of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setGlobalLogLevel()}.
@@ -574,7 +595,8 @@ public class InstanceBuilder extends BaseObject {
     }
 
     /**
-     * Sets the custom Logger for the Instance. This logger will be used for logging messages related to the Instance and its components. When configured, the `Logger sink` will be ignored, as it is in use only with the default Instance logger.
+     * Sets the custom Logger for the Instance. This logger will be used for logging messages related to the Instance and its components.
+     * When configured, the `Logger sink` will be ignored, as it is in use only with the default Instance logger.
      * &#64;param logger The custom Logger of Instance
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setLogger()}.
@@ -597,11 +619,12 @@ public class InstanceBuilder extends BaseObject {
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setModuleAuthenticator()}.
      * @return this builder, to allow call chaining
      */
-    public InstanceBuilder setModuleAuthenticator(MemorySegment authenticator) {
+    public InstanceBuilder setModuleAuthenticator(ModuleAuthenticator authenticator) {
         try {
-            DaqInstanceBuilder.setModuleAuthenticator(requireLivePointer(), Ffi.orNull(authenticator));
+            DaqInstanceBuilder.setModuleAuthenticator(requireLivePointer(), (authenticator == null ? MemorySegment.NULL : authenticator.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
+            Reference.reachabilityFence(authenticator);
         }
         return this;
     }
@@ -643,9 +666,13 @@ public class InstanceBuilder extends BaseObject {
     }
 
     /**
-     * Sets the connection string for a device that replaces the default openDAQ root device. When the instance is created, a connection to the device with the given connection string will be established, and the device will be placed at the root of the component tree structure.
+     * Sets the connection string for a device that replaces the default openDAQ root device.
+     * When the instance is created, a connection to the device with the given connection string will be established,
+     * and the device will be placed at the root of the component tree structure.
      * &#64;param connectionString The connection string for the root device of the Instance.
-     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate, port to use for 3rd party communication, number of channels to generate, or other device specific settings. In case of nullptr, a default configuration is used.
+     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate,
+     * port to use for 3rd party communication, number of channels to generate, or other device specific settings. In case
+     * of nullptr, a default configuration is used.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstanceBuilder_setRootDevice()}.
      * @return this builder, to allow call chaining
@@ -722,6 +749,7 @@ public class InstanceBuilder extends BaseObject {
     /**
      * Enables or disables usage of the scheduler's main loop.
      * &#64;param useMainLoop Whether to construct the scheduler with main loop support.
+     *
      * If enabled, the scheduler will be constructed with the main worker, allowing use of the main loop.
      * Note that enabling this does not automatically start the main loop. To start it, you must call
      * `IScheduler::runMainLoop()` or `IScheduler::runMainLoopIteration()`.

@@ -13,9 +13,11 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Used by openDAQ properties to coerce a value to match the restrictions imposed by the Property.
+ *
  * Whenever a value is set to on a Property object, if the corresponding Property has a coercer configured, the value will
  * be evaluated and modified to fit the restrictions imposed by the coercer. For example, a coercer can enforce lower-than,
  * greater-than, equality, or other number relations on written values.
+ *
  * The coercion conditions are configured with an evaluation string when the coercer is constructed. The string constructs an
  * Eval value that replaces any instance of the keyword "value" or "val" with the value being set. The result of the Eval
  * value evaluation is the output of the `coerce` function call. For example, coercers created with the string

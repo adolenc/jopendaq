@@ -12,9 +12,12 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents a server. The server provides access to the openDAQ device. Depend of the implementation, it can support configuring the device, reading configuration, and data streaming.
+ * Represents a server. The server provides access to the openDAQ device.
+ * Depend of the implementation, it can support configuring the device, reading configuration, and data streaming.
+ *
  * We do not make the server directly. But through the instance and module manager. For that reason, the server must be uniquely
  * defined with "ServerType". The server is then created with the current root device, context and configuration object.
+ *
  * Configuration of the server can be done with custom property object.
  * The configuration object is created with the corresponding ServerType object (IServerType::createDefaultConfig method).
  * For example, with a configuration object, we can define connection timeout.
@@ -71,6 +74,7 @@ public class Server extends Folder {
     /**
      * Gets a list of the server's signals.
      * &#64;param[out] signals The flat list of signals.
+     *
      * Server signals are most often the mirrored representations of signals that belong to the client connected to the instance via this server.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServer_getSignals()}.
@@ -92,6 +96,7 @@ public class Server extends Folder {
     /**
      * Gets a streaming source associated with server.
      * &#64;param[out] streaming The streaming object that represents the server’s client-to-device streaming source.
+     *
      * The streaming object is assigned on servers that support the generalized client-to-device streaming mechanism.
      * The object is expected to be associated with mirrored server-side copies of client signals and is responsible for receiving
      * their data sent from the client to the device.

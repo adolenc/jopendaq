@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_server_capability
- * &#64;addtogroup opendaq_address_info Address info
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqAddressInfoBuilder} interface.
+ * Wraps the openDAQ {&#64;code daqAddressInfoBuilder} interface.
  */
 public class AddressInfoBuilder extends BaseObject {
 
@@ -82,6 +79,7 @@ public class AddressInfoBuilder extends BaseObject {
     /**
      * Gets the reachability status of the address.
      * &#64;param addressReachability The reachability status of the address.
+     *
      * This status is set to "Unknown" by default. For IPv4 address types, the module manager checks
      * reachability when querying for available devices.
      *
@@ -98,6 +96,7 @@ public class AddressInfoBuilder extends BaseObject {
     /**
      * Gets the type of the address.
      * &#64;param[out] type The type the address.
+     *
      * Currently available address types in the main openDAQ modules are: IPv4 and IPv6.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_getType()}.
@@ -151,6 +150,7 @@ public class AddressInfoBuilder extends BaseObject {
     /**
      * Sets the reachability status of the address.
      * &#64;param addressReachability The reachability status of the address.
+     *
      * This status is set to "Unknown" by default. For IPv4 address types, the module manager checks
      * reachability when querying for available devices.
      *
@@ -169,6 +169,7 @@ public class AddressInfoBuilder extends BaseObject {
     /**
      * Sets the type of the address.
      * &#64;param type The type the address.
+     *
      * Currently available address types in the main openDAQ modules are: IPv4 and IPv6.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAddressInfoBuilder_setType()}.

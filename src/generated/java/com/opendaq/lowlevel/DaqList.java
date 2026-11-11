@@ -22,6 +22,8 @@ public final class DaqList {
         Ffi.downcallOrNull("daqList_createList", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_createListWithElementType =
         Ffi.downcallOrNull("daqList_createListWithElementType", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID));
+    private static final MethodHandle MH_createOwningList =
+        Ffi.downcallOrNull("daqList_createOwningList", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createStartIterator =
         Ffi.downcallOrNull("daqList_createStartIterator", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_deleteAt =
@@ -85,6 +87,16 @@ public final class DaqList {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createListWithElementType, "daqList_createListWithElementType").invokeExact(objSlot, Ffi.orNull(id));
             Ffi.checkError(err, "daqList_createListWithElementType");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqList_createOwningList()}. */
+    public static MemorySegment createOwningList(MemorySegment owner, MemorySegment ref) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createOwningList, "daqList_createOwningList").invokeExact(objSlot, Ffi.orNull(owner), Ffi.orNull(ref));
+            Ffi.checkError(err, "daqList_createOwningList");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

@@ -24,6 +24,8 @@ public final class DaqSignal {
         Ffi.downcallOrNull("daqSignal_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getLastValue =
         Ffi.downcallOrNull("daqSignal_getLastValue", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getLastValueWithTimestamp =
+        Ffi.downcallOrNull("daqSignal_getLastValueWithTimestamp", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getPublic =
         Ffi.downcallOrNull("daqSignal_getPublic", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getRelatedSignals =
@@ -79,6 +81,20 @@ public final class DaqSignal {
             int err = (int) Ffi.require(MH_getLastValue, "daqSignal_getLastValue").invokeExact(Ffi.orNull(self), valueSlot);
             Ffi.checkError(err, "daqSignal_getLastValue");
             return valueSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Result of {@link #getLastValueWithTimestamp}. */
+    public record GetLastValueWithTimestampResult(MemorySegment value, MemorySegment timestamp) {}
+
+    /** Gets the signal last value and its corresponding timestamp.  Calls {@code daqSignal_getLastValueWithTimestamp()}. */
+    public static GetLastValueWithTimestampResult getLastValueWithTimestamp(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment valueSlot = arena.allocate(ADDRESS);
+            MemorySegment timestampSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getLastValueWithTimestamp, "daqSignal_getLastValueWithTimestamp").invokeExact(Ffi.orNull(self), valueSlot, timestampSlot);
+            Ffi.checkError(err, "daqSignal_getLastValueWithTimestamp");
+            return new GetLastValueWithTimestampResult(valueSlot.get(ADDRESS, 0), timestampSlot.get(ADDRESS, 0));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * An allocator used to allocate memory.
+ *
  * The default BB allocator simply uses `malloc`, but the user can implement a custom allocator to
  * override this behavior (perhaps using a memory pool or different allocation strategy). An
  * example/reference implementation is provided which uses Microsoft `mimalloc`.
@@ -54,10 +55,15 @@ public class Allocator extends BaseObject {
 
     /**
      * Allocates a chunk of memory for a packet.
-     * &#64;param descriptor The OPTIONAL data descriptor of the signal for which memory is to be allocated. This can provide hints to the allocator. However, allocator implementations MUST accept null values.
+     * &#64;param descriptor The OPTIONAL data descriptor of the signal for which memory is to be
+     * allocated. This can provide hints to the allocator. However, allocator
+     * implementations MUST accept null values.
      * &#64;param bytes The number of bytes to allocate.
-     * &#64;param align The alignment requirement of the caller (typically the element size). This value may be zero if the caller does not need to specify an alignment requirement.
+     * &#64;param align The alignment requirement of the caller (typically the element size). This
+     * value may be zero if the caller does not need to specify an alignment
+     * requirement.
      * &#64;param[out] address The address of the allocated memory.
+     *
      * The implementation MAY set address value to `nullptr` without returning an error code,
      * if the allocator is out of memory. Alternatively, the implementation MAY return an error
      * code in this case.
@@ -76,6 +82,7 @@ public class Allocator extends BaseObject {
     /**
      * Releases a chunk of memory allocated by allocate().
      * &#64;param address The address of the allocated memory to release.
+     *
      * The implementation MUST ignore calls where &#64;p address is null.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAllocator_free()}.

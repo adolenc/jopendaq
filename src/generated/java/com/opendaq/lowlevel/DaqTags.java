@@ -62,7 +62,7 @@ public final class DaqTags {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Queries the list of tags, creating an EvalValue expression from the `query` string. Returns true if the list of tags matches the query, false otherwise.  Calls {@code daqTags_query()}. */
+    /** Queries the list of tags, creating an EvalValue expression from the `query` string.  Calls {@code daqTags_query()}. */
     public static boolean query(MemorySegment self, MemorySegment query) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valueSlot = arena.allocate(JAVA_BYTE);

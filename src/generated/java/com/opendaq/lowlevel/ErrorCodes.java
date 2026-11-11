@@ -16,6 +16,13 @@ public final class ErrorCodes {
     private ErrorCodes() {}
 
     public static final int OPENDAQ_SUCCESS = 0x00000000;
+    public static final int OPENDAQ_LOWER = 0x00000002;
+    public static final int OPENDAQ_EQUAL = 0x00000003;
+    public static final int OPENDAQ_GREATER = 0x00000004;
+    public static final int OPENDAQ_NO_MORE_ITEMS = 0x00000005;
+    public static final int OPENDAQ_IGNORED = 0x00000006;
+    public static final int OPENDAQ_NOTFOUND = 0x00000007;
+    public static final int OPENDAQ_PARTIAL_SUCCESS = 0x00000008;
     public static final int OPENDAQ_ERR_NOMEMORY = 0x80000000;
     public static final int OPENDAQ_ERR_INVALIDPARAMETER = 0x80000001;
     public static final int OPENDAQ_ERR_SIZETOOSMALL = 0x80000003;
@@ -64,11 +71,14 @@ public final class ErrorCodes {
     public static final int OPENDAQ_ERR_NO_DATA = 0x80000050;
     public static final int OPENDAQ_ERR_INVALID_ARGUMENT = 0x80000051;
     public static final int OPENDAQ_ERR_DEVICE_LOCKED = 0x80000052;
+    public static final int OPENDAQ_ERR_RESERVED_TYPE_NAME = 0x80000053;
+    public static final int OPENDAQ_ERR_NOT_CLONEABLE = 0x80000054;
     public static final int OPENDAQ_ERR_NOINTERFACE = 0x80004002;
     public static final int OPENDAQ_ERR_CONNECTION_LOST = 0x80010001;
     public static final int OPENDAQ_ERR_CONNECTION_LIMIT_REACHED = 0x80010002;
     public static final int OPENDAQ_ERR_SERVER_VERSION_TOO_LOW = 0x80010003;
     public static final int OPENDAQ_ERR_CONTROL_CLIENT_REJECTED = 0x80010004;
+    public static final int OPENDAQ_ERR_CYCLIC_REFERENCE = 0x80010005;
     public static final int OPENDAQ_ERR_MODULE_MANAGER_UNKNOWN = 0x80030000;
     public static final int OPENDAQ_ERR_MODULE_LOAD_FAILED = 0x80030001;
     public static final int OPENDAQ_ERR_MODULE_NO_ENTRY_POINT = 0x80030002;
@@ -101,6 +111,13 @@ public final class ErrorCodes {
 
     static {
         NAMES.put(0x00000000, "OPENDAQ_SUCCESS");
+        NAMES.put(0x00000002, "OPENDAQ_LOWER");
+        NAMES.put(0x00000003, "OPENDAQ_EQUAL");
+        NAMES.put(0x00000004, "OPENDAQ_GREATER");
+        NAMES.put(0x00000005, "OPENDAQ_NO_MORE_ITEMS");
+        NAMES.put(0x00000006, "OPENDAQ_IGNORED");
+        NAMES.put(0x00000007, "OPENDAQ_NOTFOUND");
+        NAMES.put(0x00000008, "OPENDAQ_PARTIAL_SUCCESS");
         NAMES.put(0x80000000, "OPENDAQ_ERR_NOMEMORY");
         NAMES.put(0x80000001, "OPENDAQ_ERR_INVALIDPARAMETER");
         NAMES.put(0x80000003, "OPENDAQ_ERR_SIZETOOSMALL");
@@ -149,11 +166,14 @@ public final class ErrorCodes {
         NAMES.put(0x80000050, "OPENDAQ_ERR_NO_DATA");
         NAMES.put(0x80000051, "OPENDAQ_ERR_INVALID_ARGUMENT");
         NAMES.put(0x80000052, "OPENDAQ_ERR_DEVICE_LOCKED");
+        NAMES.put(0x80000053, "OPENDAQ_ERR_RESERVED_TYPE_NAME");
+        NAMES.put(0x80000054, "OPENDAQ_ERR_NOT_CLONEABLE");
         NAMES.put(0x80004002, "OPENDAQ_ERR_NOINTERFACE");
         NAMES.put(0x80010001, "OPENDAQ_ERR_CONNECTION_LOST");
         NAMES.put(0x80010002, "OPENDAQ_ERR_CONNECTION_LIMIT_REACHED");
         NAMES.put(0x80010003, "OPENDAQ_ERR_SERVER_VERSION_TOO_LOW");
         NAMES.put(0x80010004, "OPENDAQ_ERR_CONTROL_CLIENT_REJECTED");
+        NAMES.put(0x80010005, "OPENDAQ_ERR_CYCLIC_REFERENCE");
         NAMES.put(0x80030000, "OPENDAQ_ERR_MODULE_MANAGER_UNKNOWN");
         NAMES.put(0x80030001, "OPENDAQ_ERR_MODULE_LOAD_FAILED");
         NAMES.put(0x80030002, "OPENDAQ_ERR_MODULE_NO_ENTRY_POINT");

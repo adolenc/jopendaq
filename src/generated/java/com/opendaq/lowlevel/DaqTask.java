@@ -60,7 +60,7 @@ public final class DaqTask {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the continuation to only execute after this task completes. Be careful of forming cycles as tasks whose dependencies cannot be satisfied will never execute.  Calls {@code daqTask_then()}. */
+    /** Sets the continuation to only execute after this task completes.  Calls {@code daqTask_then()}. */
     public static void then(MemorySegment self, MemorySegment continuation) {
         try {
             int err = (int) Ffi.require(MH_then, "daqTask_then").invokeExact(Ffi.orNull(self), Ffi.orNull(continuation));

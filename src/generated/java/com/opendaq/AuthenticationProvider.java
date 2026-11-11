@@ -12,7 +12,10 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A class which is responsible for authenticating a user. The authentication is usually done by verifying the username and password. An authenticator implementation might use external services for achieving that. It might make a call to an external database, do a lookup to a json file with defined users or it might simply check the password against a hardcoded one.
+ * A class which is responsible for authenticating a user. The authentication is usually done by verifying
+ * the username and password. An authenticator implementation might use external services for achieving that. It might
+ * make a call to an external database, do a lookup to a json file with defined users or it might simply check the
+ * password against a hardcoded one.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqAuthenticationProvider} interface.
  */
@@ -90,7 +93,8 @@ public class AuthenticationProvider extends BaseObject {
     }
 
     /**
-     * Authenticate user using username and password. If authentication is successful, a User instance is returned. Otherwise an exception is thrown.
+     * Authenticate user using username and password. If authentication is successful, a User instance is returned.
+     * Otherwise an exception is thrown.
      * &#64;param username The username.
      * &#64;param password The password in plain text.
      * &#64;param user[out] And instance of successfully authenticated user. If authentication is not successful, an exception is thrown.
@@ -144,7 +148,8 @@ public class AuthenticationProvider extends BaseObject {
     }
 
     /**
-     * Returns true if anonymous authentication is allowed. When anonymous authentication is enabled, user can connect to the server without providing username or password.
+     * Returns true if anonymous authentication is allowed. When anonymous authentication is enabled, user can connect
+     * to the server without providing username or password.
      * &#64;param allowedOut[out] True if anonymous authentication is allowed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAuthenticationProvider_isAnonymousAllowed()}.

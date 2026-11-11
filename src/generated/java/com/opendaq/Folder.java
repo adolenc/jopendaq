@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Acts as a container for other components
+ *
  * Other components use the folder component to organize the children components,
  * such as channels, signals, function blocks, etc.
  *
@@ -49,6 +50,7 @@ public class Folder extends Component {
      * Gets the list of the items in the folder.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] items The list of the items.
+     *
      * If searchFilter is not provided, the returned list contains only immediate children with visible set to `true`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFolder_getItems()}.

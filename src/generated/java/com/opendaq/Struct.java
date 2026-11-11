@@ -12,20 +12,27 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Structs are immutable objects that contain a set of key-value pairs. The key, as well as the types of each associated value for each struct are defined in advance within a Struct type that has the same name as the Struct.
+ * Structs are immutable objects that contain a set of key-value pairs. The key, as well as the types of each
+ * associated value for each struct are defined in advance within a Struct type that has the same name as the Struct.
+ *
  * The Struct types are stored within a Type manager. In any given instance of openDAQ, a single Type manager should
  * exist that is part of its Context.
+ *
  * When creating a Struct, the Type manager is used to validate the given dictionary of keys and values against the
  * Struct type stored within the manager. If no type with the given Struct name is currently stored, a default type
  * is created using the Struct field names and values as its parameters. When creating a Struct, fields that are part
  * of the Struct type can be omitted. If so, they will be replaced by either `null` or, if provided by the Struct type,
  * the default value of the field.
+ *
  * In the case that a field name is present that is not part of the struct type, or if the value type of the field does
  * not match, construction of the Struct will fail.
+ *
  * NOTE: Field values of fields with the Core type `ctUndefined` can hold any value, regardless of its type.
+ *
  * Structs are an openDAQ core type (ctStruct). Several objects in openDAQ such as an Unit, or DataDescriptor are Structs,
  * allowing for access to their fields through Struct methods. Such objects are, by definiton, immutable - their fields
  * cannot be modified. In order to change the value of a Struct-type object, a new Struct must be created.
+ *
  * A Struct can only have fields of Core type: `ctBool`, `ctInt`, `ctFloat`, `ctString`, `ctList`, `ctDict`, `ctRatio`, `ctComplexNumber`,
  * `ctStruct`, or `ctUndefined`. Additionally, all Container types (`ctList`, `ctDict`) should only have values of the aforementioned
  * types.
@@ -110,6 +117,7 @@ public class Struct extends BaseObject {
     /**
      * Gets a list of all Struct field names.
      * &#64;param[out] names The list of field names.
+     *
      * The list of names will be of equal length to the list of values. Additionally, the name of a field at any given
      * index corresponds to the value stored in the list of values.
      *
@@ -126,6 +134,7 @@ public class Struct extends BaseObject {
     /**
      * Gets a list of all Struct field values.
      * &#64;param[out] values The list of field values.
+     *
      * The list of names will be of equal length to the list of values. Additionally, the name of a field at any given
      * index corresponds to the value stored in the list of values.
      *

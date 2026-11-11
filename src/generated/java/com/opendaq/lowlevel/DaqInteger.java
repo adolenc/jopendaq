@@ -16,6 +16,8 @@ public final class DaqInteger {
 
     private static final MethodHandle MH_createInteger =
         Ffi.downcallOrNull("daqInteger_createInteger", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG));
+    private static final MethodHandle MH_createIntegerFromPool =
+        Ffi.downcallOrNull("daqInteger_createIntegerFromPool", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG));
     private static final MethodHandle MH_equalsValue =
         Ffi.downcallOrNull("daqInteger_equalsValue", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
@@ -29,6 +31,16 @@ public final class DaqInteger {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createInteger, "daqInteger_createInteger").invokeExact(objSlot, value);
             Ffi.checkError(err, "daqInteger_createInteger");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqInteger_createIntegerFromPool()}. */
+    public static MemorySegment createIntegerFromPool(long value) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createIntegerFromPool, "daqInteger_createIntegerFromPool").invokeExact(objSlot, value);
+            Ffi.checkError(err, "daqInteger_createIntegerFromPool");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

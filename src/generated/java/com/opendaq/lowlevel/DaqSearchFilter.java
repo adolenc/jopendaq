@@ -28,14 +28,20 @@ public final class DaqSearchFilter {
         Ffi.downcallOrNull("daqSearchFilter_createInterfaceIdSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID));
     private static final MethodHandle MH_createLocalIdSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createLocalIdSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createNamePropertyFilter =
+        Ffi.downcallOrNull("daqSearchFilter_createNamePropertyFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createNotSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createNotSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createOrSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createOrSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createReadOnlyPropertyFilter =
+        Ffi.downcallOrNull("daqSearchFilter_createReadOnlyPropertyFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_createRecursiveSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createRecursiveSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createRequiredTagsSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createRequiredTagsSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createVisiblePropertyFilter =
+        Ffi.downcallOrNull("daqSearchFilter_createVisiblePropertyFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_createVisibleSearchFilter =
         Ffi.downcallOrNull("daqSearchFilter_createVisibleSearchFilter", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
@@ -53,7 +59,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a "conjunction" search filter that combines 2 filters, accepting an object only if both filters accept it. "Visit children" returns `true` only if both filters do so.  Calls {@code daqSearchFilter_createAndSearchFilter()}. */
+    /** Creates a "conjunction" search filter that combines 2 filters, accepting an object only if both filters accept it.  Calls {@code daqSearchFilter_createAndSearchFilter()}. */
     public static MemorySegment createAndSearchFilter(MemorySegment left, MemorySegment right) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -83,7 +89,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqSearchFilter_createExcludedTagsSearchFilter()}. */
+    /** Creates a search filter that accepts components that do not have any of the excluded tags. "Visit children"  Calls {@code daqSearchFilter_createExcludedTagsSearchFilter()}. */
     public static MemorySegment createExcludedTagsSearchFilter(MemorySegment excludedTags) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -93,7 +99,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqSearchFilter_createInterfaceIdSearchFilter()}. */
+    /** Creates a search filter that accepts components that implement the interface with the given interface ID. "Visit children"  Calls {@code daqSearchFilter_createInterfaceIdSearchFilter()}. */
     public static MemorySegment createInterfaceIdSearchFilter(MemorySegment intfId) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -103,7 +109,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqSearchFilter_createLocalIdSearchFilter()}. */
+    /** Creates a search filter that accepts components with the specified local ID. "Visit children"  Calls {@code daqSearchFilter_createLocalIdSearchFilter()}. */
     public static MemorySegment createLocalIdSearchFilter(MemorySegment localId) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -113,7 +119,17 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a search filter that negates the "accepts object" result of the filter provided as construction argument. Does not negate the "visit children" result.  Calls {@code daqSearchFilter_createNotSearchFilter()}. */
+    /** Creates a search filter that accepts properties whose names match the specified pattern.  Calls {@code daqSearchFilter_createNamePropertyFilter()}. */
+    public static MemorySegment createNamePropertyFilter(MemorySegment regex) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createNamePropertyFilter, "daqSearchFilter_createNamePropertyFilter").invokeExact(objSlot, Ffi.orNull(regex));
+            Ffi.checkError(err, "daqSearchFilter_createNamePropertyFilter");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a search filter that negates the "accepts object" result of the filter provided as construction argument.  Calls {@code daqSearchFilter_createNotSearchFilter()}. */
     public static MemorySegment createNotSearchFilter(MemorySegment filter) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -123,7 +139,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a "disjunction" search filter that combines 2 filters, accepting an object if any of the two filters accepts it. "Visit children" returns `true` if any of the two filters accepts does so.  Calls {@code daqSearchFilter_createOrSearchFilter()}. */
+    /** Creates a "disjunction" search filter that combines 2 filters, accepting an object if any of the two filters accepts it.  Calls {@code daqSearchFilter_createOrSearchFilter()}. */
     public static MemorySegment createOrSearchFilter(MemorySegment left, MemorySegment right) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -133,7 +149,17 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a search filter that indicates that the search method should recursively search through the object's child elements. This filter constructor should always be the final filter wrapper, and should not be used as a constructor argument for another filter.  Calls {@code daqSearchFilter_createRecursiveSearchFilter()}. */
+    /** Creates a search filter that accepts only read-only properties.  Calls {@code daqSearchFilter_createReadOnlyPropertyFilter()}. */
+    public static MemorySegment createReadOnlyPropertyFilter() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createReadOnlyPropertyFilter, "daqSearchFilter_createReadOnlyPropertyFilter").invokeExact(objSlot);
+            Ffi.checkError(err, "daqSearchFilter_createReadOnlyPropertyFilter");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a search filter that indicates that the search method should recursively search through the object's child elements.  Calls {@code daqSearchFilter_createRecursiveSearchFilter()}. */
     public static MemorySegment createRecursiveSearchFilter(MemorySegment filter) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -143,7 +169,7 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqSearchFilter_createRequiredTagsSearchFilter()}. */
+    /** Creates a search filter that accepts components that have all the required tags. "Visit children"  Calls {@code daqSearchFilter_createRequiredTagsSearchFilter()}. */
     public static MemorySegment createRequiredTagsSearchFilter(MemorySegment requiredTags) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -153,7 +179,17 @@ public final class DaqSearchFilter {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqSearchFilter_createVisibleSearchFilter()}. */
+    /** Creates a search filter that accepts only visible properties. "Visit children" returns `true`  Calls {@code daqSearchFilter_createVisiblePropertyFilter()}. */
+    public static MemorySegment createVisiblePropertyFilter() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createVisiblePropertyFilter, "daqSearchFilter_createVisiblePropertyFilter").invokeExact(objSlot);
+            Ffi.checkError(err, "daqSearchFilter_createVisiblePropertyFilter");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a search filter that accepts only visible components. "Visit children" returns `true`  Calls {@code daqSearchFilter_createVisibleSearchFilter()}. */
     public static MemorySegment createVisibleSearchFilter() {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);

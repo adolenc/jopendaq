@@ -13,8 +13,10 @@ import com.opendaq.lowlevel.*;
 
 /**
  * The top-level openDAQ object. It acts as container for the openDAQ context and the base module manager.
+ *
  * It forwards all Device and PropertyObject calls to the current root device, making the calls on the Instance
  * and root device equivalent.
+ *
  * On creation, it creates a Client device - a default device implementation that can load any function blocks
  * present in the module manager search path. If the native openDAQ client-module is loaded, the Client device
  * can connect to any TMS enabled device by using the `addDevice` function. The Client is set as the root device
@@ -51,10 +53,13 @@ public class Instance extends Device {
      * Creates an openDAQ instance.
      * &#64;param context The context object.
      * &#64;param localId The localID of the instance.
+     *
      * openDAQ application uses instance as an entry point and a root component. The instance is the first openDAQ object
      * that is created in the application.
+     *
      * The caller should provide a localID that is a string that should be unique across multiple instances. If the
      * instance sets a root device, the localID of the root device is automatically used as localID of the instance.
+     *
      * The caller should provide configured module manager and context.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstance_createInstance()}.
@@ -119,6 +124,7 @@ public class Instance extends Device {
     /**
      * Gets the current root device.
      * &#64;param[out] rootDevice The current root device.
+     *
      * All Device calls invoked on the Instance are forwarded to the current root device.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstance_getRootDevice()}.
@@ -134,7 +140,10 @@ public class Instance extends Device {
     /**
      * Adds a device with the connection string as root device.
      * &#64;param connectionString The connection string containing the address of the device.
-     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate, port to use for 3rd party communication, number of channels to generate, or other device specific settings. In case of nullptr, a default configuration is used.
+     * &#64;param config A config object to configure a client device. This object can contain properties like max sample rate,
+     * port to use for 3rd party communication, number of channels to generate, or other device specific settings. In case
+     * of nullptr, a default configuration is used.
+     *
      * All Device calls invoked on the Instance are forwarded to the root device. The root device can only be set once.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInstance_setRootDevice()}.

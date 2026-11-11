@@ -13,24 +13,30 @@ import com.opendaq.lowlevel.*;
 
 /**
  * A container of Properties and their corresponding Property values.
+ *
  * The Property object acts as a container of properties that can be inherited from a specified Property object class,
  * or added to the Property object after its creation. The property names must be unique within any given Property object,
  * as no duplicates are allowed.
+ *
  * The Property object class name is specified when constructing the Property object, and the class itself is obtained from
  * the Type manager, which, at that point, must already contain a class with the specified name.
+ *
  * Each Property defines a set of metadata, specifying what value type it represents, as well as additional information that
  * is used when displaying a user interface, such as whether a Property is visible, or read-only. The Property can
  * also limit the set of valid values by specifying a minimum/maximum value, or validation/coercion expressions.
+ *
  * In addition to properties, a Property object holds a dictionary of Property values, where the key is a Property's name,
  * and the value is the current Property value. When setting the value of a property, the value is written into the said dictionary.
  * Correspondingly, when reading the value of a property, it is read from the dictionary as well. If the value is not present in
  * the dictionary, the default value of the Property is read instead.
+ *
  * Property values must match the Value, Item, and Key type of the corresponding Property. If the Property expects an integer type,
  * only objects of which core type is equal to ctInt can be written to said Property. The Item type represents the type of items
  * expected in lists and dictionaries (when the value type is ctList or ctDict), while the Key type represents the type of keys
  * expected in a dictionary (when the value type is ctDict). Notable, when the Property expects object type values, only other
  * base Property objects can be written to said property. Any classes that inherit the Property object class are not valid Property
  * values.
+ *
  * Property objects can be frozen. When frozen, their set of Properties and Property values can no longer be modified.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPropertyObject} interface.
@@ -83,6 +89,7 @@ public class PropertyObject extends BaseObject {
      * &#64;retval OPENDAQ_ERR_INVALIDVALUE if the property has no name.
      * &#64;retval OPENDAQ_ERR_ALREADYEXISTS if a property with the same name is already part of the Property object.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
+     *
      * The Property is frozen once added to the Property object, making it immutable. The same Property cannot
      * be added to multiple different Property objects.
      *
@@ -99,10 +106,12 @@ public class PropertyObject extends BaseObject {
 
     /**
      * Begins batch configuration of the object.
+     *
      * Batched configuration is used to apply several settings at once. To begin batch configuration, call `beginUpdate`.
      * When the `setPropertyValue` is called on the object, the changes are not immediately applied to it. When `endUpdate`
      * is called, the property values set between the `beginUpdate` and `endUpdate` method calls are
      * applied. It triggers the ˙OnPropertyWriteEvent` for each property value set, and the `OnEndUpdate` event.
+     *
      * `beginUpdate` is called recursively for each child property object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_beginUpdate()}.
@@ -120,9 +129,11 @@ public class PropertyObject extends BaseObject {
      * &#64;param propertyName The name of the Property of which value should be cleared.
      * &#64;retval OPENDAQ_ERR_NOTFOUND if a Property with given `propertyName` is not part of the Property object.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
+     *
      * When a Property value is set, the value is written in the internal dictionary of Property values.
      * This function will remove said value from the dictionary. If the tries to obtain the Property value of
      * a property that does not have a set Property value, then the default value is returned.
+     *
      * Importantly, clearing the value of an Object-type property will call `clear` on all the child object's properties.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_clearPropertyValue()}.
@@ -140,6 +151,7 @@ public class PropertyObject extends BaseObject {
 
     /**
      * Clears values of all properties contained in the Property object, including nested child properties.
+     *
      * This function clears the values by internally invoking `clearPropertyValue(...)` for all properties returned by
      * `getAllProperties()`; for object-type properties it therefore clears their child properties as well.
      * Read-only properties and frozen objects are skipped.
@@ -156,10 +168,12 @@ public class PropertyObject extends BaseObject {
 
     /**
      * Ends batch configuration of the object.
+     *
      * Batched configuration is used to apply several settings at once. To begin batch configuration, call `beginUpdate`.
      * When the `setPropertyValue` is called on the object, the changes are not immediately applied to it. When `endUpdate`
      * is called, the property values set between the `beginUpdate` and `endUpdate` method calls are
      * applied. It triggers the ˙OnPropertyWriteEvent` for each property value set, and the `OnEndUpdate` event.
+     *
      * `endUpdate` is called recursively for each child property object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_endUpdate()}.
@@ -174,9 +188,12 @@ public class PropertyObject extends BaseObject {
 
     /**
      * Retrieves a list of properties from the Property object that match the given property filter.
-     * &#64;param propertyFilter A filter used to select relevant properties. Can include a recursive wrapper to search thru nested property objects.
-     * &#64;param componentFilter An optional filter to determine which components' properties are included in the search. A recursive wrapper can be used to enable tree-traversal search.
+     * &#64;param propertyFilter A filter used to select relevant properties. Can include a recursive wrapper
+     * to search thru nested property objects.
+     * &#64;param componentFilter An optional filter to determine which components' properties are included in the search.
+     * A recursive wrapper can be used to enable tree-traversal search.
      * &#64;param[out] properties The list containing the matching properties.
+     *
      * If the propertyFilter is nullptr, only the visible properties directly associated with the current object are retrieved.
      * When searching for properties within a component, if no componentFilter is provided, only the current component is searched.
      * If a componentFilter is provided but the current component does not match it, the result will be an empty list.
@@ -201,7 +218,9 @@ public class PropertyObject extends BaseObject {
     /**
      * Returns a list of all properties contained in the Property object.
      * &#64;param[out] properties The List of properties.
+     *
      * Properties are retrieved regardless of their visibility. They are sorted in insertion order unless a custom order is specified.
+     *
      * This function returns both the properties added to the Property object, as well as those of its class.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_getAllProperties()}.
@@ -217,6 +236,7 @@ public class PropertyObject extends BaseObject {
     /**
      * Gets the name of the class the Property object was constructed with.
      * &#64;param[out] className The class's name. Contains an empty string if the class name is not configured.
+     *
      * A Property object inherits all properties of the Property object class of the same name. Such Property objects
      * have access to the Type manager from which they can retrieve its class type and its properties.
      *
@@ -231,8 +251,10 @@ public class PropertyObject extends BaseObject {
     }
 
     /**
-     * Gets the Event that is triggered whenever any Property value is read.The event is triggered after the specific Property event.
+     * Gets the Event that is triggered whenever any Property value is read.The event is triggered after the specific Property
+     * event.
      * &#64;param[out] event The read Event.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever the event is triggered.
      * The callback function requires two parameters - a Property object, as well as a "Property value event args" object.
      * The callback will be invoked with the Property object holding the read value as the first argument. The second argument
@@ -250,8 +272,10 @@ public class PropertyObject extends BaseObject {
     }
 
     /**
-     * Gets the Event that is triggered whenever any Property value is written. The event is triggered after the specific Property event.
+     * Gets the Event that is triggered whenever any Property value is written. The event is triggered after the specific Property
+     * event.
      * &#64;param[out] event The write Event.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever the event is triggered.
      * The callback function requires two parameters - a Property object, as well as a "Property value event args" object.
      * The callback will be invoked with the Property object holding the written-to property as the first argument The second argument
@@ -271,6 +295,7 @@ public class PropertyObject extends BaseObject {
     /**
      * Gets the Event that is triggered whenever the batch configuration is applied.
      * &#64;param[out] event The Event.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever the event is triggered.
      * The callback function requires one parameter - a "End update value event args" object.
      * The callback will be invoked with the batch configuration is applied, i.e. from the `endUpdate` method. The first argument
@@ -291,6 +316,7 @@ public class PropertyObject extends BaseObject {
      * &#64;param propertyName The name of the property.
      * &#64;param[out] event The read Event.
      * &#64;retval OPENDAQ_ERR_NOTFOUND if the Property object does not contain a Property named `propertyName`.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever the event is triggered.
      * The callback function requires two parameters - a Property object, as well as a "Property value event args" object.
      * The callback will be invoked with the Property object holding the read value as the first argument. The second argument
@@ -315,6 +341,7 @@ public class PropertyObject extends BaseObject {
      * &#64;param propertyName The name of the property.
      * &#64;param[out] event The write Event.
      * &#64;retval OPENDAQ_ERR_NOTFOUND if the Property object does not contain a Property named `propertyName`.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever the event is triggered.
      * The callback function requires two parameters - a Property object, as well as a "Property value event args" object.
      * The callback will be invoked with the Property object holding the written-to property as the first argument The second argument
@@ -353,12 +380,15 @@ public class PropertyObject extends BaseObject {
      * &#64;param propertyName The name of the property.
      * &#64;param[out] property The retrieved Property.
      * &#64;retval OPENDAQ_ERR_NOTFOUND if the Property object does not contain the requested Property.
+     *
      * The property is obtained from either the Property object class of the Property object, or the
      * object's local list of properties. The Property held by the object/class is not returned directly,
      * but is instead cloned, and bound to the Property object. This allows for evaluation of Property metadata
      * that depends on other properties of the Property object.
+     *
      * For example, a Property's visibility might depend on the value of another Property. To make evaluation
      * of the visibility parameter possible, the Property must be able to access its owning Property object.
+     *
      * Likewise, Reference properties always point at another Property of a Property object. Again, for this to
      * be possible, the Property must be able to access its owning Property object, to be able to retrieve its
      * referenced Property.
@@ -383,6 +413,7 @@ public class PropertyObject extends BaseObject {
      * &#64;retval OPENDAQ_ERR_NOTFOUND if a Property with given `propertyName` is not part of the Property object.
      * &#64;retval OPENDAQ_ERR_INVALIDPROPERTY if the Property either has no Selection values, or the Selection values are not a list or dictionary.
      * &#64;retval OPENDAQ_ERR_INVALIDTYPE if the retrieved value does not match the Property's item type.
+     *
      * This function serves as a shortcut to obtaining the Property value of a Property, and using it to retrieve the currently
      * selected value from the Selection values of the Property. For example, if the Selection values contain the following list
      * "["banana", "apple", "pear"]", and the corresponding Property value is set to 1, retrieving the Property selection value
@@ -404,6 +435,7 @@ public class PropertyObject extends BaseObject {
     /**
      * Returns the state of batch configuration.
      * &#64;param[out] updating True if the object is performing batch update of its properties.
+     *
      * Batched configuration is used to apply several settings at once. To begin batch configuration, call `beginUpdate`.
      * When the `setPropertyValue` is called on the object, the changes are not immediately applied. When `endUpdate`
      * is called, the property values set between the `beginUpdate` and `endUpdate` method calls are
@@ -423,8 +455,10 @@ public class PropertyObject extends BaseObject {
     /**
      * Returns a list of visible properties contained in the Property object.
      * &#64;param[out] properties The List of properties.
+     *
      * A Property is visible if both the Visible parameter is set to `true`, and IsReferenced is `false`. The properties
      * are sorted in insertion order unless a custom order is specified.
+     *
      * This function returns both the properties added to the Property object, as well as those of its class.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_getVisibleProperties()}.
@@ -458,8 +492,10 @@ public class PropertyObject extends BaseObject {
     /**
      * Removes the Property named `propertyName` from the Property object.
      * &#64;param propertyName The name of the Property to be removed.
-     * &#64;retval OPENDAQ_ERR_NOTFOUND if the Property object does not contain a Property named `propertyName`, or the Property is part of the Property object's Property object class.
+     * &#64;retval OPENDAQ_ERR_NOTFOUND if the Property object does not contain a Property named `propertyName`, or the
+     * Property is part of the Property object's Property object class.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
+     *
      * A property can only be removed from a Property object, if it was added to the object, and not inherited from its class.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObject_removeProperty()}.
@@ -479,6 +515,7 @@ public class PropertyObject extends BaseObject {
      * Sets a custom order of properties as defined in the list of property names.
      * &#64;param orderedPropertyNames A list of names of properties. The order of the list is applied to the object's properties.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
+     *
      * The list should contain names of properties available in the object. When retrieving the Property object's properties, they will
      * be sorted in the order in which the names appear in the provided list. Any properties not in the custom order are
      * kept in insertion order at the end of the Property object's list of properties.
@@ -504,6 +541,7 @@ public class PropertyObject extends BaseObject {
      * &#64;retval OPENDAQ_ERR_INVALIDPROPERTY if the Property has no Selection values.
      * &#64;retval OPENDAQ_ERR_ACCESSDENIED if the property is Read-only.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
+     *
      * Works for all Selection properties (list or dictionary): the value is the actual selection item (e.g. a string from the list,
      * or the value part of a key-value pair in the dictionary). Use setPropertyValue when setting by index/key.
      *
@@ -535,6 +573,7 @@ public class PropertyObject extends BaseObject {
      * &#64;retval OPENDAQ_ERR_COERCION_FAILED if the Coercer fails to coerce the `value`.
      * &#64;retval OPENDAQ_ERR_FROZEN if the Property object is frozen.
      * &#64;retval OPENDAQ_ERR_IGNORED if the `value` is the same as the default, or the previously written value.
+     *
      * Stores the provided `value` into an internal dictionary of property name and value pairs. This property value can
      * later be retrieved through the corresponding getter method when invoked with the same `propertyName`. The provided
      * `value` must adhere to the restrictions of the corresponding Property (that bears the name `propertyName`). If such
@@ -546,8 +585,10 @@ public class PropertyObject extends BaseObject {
      * - The value will be validated by the Property validator causing the setter method to fail if validation is unsuccessful.
      * - The value will be coerced to fit the coercion expression of the Property coercer before being written into the local
      * dictionary of property values.
+     *
      * Setting the value of a Property will override either its default value or the value that was set beforehand.
      * &#64;subsection patterns Behaviour patterns of note
+     *
      * - When setting the value of a Property with the Selection values field configured (a Selection property), the `value`
      * must be an integer type, and acts as an index/key into the list/dictionary of Selection values.
      * - If the Property is a Reference property (the Referenced property field is configured), the `value` is actually written
@@ -556,6 +597,7 @@ public class PropertyObject extends BaseObject {
      * of the same type as specified by the item and key type of the Property.
      * - Setting a Property value will invoke the corresponding `onPropertyValueWrite` event.
      * &#64;subsection value_set_child_property_objects Child Property objects
+     *
      * The Property value setter allows for direct configuration of any child Property objects. To set the Property value of a
      * child Property object, the `propertyName` parameter should be of the format: "childName.propertyName". This pattern
      * can also be used to access nested properties - for example "childName1.childName2.childName3.propertyName".

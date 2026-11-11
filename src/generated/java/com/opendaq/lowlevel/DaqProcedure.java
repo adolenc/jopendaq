@@ -18,6 +18,8 @@ public final class DaqProcedure {
         Ffi.downcallOrNull("daqProcedure_createProcedure", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_dispatch =
         Ffi.downcallOrNull("daqProcedure_dispatch", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqProcedure_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
 
     /** Calls {@code daqProcedure_createProcedure()}. */
     public static MemorySegment createProcedure(MemorySegment value) {
@@ -29,11 +31,18 @@ public final class DaqProcedure {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqProcedure_dispatch()}. */
+    /** Calls the stored callback.  Calls {@code daqProcedure_dispatch()}. */
     public static void dispatch(MemorySegment self, MemorySegment params) {
         try {
             int err = (int) Ffi.require(MH_dispatch, "daqProcedure_dispatch").invokeExact(Ffi.orNull(self), Ffi.orNull(params));
             Ffi.checkError(err, "daqProcedure_dispatch");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqProcedure_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqProcedure_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

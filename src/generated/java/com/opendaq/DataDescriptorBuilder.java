@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Data descriptor objects. Contains setter methods that allow for Data descriptor parameter configuration, and a `build` method that builds the Data descriptor.
+ * Builder component of Data descriptor objects. Contains setter methods that allow for Data descriptor
+ * parameter configuration, and a `build` method that builds the Data descriptor.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDataDescriptorBuilder} interface.
  */
@@ -37,7 +38,8 @@ public class DataDescriptorBuilder extends BaseObject {
     }
 
     /**
-     * Data descriptor copy factory that creates a Data descriptor builder object from a different Data descriptor, copying its parameters.
+     * Data descriptor copy factory that creates a Data descriptor builder object from a
+     * different Data descriptor, copying its parameters.
      * &#64;param descriptorToCopy The Data descriptor of which configuration should be copied.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_createDataDescriptorBuilderFromExisting()}.
@@ -141,6 +143,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Gets the Reference Domain Info.
      * &#64;param[out] referenceDomainInfo The Reference Domain Info.
+     *
      * If set, gives additional information about the reference domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_getReferenceDomainInfo()}.
@@ -240,6 +243,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the list of the descriptor's dimension's.
      * &#64;param dimensions The list of dimensions.
+     *
      * The number of dimensions defines the rank of the signal's data (eg. Vector, Matrix).
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setDimensions()}.
@@ -260,6 +264,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets any extra metadata defined by the data descriptor.
      * &#64;param metadata Additional metadata of the descriptor as a dictionary.
+     *
      * All objects in the metadata dictionary must be serializable.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setMetadata()}.
@@ -280,6 +285,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets a descriptive name for the signal's value.
      * &#64;param name The name of the signal value.
+     *
      * When, for example, describing the amplitude values of spectrum data, the name would be `Amplitude`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setName()}.
@@ -300,9 +306,11 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the absolute origin of a signal value component.
      * &#64;param origin The absolute origin.
+     *
      * An origin can be an arbitrary string that determines the starting point of the signal data.
      * All explicit or implicit values are multiplied by the resolution and added to the origin to obtain
      * absolute data instead of relative.
+     *
      * Most commonly a time epoch is used, in which case it should be formatted according to the ISO 8601 standard.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setOrigin()}.
@@ -323,6 +331,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the scaling rule that needs to be applied to explicit/implicit data by readers.
      * &#64;param scaling The scaling rule.
+     *
      * The OutputDataType of the rule matches the value descriptor's sample type. The InputDataType defines the sample type
      * of either the explicit data in packet buffers, or the packet's implicit value's sample type.
      *
@@ -342,6 +351,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the Reference Domain Info.
      * &#64;param referenceDomainInfo The Reference Domain Info.
+     *
      * If set, gives additional information about the reference domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setReferenceDomainInfo()}.
@@ -360,6 +370,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the value Data rule.
      * &#64;param rule The value Data rule.
+     *
      * If explicit, the values will be contained in the packet buffer. Otherwise they are calculated
      * using the packet parameter as the input into the rule.
      *
@@ -395,6 +406,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the fields of the struct, forming a recursive value descriptor definition.
      * &#64;param structFields The list of data descriptors forming the struct fields.
+     *
      * Contains a list of value descriptors, defining the data layout: the data described by the first DataDescriptor
      * of the list is at the start, followed by the data described by the second and so on.
      *
@@ -452,6 +464,7 @@ public class DataDescriptorBuilder extends BaseObject {
     /**
      * Sets the value range of the data in a signal's packets defining the lowest and highest expected values.
      * &#64;param range The value range the signal's data.
+     *
      * The range is not enforced by openDAQ.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptorBuilder_setValueRange()}.

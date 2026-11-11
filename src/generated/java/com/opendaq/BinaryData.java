@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Represents binary large object (BLOB).
+ *
  * Binary data is just a continuously allocated memory of a specific size. A client can get a pointer to
  * internal buffer and size it.
  *

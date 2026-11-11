@@ -12,7 +12,25 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqFunction} interface.
+ * Holds a callback function.
+ *
+ * Represents a callable object. The openDAQ SDK uses this interface when it needs to make
+ * a call back to the client.
+ *
+ * Although the implementation of this interface is provided by openDAQ, C++ and other
+ * bindings provide their implementation which allows passing function as a lambda
+ * functions and other constructs.
+ *
+ * Available factories:
+ * &#64;code
+ * // Creates a new Function object. Throws exception if not successful.
+ * IFunction* Function_Create(FuncCall value)
+ *
+ * // Creates a new Function object. Returns error code if not successful.
+ * ErrCode createFunction(IFuncObject** obj, FuncCall value)
+ * &#64;endcode
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqFunction} interface.
  */
 public class FunctionObject extends BaseObject {
 

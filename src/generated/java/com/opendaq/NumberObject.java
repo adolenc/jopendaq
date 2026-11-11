@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Represents either a float or an int number.
+ *
  * Number is used if data type of the number is not strictly defined, i.e.
  * it can accept a float or an int.
  *

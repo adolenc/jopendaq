@@ -56,7 +56,7 @@ public final class DaqMirroredSignalConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Event that is triggered whenever the acknowledgment for signal subscription completion is received from the streaming server.  Calls {@code daqMirroredSignalConfig_getOnSubscribeComplete()}. */
+    /** Gets the Event that is triggered whenever the acknowledgment for signal subscription  Calls {@code daqMirroredSignalConfig_getOnSubscribeComplete()}. */
     public static MemorySegment getOnSubscribeComplete(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);
@@ -66,7 +66,7 @@ public final class DaqMirroredSignalConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Event that is triggered whenever the acknowledgment for signal unsubscription completion is received from the streaming server.  Calls {@code daqMirroredSignalConfig_getOnUnsubscribeComplete()}. */
+    /** Gets the Event that is triggered whenever the acknowledgment for signal unsubscription  Calls {@code daqMirroredSignalConfig_getOnUnsubscribeComplete()}. */
     public static MemorySegment getOnUnsubscribeComplete(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);

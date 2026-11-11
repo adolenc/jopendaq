@@ -13,9 +13,11 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Packet that contains data sent by a signal. The data can be either explicit, or implicit.
+ *
  * Explicit data is contained within a signal's buffer, accessible through `getRawData`, while implicit
  * packets do not carry any data. Their values are calculated given a rule, packet offset, and the index of
  * a sample within the data buffer.
+ *
  * To obtain implicitly calculated, or scaled values, `getData` should be used. The data descriptor and sample
  * count provide information about the type and amount of data available at the obtained address.
  *
@@ -29,10 +31,12 @@ public class DataPacket extends Packet {
     }
 
     /**
-     * Creates a Data packet with a given descriptor, sample count, memory size of each sample, and an optional packet offset.
+     * Creates a Data packet with a given descriptor, sample count, memory size of each sample,
+     * and an optional packet offset.
      * &#64;param descriptor The descriptor of the signal sending the data.
      * &#64;param sampleCount The number of samples in the packet.
-     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet if the Data rule of the Signal descriptor is not explicit.
+     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet
+     * if the Data rule of the Signal descriptor is not explicit.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_createDataPacket()}.
      */
@@ -52,13 +56,73 @@ public class DataPacket extends Packet {
     }
 
     /**
-     * Creates a Data packet with a given constat rule descriptor, initial constant value, and other constant values.
+     * Creates a binary value packet that contains exactly one sample.
+     * &#64;param domainPacket The Data packet carrying domain data (can be nullptr).
+     * &#64;param descriptor The descriptor of the signal sending the data.
+     * &#64;param sampleMemSize The memory size of a sample.
+     *
+     * Binary value packet should contain exactly one sample of `SampleType::Binary` or `SampleType::String`
+     * sample type.
+     *
+     * For String type signals, the string data must be encoded as UTF-8 strings. The string length is
+     * determined by the `sampleMemSize` parameter, and the string does not need to be null-terminated.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_createBinaryDataPacket()}.
+     */
+    public static DataPacket createBinaryDataPacket(DataPacket domainPacket, DataDescriptor descriptor, long sampleMemSize) {
+        return DaqObject.wrap(create$createBinaryDataPacket(domainPacket, descriptor, sampleMemSize), DataPacket.class);
+    }
+
+    private static MemorySegment create$createBinaryDataPacket(DataPacket domainPacket, DataDescriptor descriptor, long sampleMemSize) {
+        try {
+            return DaqDataPacket.createBinaryDataPacket((domainPacket == null ? MemorySegment.NULL : domainPacket.requireLivePointer()), (descriptor == null ? MemorySegment.NULL : descriptor.requireLivePointer()), sampleMemSize);
+        } finally {
+            Reference.reachabilityFence(domainPacket);
+            Reference.reachabilityFence(descriptor);
+        }
+    }
+
+    /**
+     * Creates a binary value packet with external memory and a deleter that contains exactly one sample.
+     * &#64;param domainPacket The Data packet carrying domain data (can be nullptr).
+     * &#64;param descriptor The descriptor of the signal sending the data.
+     * &#64;param sampleMemSize The memory size of a sample.
+     * &#64;param data Pointer to the external memory buffer.
+     * &#64;param deleter Custom deleter callback that is called when the packet is destroyed.
+     *
+     * Binary value packet should contain exactly one sample of `SampleType::Binary` or `SampleType::String`
+     * sample type. Memory should be allocated by the caller and a custom deleter callback
+     * should be provided.
+     *
+     * For String type signals, the string data must be encoded as UTF-8 strings. The string length is
+     * determined by the `sampleMemSize` parameter, and the string does not need to be null-terminated.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_createBinaryDataPacketWithExternalMemory()}.
+     */
+    public static DataPacket createBinaryDataPacketWithExternalMemory(DataPacket domainPacket, DataDescriptor descriptor, long sampleMemSize, MemorySegment data, Deleter deleter) {
+        return DaqObject.wrap(create$createBinaryDataPacketWithExternalMemory(domainPacket, descriptor, sampleMemSize, data, deleter), DataPacket.class);
+    }
+
+    private static MemorySegment create$createBinaryDataPacketWithExternalMemory(DataPacket domainPacket, DataDescriptor descriptor, long sampleMemSize, MemorySegment data, Deleter deleter) {
+        try {
+            return DaqDataPacket.createBinaryDataPacketWithExternalMemory((domainPacket == null ? MemorySegment.NULL : domainPacket.requireLivePointer()), (descriptor == null ? MemorySegment.NULL : descriptor.requireLivePointer()), sampleMemSize, Ffi.orNull(data), (deleter == null ? MemorySegment.NULL : deleter.requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(domainPacket);
+            Reference.reachabilityFence(descriptor);
+            Reference.reachabilityFence(deleter);
+        }
+    }
+
+    /**
+     * Creates a Data packet with a given constat rule descriptor, initial constant value,
+     * and other constant values.
      * &#64;param domainPacket The Data packet carrying domain data.
      * &#64;param descriptor The descriptor of the signal sending the data.
      * &#64;param sampleCount The number of samples in the packet.
      * &#64;param initialValue The initial constant value.
      * &#64;param otherValues The other constant values.
      * &#64;param otherValueCount The number of other constant values.
+     *
      * The values in the packet are calculated by constant rule. The initial value is taken as a constant.
      * Other values are used to change the constant value within the packet. Any number of other constant values
      * can be used. Other values are passed as an array of struct with uint32_t sample position field and value field.
@@ -80,11 +144,13 @@ public class DataPacket extends Packet {
     }
 
     /**
-     * Creates a Data packet with a given descriptor, sample count, memory size of each sample, and an optional implicit value.
+     * Creates a Data packet with a given descriptor, sample count, memory size of each sample,
+     * and an optional implicit value.
      * &#64;param domainPacket The Data packet carrying domain data.
      * &#64;param descriptor The descriptor of the signal sending the data.
      * &#64;param sampleCount The number of samples in the packet.
-     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet if the Data rule of the Signal descriptor is not explicit.
+     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet
+     * if the Data rule of the Signal descriptor is not explicit.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_createDataPacketWithDomain()}.
      */
@@ -105,13 +171,16 @@ public class DataPacket extends Packet {
     }
 
     /**
-     * Creates a Data packet with a given descriptor, sample count, an optional packet offset, external memory location for data, custom deleter function and buffer size of external memory.
+     * Creates a Data packet with a given descriptor, sample count, an optional packet offset,
+     * external memory location for data, custom deleter function and buffer size of external memory.
      * &#64;param descriptor The descriptor of the signal sending the data.
      * &#64;param sampleCount The number of samples in the packet.
-     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet if the Data rule of the Signal descriptor is not explicit.
+     * &#64;param offset Optional packet offset parameter, used to calculate the data of the packet
+     * if the Data rule of the Signal descriptor is not explicit.
      * &#64;param externalMemory The pointer to the location of buffer data.
      * &#64;param deleter Custom deleter callback that is called when the packet is destroyed
      * &#64;param bufferSize The size of the external memory.
+     *
      * Use this factory when pointer to create a packet which uses an existing memory. The memory should not be
      * freed or written until the packet is destroyed. A deleter callback should be passed as a parameter that
      * is called when the packet is destroyed. The callback should free the memory provided. If bufferSize parameter
@@ -133,6 +202,26 @@ public class DataPacket extends Packet {
             Reference.reachabilityFence(domainPacket);
             Reference.reachabilityFence(descriptor);
             Reference.reachabilityFence(deleter);
+        }
+    }
+
+    /**
+     * Creates a wrapped data packet.
+     * &#64;param sourcePacket The source packet being wrapped.
+     * &#64;param descriptor The descriptor of the packet.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_createWrappedDataPacket()}.
+     */
+    public static DataPacket createWrappedDataPacket(DataPacket sourcePacket, DataDescriptor descriptor) {
+        return DaqObject.wrap(create$createWrappedDataPacket(sourcePacket, descriptor), DataPacket.class);
+    }
+
+    private static MemorySegment create$createWrappedDataPacket(DataPacket sourcePacket, DataDescriptor descriptor) {
+        try {
+            return DaqDataPacket.createWrappedDataPacket((sourcePacket == null ? MemorySegment.NULL : sourcePacket.requireLivePointer()), (descriptor == null ? MemorySegment.NULL : descriptor.requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(sourcePacket);
+            Reference.reachabilityFence(descriptor);
         }
     }
 
@@ -182,10 +271,12 @@ public class DataPacket extends Packet {
      * Gets the data packet last value.
      * &#64;param[out] value The IBaseObject value can be a nullptr if there is no value, or if the data type is not supported by the function.
      * &#64;param typeManager Optional ITypeManager value can be provided to enable getLastValue for IStruct.
+     *
      * If a value is assigned, it can be cast based on the signal description to IFloat if the type is Float32 or Float64,
      * to IInteger if the type is Int8 through Int64 or UInt8 through UInt64, to IComplexNumber if the type is ComplexFloat32 or ComplexFloat64,
      * to IRange if the type is RangeInt64, to IString if the type is String, to IStruct if the type is Struct, and to IList of the forementioned types if there is exactly
      * one dimension.
+     *
      * For String type signals in binary data packets, the string data must be encoded as UTF-8 strings. The string length is
      * determined by the sample size, and the string does not need to be null-terminated. The method extracts the string value
      * from the packet data and returns it as an IString object.
@@ -207,7 +298,11 @@ public class DataPacket extends Packet {
     }
 
     /**
-     * Gets current packet offset. This offset is later applied to the data rule used by a signal to calculate actual data value. This value is usually a time or other domain value. Packet offset is particularly useful when one wants to transfer a gap in otherwise equidistant samples. If we have a linear data rule, defined by equation f(x) = k*x + n, then the data value will be calculated by the equation g(x) = offset + f(x).
+     * Gets current packet offset. This offset is later applied to the data rule used by a signal to calculate
+     * actual data value. This value is usually a time or other domain value. Packet offset is particularly useful when
+     * one wants to transfer a gap in otherwise equidistant samples.
+     * If we have a linear data rule, defined by equation f(x) = k*x + n, then the data value will be calculated
+     * by the equation g(x) = offset + f(x).
      * &#64;param[out] offset The packet offset
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_getOffset()}.
@@ -223,6 +318,7 @@ public class DataPacket extends Packet {
     /**
      * Gets the unique packet id.
      * &#64;param[out] packetId The packet unique id.
+     *
      * The packet id is automatically created on packet construction.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_getPacketId()}.
@@ -238,6 +334,7 @@ public class DataPacket extends Packet {
     /**
      * Gets size of raw data buffer in bytes.
      * &#64;param[out] dataSize the size of raw data buffer in bytes.
+     *
      * Raw data size is 0 if signal's data rule is implicit.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataPacket_getRawDataSize()}.
@@ -253,6 +350,7 @@ public class DataPacket extends Packet {
     /**
      * Gets the last raw value of the data packet.
      * &#64;param[out] value A pointer to a memory location where the raw value will be stored.
+     *
      * This method writes the raw value of the last sample to the provided memory location.
      * It does not allocate memory and assumes that sufficient memory has already been allocated.
      * The value is not cast to any specific type; it remains a raw data pointer.
@@ -271,7 +369,8 @@ public class DataPacket extends Packet {
     /**
      * Gets the raw value of the data packet at the specified index.
      * &#64;param[out] value A pointer to a memory location where the raw value will be stored.
-     * &#64;param index The index of the sample to retrieve.
+     * &#64;param[in] index The index of the sample to retrieve.
+     *
      * This method writes the raw value of the sample at the specified index to the provided memory location.
      * It does not allocate memory and assumes that sufficient memory has already been allocated.
      * The value is not cast to any specific type; it remains a raw data pointer.
@@ -304,12 +403,14 @@ public class DataPacket extends Packet {
     /**
      * Gets the data packet value at the specified index.
      * &#64;param[out] value The IBaseObject value can be a nullptr if there is no value, or if the data type is not supported by the function.
-     * &#64;param index Index of the sample to obtain.
+     * &#64;param[in] index Index of the sample to obtain.
      * &#64;param typeManager Optional ITypeManager value can be provided to enable getLastValue for IStruct.
+     *
      * If a value is assigned, it can be cast based on the signal description to IFloat if the type is Float32 or Float64,
      * to IInteger if the type is Int8 through Int64 or UInt8 through UInt64, to IComplexNumber if the type is ComplexFloat32 or
      * ComplexFloat64, to IRange if the type is RangeInt64, to IString if the type is String, to IStruct if the type is Struct, and to IList of the forementioned types if
      * there is exactly one dimension.
+     *
      * For String type signals in binary data packets, the string data must be encoded as UTF-8 strings. The string length is
      * determined by the sample size, and the string does not need to be null-terminated. The method extracts the string value
      * from the packet data and returns it as an IString object.

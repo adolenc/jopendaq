@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A module is an object that provides device and function block factories. The object is usually implemented in an external dynamic link / shared library. IModuleManager is responsible for loading all modules.
+ * A module is an object that provides device and function block factories.
+ * The object is usually implemented in an external dynamic link / shared library.
+ * IModuleManager is responsible for loading all modules.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqModule} interface.
  */
@@ -37,7 +39,8 @@ public class Module extends BaseObject {
     }
 
     /**
-     * Creates a device object that can communicate with the device described in the specified connection string. The device object is not automatically added as a sub-device of the caller, but only returned by reference.
+     * Creates a device object that can communicate with the device described in the specified connection string.
+     * The device object is not automatically added as a sub-device of the caller, but only returned by reference.
      * &#64;param[out] device The device object created to communicate with and control the device.
      * &#64;param connectionString Describes the connection info of the device to connect to.
      * &#64;param parent The parent component/device to which the device attaches.
@@ -64,7 +67,8 @@ public class Module extends BaseObject {
     }
 
     /**
-     * Creates and returns a function block with the specified id. The function block is not automatically added to the FB list of the caller.
+     * Creates and returns a function block with the specified id.
+     * The function block is not automatically added to the FB list of the caller.
      * &#64;param id The id of the function block to create. Ids can be retrieved by calling `getAvailableFunctionBlockTypes()`.
      * &#64;param parent The parent component/device to which the device attaches.
      * &#64;param localId The local id of the function block.
@@ -124,7 +128,8 @@ public class Module extends BaseObject {
     /**
      * Creates and returns a streaming object using the specified connection string and config object.
      * &#64;param connectionString Typically a connection string usually has a well known prefix, such as `daq.lt//`.
-     * &#64;param config A config object that contains parameters used to configure a streaming connection. In case of a null value, implementation should use default configuration.
+     * &#64;param config A config object that contains parameters used to configure a streaming connection.
+     * In case of a null value, implementation should use default configuration.
      * &#64;param[out] streaming The created streaming object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModule_createStreaming()}.
@@ -161,7 +166,8 @@ public class Module extends BaseObject {
     }
 
     /**
-     * Returns a list of known devices info. The implementation can start discovery in background and only return the results in this function.
+     * Returns a list of known devices info.
+     * The implementation can start discovery in background and only return the results in this function.
      * &#64;param[out] availableDevices The list of known devices information.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModule_getAvailableDevices()}.
@@ -247,6 +253,7 @@ public class Module extends BaseObject {
     /**
      * Check whether the module license is loaded.
      * &#64;param[out] loaded True, if the module license is loaded.
+     *
      * Always return True if no license is required by the module.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModule_licenseLoaded()}.
@@ -260,7 +267,8 @@ public class Module extends BaseObject {
     }
 
     /**
-     * Used for loading a license, when the module requires one. Licenses can specify the degree to which the module is unlocked to the user (i.e. which and/or how many concurrent function blocks from this modules are accessible with the license).
+     * Used for loading a license, when the module requires one. Licenses can specify the degree to which the module is unlocked to the user
+     * (i.e. which and/or how many concurrent function blocks from this modules are accessible with the license).
      * &#64;param[out] succeeded License was accepted.
      * &#64;param licenseConfig Any information relevant to load the license (i.e. a path to the license file).
      *

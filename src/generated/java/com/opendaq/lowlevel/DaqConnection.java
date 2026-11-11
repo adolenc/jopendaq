@@ -135,7 +135,7 @@ public final class DaqConnection {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the number of samples available in the queued packets. The returned value ignores any Sample-Descriptor changes.  Calls {@code daqConnection_getAvailableSamples()}. */
+    /** Gets the number of samples available in the queued packets.  Calls {@code daqConnection_getAvailableSamples()}. */
     public static long getAvailableSamples(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment samplesSlot = arena.allocate(JAVA_LONG);
@@ -172,7 +172,7 @@ public final class DaqConnection {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the number of same-type samples available in the queued packets. The returned value is up-to the next Sample-Descriptor-Changed packet if any.  Calls {@code daqConnection_getSamplesUntilNextDescriptor()}. */
+    /** Gets the number of same-type samples available in the queued packets.  Calls {@code daqConnection_getSamplesUntilNextDescriptor()}. */
     public static long getSamplesUntilNextDescriptor(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment samplesSlot = arena.allocate(JAVA_LONG);
@@ -182,7 +182,7 @@ public final class DaqConnection {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the number of samples available in the queued packets until the next event packet. The returned value is up-to the next Event packet if any.  Calls {@code daqConnection_getSamplesUntilNextEventPacket()}. */
+    /** Gets the number of samples available in the queued packets until the next event packet.  Calls {@code daqConnection_getSamplesUntilNextEventPacket()}. */
     public static long getSamplesUntilNextEventPacket(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment samplesSlot = arena.allocate(JAVA_LONG);
@@ -192,7 +192,7 @@ public final class DaqConnection {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the number of samples available in the queued packets until the next gap packet. The returned value is up-to the next Gap packet if any.  Calls {@code daqConnection_getSamplesUntilNextGapPacket()}. */
+    /** Gets the number of samples available in the queued packets until the next gap packet.  Calls {@code daqConnection_getSamplesUntilNextGapPacket()}. */
     public static long getSamplesUntilNextGapPacket(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment samplesSlot = arena.allocate(JAVA_LONG);

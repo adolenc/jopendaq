@@ -13,20 +13,25 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Describes a dimension of the signal's data. Eg. a column/row in a matrix.
+ *
  * Dimension objects define the size and labels of a single data dimension. Labels, in concert
  * with the unit, provide information about the position of data in a structure. For example, for vector
  * rank data in a frequency domain, the unit would be Hz, and the labels would range from the minimum to the maximum
  * frequency of the spectrum.
+ *
  * The number of dimensions a sample descriptor defines the rank of the signals data. When no dimensions are
  * present, one sample is a single value. When there's one dimension, a sample contains a vector of values,
  * when there are three a sample contains a matrix. Higher ranks of data can be represented by adding more
  * dimension objects to a sample descriptor.
+ *
  * The labels can be defined with a Rule (in example a linear rule with a coefficient and offset), where the
  * the data index is the input to the rule. In example
  * A Linear rule with coefficient = 5, offset = 10, size = 5 provides the following list of labels:
  * [10, 15, 20, 25, 30]
+ *
  * To specify the labels can explicitly, the List dimension rule can be used. The list rule allows for a list of
  * numbers, strings, or ranges to be used as the dimension labels.
+ *
  * Dimension objects implement the Struct methods internally and are Core type `ctStruct`.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDimension} interface.
@@ -83,6 +88,7 @@ public class Dimension extends BaseObject {
     /**
      * Gets a list of labels that defines the dimension.
      * &#64;param[out] labels The list of labels.
+     *
      * The list is obtained from the dimension rule parameters by parsing and evaluating the parameters
      * in conjunction with the rule type.
      *
@@ -99,6 +105,7 @@ public class Dimension extends BaseObject {
     /**
      * Gets the name of the dimension.
      * &#64;param[out] name The name of the dimension.
+     *
      * The name that best describes the dimension, in example "Frequency" for spectrum data.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimension_getName()}.
@@ -114,6 +121,7 @@ public class Dimension extends BaseObject {
     /**
      * Gets the rule that defines the labels and size of the dimension.
      * &#64;param[out] rule The dimension rule.
+     *
      * The rule takes as input the index of data value in a sample and produces a label associated
      * with that index.
      *
@@ -130,6 +138,7 @@ public class Dimension extends BaseObject {
     /**
      * Gets the size of the dimension.
      * &#64;param[out] size The size of the dimension.
+     *
      * The size is obtained from the dimension rule parameters - either from the `size` parameter, or the
      * count of elements in the `list` parameter.
      *

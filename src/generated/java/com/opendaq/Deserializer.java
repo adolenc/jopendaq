@@ -22,6 +22,17 @@ public class Deserializer extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqDeserializer_createJsonDeserializer()}.
+     */
+    public Deserializer() {
+        super(create$createJsonDeserializer());
+    }
+
+    private static MemorySegment create$createJsonDeserializer() {
+        return DaqDeserializer.createJsonDeserializer();
+    }
+
+    /**
      * Calls the openDAQ C function {&#64;code daqDeserializer_callCustomProc()}.
      */
     public void callCustomProc(Procedure customDeserialize, String serialized) {
@@ -51,6 +62,15 @@ public class Deserializer extends BaseObject {
         } finally {
             Reference.reachabilityFence(this);
             Reference.reachabilityFence(factoryCallback);
+        }
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqDeserializer_unregisterSerializerFactory()}.
+     */
+    public static void unregisterSerializerFactory(String id) {
+        try (Arena arena = Arena.ofConfined()) {
+            DaqDeserializer.unregisterSerializerFactory((id == null ? MemorySegment.NULL : arena.allocateFrom(id)));
         }
     }
 

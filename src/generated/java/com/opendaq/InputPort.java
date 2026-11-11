@@ -12,11 +12,15 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Signals accepted by input ports can be connected, forming a connection between the input port and signal, through which Packets can be sent.
+ * Signals accepted by input ports can be connected, forming a connection between the input port
+ * and signal, through which Packets can be sent.
+ *
  * Any openDAQ object which wishes to receive signal data must create an input port and connect it to said
  * signals. Such objects are for example function blocks, and readers.
+ *
  * An input port can filter out incompatible signals by returning false when such a signal is passed as argument
  * to `acceptsSignal`, and also rejects the signals when they are passed as argument to `connect`.
+ *
  * Depending on the configuration, an input port might not require a signal to be connected, returning false
  * when `requiresSignal` is called. Such input ports are usually a part of function blocks that do not require
  * a given signal to perform calculations.
@@ -50,7 +54,8 @@ public class InputPort extends Component {
     /**
      * Checks whether the given signals can be connected to the input port.
      * &#64;param signals The signals to check.
-     * &#64;param[out] accepts Output list of boolean values matching &#64;p signals by index. A value of `true` indicates that the corresponding signal can be connected; `false` otherwise.
+     * &#64;param[out] accepts Output list of boolean values matching &#64;p signals by index. A value of `true`
+     * indicates that the corresponding signal can be connected; `false` otherwise.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInputPort_acceptsSignals()}.
      */
@@ -70,6 +75,7 @@ public class InputPort extends Component {
      * &#64;param signal The signal to be connected to the input port.
      * &#64;retval OPENDAQ_ERR_SIGNAL_NOT_ACCEPTED if the signal is not accepted.
      * &#64;retval OPENDAQ_ERR_NOTASSIGNED if the accepted signal criteria is not defined by the input port.
+     *
      * The signal is notified of the connection formed between it and the input port.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInputPort_connect()}.

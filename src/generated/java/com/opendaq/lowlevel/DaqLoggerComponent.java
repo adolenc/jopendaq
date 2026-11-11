@@ -27,6 +27,8 @@ public final class DaqLoggerComponent {
         Ffi.downcallOrNull("daqLoggerComponent_getLevel", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getName =
         Ffi.downcallOrNull("daqLoggerComponent_getName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_logMessage =
+        Ffi.downcallOrNull("daqLoggerComponent_logMessage", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID, ADDRESS, JAVA_INT));
     private static final MethodHandle MH_setLevel =
         Ffi.downcallOrNull("daqLoggerComponent_setLevel", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT));
     private static final MethodHandle MH_setPattern =
@@ -52,7 +54,7 @@ public final class DaqLoggerComponent {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the minimum severity level of messages to be automatically written to the associated sinks bypassing the temporary buffers.  Calls {@code daqLoggerComponent_flushOnLevel()}. */
+    /** Sets the minimum severity level of messages to be automatically written to the associated  Calls {@code daqLoggerComponent_flushOnLevel()}. */
     public static void flushOnLevel(MemorySegment self, LogLevel level) {
         try {
             int err = (int) Ffi.require(MH_flushOnLevel, "daqLoggerComponent_flushOnLevel").invokeExact(Ffi.orNull(self), level.value());
@@ -84,6 +86,14 @@ public final class DaqLoggerComponent {
             int err = (int) Ffi.require(MH_getName, "daqLoggerComponent_getName").invokeExact(Ffi.orNull(self), nameSlot);
             Ffi.checkError(err, "daqLoggerComponent_getName");
             return nameSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Logs a message with the provided source location and severity level.  Calls {@code daqLoggerComponent_logMessage()}. */
+    public static void logMessage(MemorySegment self, MemorySegment location, MemorySegment msg, LogLevel level) {
+        try {
+            int err = (int) Ffi.require(MH_logMessage, "daqLoggerComponent_logMessage").invokeExact(Ffi.orNull(self), Ffi.orNull(location), Ffi.orNull(msg), level.value());
+            Ffi.checkError(err, "daqLoggerComponent_logMessage");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

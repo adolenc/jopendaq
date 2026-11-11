@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Simple type created from a CoreType. The name of the type matches that of the CoreType used for its construction (eg. ctInt == "int"
+ * Simple type created from a CoreType. The name of the type matches that of the CoreType
+ * used for its construction (eg. ctInt == "int"
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSimpleType} interface.
  */

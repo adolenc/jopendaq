@@ -124,7 +124,7 @@ public final class DaqComponentTypeBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the default configuration object that will be cloned and passed to users by the built Component type when requested.  Calls {@code daqComponentTypeBuilder_getDefaultConfig()}. */
+    /** Gets the default configuration object that will be cloned and passed to users  Calls {@code daqComponentTypeBuilder_getDefaultConfig()}. */
     public static MemorySegment getDefaultConfig(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment defaultConfigSlot = arena.allocate(ADDRESS);
@@ -171,7 +171,7 @@ public final class DaqComponentTypeBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the component type sort. Can be either Streaming, Function block, Device, or Server. Depending on the setting, the corresponding Component type object will be built.  Calls {@code daqComponentTypeBuilder_getTypeSort()}. */
+    /** Gets the component type sort. Can be either Streaming, Function block, Device, or Server.  Calls {@code daqComponentTypeBuilder_getTypeSort()}. */
     public static ComponentTypeSort getTypeSort(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment sortSlot = arena.allocate(JAVA_INT);
@@ -189,7 +189,7 @@ public final class DaqComponentTypeBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the default configuration object that will be cloned and passed to users by the built Component type when requested.  Calls {@code daqComponentTypeBuilder_setDefaultConfig()}. */
+    /** Sets the default configuration object that will be cloned and passed to users  Calls {@code daqComponentTypeBuilder_setDefaultConfig()}. */
     public static void setDefaultConfig(MemorySegment self, MemorySegment defaultConfig) {
         try {
             int err = (int) Ffi.require(MH_setDefaultConfig, "daqComponentTypeBuilder_setDefaultConfig").invokeExact(Ffi.orNull(self), Ffi.orNull(defaultConfig));
@@ -221,7 +221,7 @@ public final class DaqComponentTypeBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the component type sort. Can be either Streaming, Function block, Device, or Server. Depending on the setting, the corresponding Component type object will be built.  Calls {@code daqComponentTypeBuilder_setTypeSort()}. */
+    /** Sets the component type sort. Can be either Streaming, Function block, Device, or Server.  Calls {@code daqComponentTypeBuilder_setTypeSort()}. */
     public static void setTypeSort(MemorySegment self, ComponentTypeSort sort) {
         try {
             int err = (int) Ffi.require(MH_setTypeSort, "daqComponentTypeBuilder_setTypeSort").invokeExact(Ffi.orNull(self), sort.value());

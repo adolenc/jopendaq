@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Base packet type. Data, Value, and Event packets are all also packets. Provides the packet's unique ID that is unique to a given device, as well as the packet type.
+ * Base packet type. Data, Value, and Event packets are all also packets. Provides
+ * the packet's unique ID that is unique to a given device, as well as the packet type.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPacket} interface.
  */

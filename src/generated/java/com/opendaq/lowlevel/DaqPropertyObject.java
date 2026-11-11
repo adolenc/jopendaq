@@ -166,7 +166,7 @@ public final class DaqPropertyObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Event that is triggered whenever any Property value is read.The event is triggered after the specific Property event.  Calls {@code daqPropertyObject_getOnAnyPropertyValueRead()}. */
+    /** Gets the Event that is triggered whenever any Property value is read.The event is triggered after the specific Property  Calls {@code daqPropertyObject_getOnAnyPropertyValueRead()}. */
     public static MemorySegment getOnAnyPropertyValueRead(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);
@@ -176,7 +176,7 @@ public final class DaqPropertyObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Event that is triggered whenever any Property value is written. The event is triggered after the specific Property event.  Calls {@code daqPropertyObject_getOnAnyPropertyValueWrite()}. */
+    /** Gets the Event that is triggered whenever any Property value is written. The event is triggered after the specific Property  Calls {@code daqPropertyObject_getOnAnyPropertyValueWrite()}. */
     public static MemorySegment getOnAnyPropertyValueWrite(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);

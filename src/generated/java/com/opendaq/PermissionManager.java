@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A class which is responsible for managing permissions on an object level. Given a user's group, it is possible to restrict or allow read, write and execute permissions for each object. It is also possible to specify if permissions are inherited from parent object
+ * A class which is responsible for managing permissions on an object level. Given a user's group,
+ * it is possible to restrict or allow read, write and execute permissions for each object. It is also
+ * possible to specify if permissions are inherited from parent object
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPermissionManager} interface.
  */

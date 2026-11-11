@@ -39,6 +39,7 @@ public class Removable extends BaseObject {
 
     /**
      * Notifies the component that it is being removed.
+     *
      * Call `remove` on the component to mark it as removed. It's up to the implementation
      * to define what is does on the act of removal. Basic implementation of `Component`
      * will switch it to inactive state and it cannot be activated again.

@@ -18,6 +18,8 @@ public final class DaqContextInternal {
         Ffi.downcallOrNull("daqContextInternal_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_moveModuleManager =
         Ffi.downcallOrNull("daqContextInternal_moveModuleManager", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setRootDevice =
+        Ffi.downcallOrNull("daqContextInternal_setRootDevice", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
     /** Calls {@code daqContextInternal_getInterfaceId()} with caller-allocated out slots. */
     public static void getInterfaceId(MemorySegment intfId) {
@@ -26,13 +28,21 @@ public final class DaqContextInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Module Manager. Moves the strong reference to the manager to the first caller and retains a weak reference internally.  Calls {@code daqContextInternal_moveModuleManager()}. */
+    /** Gets the Module Manager. Moves the strong reference to the manager to the first  Calls {@code daqContextInternal_moveModuleManager()}. */
     public static MemorySegment moveModuleManager(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment managerSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_moveModuleManager, "daqContextInternal_moveModuleManager").invokeExact(Ffi.orNull(self), managerSlot);
             Ffi.checkError(err, "daqContextInternal_moveModuleManager");
             return managerSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Sets the root device of the openDAQ instance.  Calls {@code daqContextInternal_setRootDevice()}. */
+    public static void setRootDevice(MemorySegment self, MemorySegment device) {
+        try {
+            int err = (int) Ffi.require(MH_setRootDevice, "daqContextInternal_setRootDevice").invokeExact(Ffi.orNull(self), Ffi.orNull(device));
+            Ffi.checkError(err, "daqContextInternal_setRootDevice");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

@@ -12,9 +12,15 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents standard information about a server's capability to support various protocols. The Server Capability object functions as a Property Object, facilitating the inclusion of custom properties of String, Int, Bool, or Float types. This interface serves to store essential details regarding the supported protocol by a device. It adheres to a standardized set of properties, including methods to retrieve information such as the connection string, protocol name, protocol type, connection type, and core events enabled.
+ * Represents standard information about a server's capability to support various protocols.
+ * The Server Capability object functions as a Property Object, facilitating the inclusion of custom properties of String, Int, Bool, or Float types.
+ * This interface serves to store essential details regarding the supported protocol by a device.
+ * It adheres to a standardized set of properties, including methods to retrieve information such as
+ * the connection string, protocol name, protocol type, connection type, and core events enabled.
+ *
  * Additional String, Int, Bool, or Float-type properties can be added using the appropriate Property Object "add property" method.
  * However, other property types are considered invalid for this interface.
+ *
  * The Server Capability object conforms to a standardized format, ensuring compatibility with communication standards.
  * For instance, it provides methods to retrieve details like
  * - the connection string (URL),
@@ -35,6 +41,7 @@ public class ServerCapability extends PropertyObject {
     /**
      * Gets the list of address information objects.
      * &#64;param[out] addressInfo The list of address information objects.
+     *
      * Address information duplicates the connection string and address as available on the Server Capability object.
      * Additionally, it provides information on what type of address it is (e.g., IPv4, IPv6), as well as whether the address is reachable.
      *
@@ -147,6 +154,21 @@ public class ServerCapability extends PropertyObject {
     }
 
     /**
+     * Gets the id of the protocol group supported by the device. Should not contain spaces or special characters except for '_' and '-'.
+     * Could be empty if the protocol is not part of any group.
+     * &#64;param[out] protocolGropuId The id of the protocol group.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServerCapability_getProtocolGroupId()}.
+     */
+    public String getProtocolGroupId() {
+        try {
+            return Ffi.readDaqStringAndRelease(DaqServerCapability.getProtocolGroupId(requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Gets the id of the protocol supported by the device. Should not contain spaces or special characters except for '_' and '-'.
      * &#64;param[out] protocolId The id of the protocol.
      *
@@ -169,6 +191,24 @@ public class ServerCapability extends PropertyObject {
     public String getProtocolName() {
         try {
             return Ffi.readDaqStringAndRelease(DaqServerCapability.getProtocolName(requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Gets the security level of the protocol.
+     * &#64;param[out] securityLevel The security level of the protocol.
+     *
+     * Could be '-1' if the protocol does not define any security level or if the security level is not known,
+     * '0' if the protocol is not secure, and positive integer values for different security levels defined by the protocol.
+     * The higher the value, the more secure the protocol is considered to be.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServerCapability_getProtocolSecurityLevel()}.
+     */
+    public IntegerObject getProtocolSecurityLevel() {
+        try {
+            return DaqObject.wrap(DaqServerCapability.getProtocolSecurityLevel(requireLivePointer()), IntegerObject.class);
         } finally {
             Reference.reachabilityFence(this);
         }

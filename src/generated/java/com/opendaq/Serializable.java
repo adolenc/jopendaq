@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_serialization
- * &#64;defgroup types_serializable Serializable
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqSerializable} interface.
+ * Wraps the openDAQ {&#64;code daqSerializable} interface.
  */
 public class Serializable extends BaseObject {
 

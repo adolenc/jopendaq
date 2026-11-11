@@ -12,7 +12,32 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqErrorInfo} interface.
+ * Contains detailed information about error.
+ *
+ * Most of openDAQ's methods in interfaces return `ErrCode`. This is just an integer number. With `IErrorInfo`
+ * interface it is possible to attach an error message and a source to the last error. The Interface function that
+ * returns an error can create an object that implements this interface and attaches it to thread-local storage
+ * using `daqSetErrorInfo` function. The Client can check the return value of an arbitrary interface function and
+ * in case of an error, it can check if `IErrorInfo` is stored in thread-local storage using `daqGetErrorInfo` for
+ * additional error information.
+ *
+ * `DAQ_MAKE_ERROR_INFO` automatically creates IErrorInfo and calls `daqSetErrorInfo`. In case of an error, `checkErrorInfo`
+ * calls `daqGetErrorInfo` to get extended error information and throws an exception.
+ *
+ * Example:
+ * &#64;code
+ * ErrCode ISomeInterface::checkValue(Int value)
+ * {
+ * if (value &lt; 0)
+ * return DAQ_MAKE_ERROR_INFO(OPENDAQ_ERR_INVALIDPARAMETER, "Parameter should be &gt;= 0");
+ * return OPENDAQ_SUCCESS;
+ * };
+ *
+ * auto errCode = someInterface-&gt;checkValue(-1);
+ * checkErrorInfo(errCode); // this will throw InvalidParameterException with above error message
+ * &#64;endcode
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqErrorInfo} interface.
  */
 public class ErrorInfo extends BaseObject {
 
@@ -33,7 +58,63 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_getFileLine()}.
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_clearErrorInfo()}.
+     */
+    public static void clearErrorInfo() {
+        DaqErrorInfo.clearErrorInfo();
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_extendErrorInfo()}.
+     */
+    public static void extendErrorInfo(ErrorInfo errorInfo) {
+        try {
+            DaqErrorInfo.extendErrorInfo((errorInfo == null ? MemorySegment.NULL : errorInfo.requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(errorInfo);
+        }
+    }
+
+    /**
+     * Gets the error code.
+     * &#64;param errorCode A pointer to store the error code.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getErrorCode()}.
+     */
+    public int getErrorCode() {
+        try {
+            return DaqErrorInfo.getErrorCode(requireLivePointer());
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_getErrorInfo()}.
+     */
+    public static ErrorInfo getErrorInfo() {
+        return DaqObject.wrap(DaqErrorInfo.getErrorInfo(), ErrorInfo.class);
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_getErrorInfoList()}.
+     */
+    public static java.util.List<Object> getErrorInfoList() {
+        return Wrap.list(DaqErrorInfo.getErrorInfoList(), Wrap::unboxOwned);
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_getErrorInfoMessage()}.
+     */
+    public static String getErrorInfoMessage() {
+        return Ffi.readDaqStringAndRelease(DaqErrorInfo.getErrorInfoMessage());
+    }
+
+    /**
+     * Gets the line number in the file where the error occurred.
+     * &#64;param fileLine Line number.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getFileLine()}.
      */
     public long getFileLine() {
         try {
@@ -44,7 +125,10 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_getFileName()}.
+     * Gets the file name where the error occurred.
+     * &#64;param fileName File name.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getFileName()}.
      */
     public MemorySegment getFileName() {
         try {
@@ -55,7 +139,24 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_getMessage()}.
+     * Gets a formatted error message containing the error description, file name, and line number.
+     * &#64;param message A pointer to store the formatted error message.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getFormattedMessage()}.
+     */
+    public String getFormattedMessage() {
+        try {
+            return Ffi.readDaqStringAndRelease(DaqErrorInfo.getFormattedMessage(requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Gets the message of the error.
+     * &#64;param message Error description.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getMessage()}.
      */
     public String getMessage() {
         try {
@@ -66,7 +167,24 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_getSource()}.
+     * Gets the error code of the preceding error in the chain.
+     * &#64;param prevErrCode The error code of the previous error. If this error was not caused by a previous error, this will be OPENDAQ_SUCCESS.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getPreviousErrorCode()}.
+     */
+    public int getPreviousErrorCode() {
+        try {
+            return DaqErrorInfo.getPreviousErrorCode(requireLivePointer());
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Gets the source of the error.
+     * &#64;param source Error source.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_getSource()}.
      */
     public String getSource() {
         try {
@@ -77,7 +195,35 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_setFileLine()}.
+     * Sets the error code.
+     * &#64;param errorCode Error code.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setErrorCode()}.
+     */
+    public void setErrorCode(int errorCode) {
+        try {
+            DaqErrorInfo.setErrorCode(requireLivePointer(), errorCode);
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Calls the openDAQ C function {&#64;code daqErrorInfo_setErrorInfo()}.
+     */
+    public static void setErrorInfo(ErrorInfo errorInfo) {
+        try {
+            DaqErrorInfo.setErrorInfo((errorInfo == null ? MemorySegment.NULL : errorInfo.requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(errorInfo);
+        }
+    }
+
+    /**
+     * Sets the line number in the file where the error occurred.
+     * &#64;param fileLine Line number.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setFileLine()}.
      */
     public void setFileLine(long fileLine) {
         try {
@@ -88,7 +234,10 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_setFileName()}.
+     * Sets the file name where the error occurred.
+     * &#64;param fileName File name.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setFileName()}.
      */
     public void setFileName(String fileName) {
         try {
@@ -101,7 +250,10 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_setMessage()}.
+     * Sets the message of the error.
+     * &#64;param message Error description.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setMessage()}.
      */
     public void setMessage(String message) {
         try {
@@ -115,7 +267,24 @@ public class ErrorInfo extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqErrorInfo_setSource()}.
+     * Sets whether this error was caused by a previous error.
+     * &#64;param prevErrCode The error code of the previous error.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setPreviousErrorCode()}.
+     */
+    public void setPreviousErrorCode(int prevErrCode) {
+        try {
+            DaqErrorInfo.setPreviousErrorCode(requireLivePointer(), prevErrCode);
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Sets the source of the error.
+     * &#64;param source Error source.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqErrorInfo_setSource()}.
      */
     public void setSource(String source) {
         try {

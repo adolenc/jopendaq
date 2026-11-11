@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_types
- * &#64;defgroup types_types_type_manager Type manager private
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqTypeManagerPrivate} interface.
+ * Wraps the openDAQ {&#64;code daqTypeManagerPrivate} interface.
  */
 public class TypeManagerPrivate extends BaseObject {
 

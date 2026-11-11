@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Notifications object passed to the input port on construction by its owner (listener).
+ *
  * Input ports invoke the notification functions within the Input port notifications object when corresponding
  * events occur. The listener can then react on those events.
  *
@@ -26,7 +27,8 @@ public class InputPortNotifications extends BaseObject {
     }
 
     /**
-     * Called when the Input port method `acceptsSignal` is called. Should return true if the signal is accepted; false otherwise.
+     * Called when the Input port method `acceptsSignal` is called. Should return true if the signal is
+     * accepted; false otherwise.
      * &#64;param port The input port on which the method was called.
      * &#64;param signal The signal which is being checked for acceptance.
      * &#64;param[out] accept True if the signal is accepted; false otherwise.

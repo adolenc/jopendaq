@@ -12,10 +12,14 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Search filter that can be passed as an optional parameter to search functions to filter out unwanted results. Allows for recursive searches.
+ * Search filter that can be passed as an optional parameter to search functions to filter
+ * out unwanted results. Allows for recursive searches.
+ *
  * Each filter defines an "accepts object" and "visit children" function.
+ *
  * Accepts object defines whether or not the object being evaluated as part of a search method should be included
  * in the resulting output.
+ *
  * Visit children defines whether or not the children of said object should be traversed during a recursive search.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSearchFilter} interface.
@@ -28,7 +32,8 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Creates a "conjunction" search filter that combines 2 filters, accepting an object only if both filters accept it. "Visit children" returns `true` only if both filters do so.
+     * Creates a "conjunction" search filter that combines 2 filters, accepting an object only if both filters accept it.
+     * "Visit children" returns `true` only if both filters do so.
      * &#64;param left The first argument of the conjunction operation.
      * &#64;param right The second argument of the conjunction operation.
      *
@@ -81,7 +86,11 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqSearchFilter_createExcludedTagsSearchFilter()}.
+     * Creates a search filter that accepts components that do not have any of the excluded tags. "Visit children"
+     * always returns `true`.
+     * &#64;param excludedTags A list of strings containing the tags that a component must not have to be accepted.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createExcludedTagsSearchFilter()}.
      */
     public static SearchFilter createExcludedTagsSearchFilter(java.util.List<?> excludedTags) {
         return DaqObject.wrap(create$createExcludedTagsSearchFilter(excludedTags), SearchFilter.class);
@@ -95,7 +104,11 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqSearchFilter_createLocalIdSearchFilter()}.
+     * Creates a search filter that accepts components with the specified local ID. "Visit children"
+     * always returns `true`.
+     * &#64;param localId The local ID of the accepted components.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createLocalIdSearchFilter()}.
      */
     public static SearchFilter createLocalIdSearchFilter(String localId) {
         return DaqObject.wrap(create$createLocalIdSearchFilter(localId), SearchFilter.class);
@@ -109,7 +122,25 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Creates a search filter that negates the "accepts object" result of the filter provided as construction argument. Does not negate the "visit children" result.
+     * Creates a search filter that accepts properties whose names match the specified pattern.
+     * &#64;param regex A regular expression pattern used to match property names.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createNamePropertyFilter()}.
+     */
+    public static SearchFilter createNamePropertyFilter(String regex) {
+        return DaqObject.wrap(create$createNamePropertyFilter(regex), SearchFilter.class);
+    }
+
+    private static MemorySegment create$createNamePropertyFilter(String regex) {
+        MemorySegment regex$s = Wrap.daqStringOrNull(regex);
+        try {
+            return DaqSearchFilter.createNamePropertyFilter(regex$s);
+        } finally { Ffi.releaseRef(regex$s); }
+    }
+
+    /**
+     * Creates a search filter that negates the "accepts object" result of the filter provided as construction argument.
+     * Does not negate the "visit children" result.
      * &#64;param filter The filter of which results should be negated.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createNotSearchFilter()}.
@@ -127,7 +158,8 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Creates a "disjunction" search filter that combines 2 filters, accepting an object if any of the two filters accepts it. "Visit children" returns `true` if any of the two filters accepts does so.
+     * Creates a "disjunction" search filter that combines 2 filters, accepting an object if any of the two filters accepts it.
+     * "Visit children" returns `true` if any of the two filters accepts does so.
      * &#64;param left The first argument of the disjunction operation.
      * &#64;param right The second argument of the disjunction operation.
      *
@@ -147,7 +179,22 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Creates a search filter that indicates that the search method should recursively search through the object's child elements. This filter constructor should always be the final filter wrapper, and should not be used as a constructor argument for another filter.
+     * Creates a search filter that accepts only read-only properties.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createReadOnlyPropertyFilter()}.
+     */
+    public static SearchFilter createReadOnlyPropertyFilter() {
+        return DaqObject.wrap(create$createReadOnlyPropertyFilter(), SearchFilter.class);
+    }
+
+    private static MemorySegment create$createReadOnlyPropertyFilter() {
+        return DaqSearchFilter.createReadOnlyPropertyFilter();
+    }
+
+    /**
+     * Creates a search filter that indicates that the search method should recursively search through the object's child elements.
+     * This filter constructor should always be the final filter wrapper, and should not be used as a constructor argument
+     * for another filter.
      * &#64;param filter The filter to be wrapped with a "recursive" flag.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createRecursiveSearchFilter()}.
@@ -165,7 +212,11 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqSearchFilter_createRequiredTagsSearchFilter()}.
+     * Creates a search filter that accepts components that have all the required tags. "Visit children"
+     * always returns `true`.
+     * &#64;param requiredTags A list of strings containing the tags that a component must have to be accepted.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createRequiredTagsSearchFilter()}.
      */
     public static SearchFilter createRequiredTagsSearchFilter(java.util.List<?> requiredTags) {
         return DaqObject.wrap(create$createRequiredTagsSearchFilter(requiredTags), SearchFilter.class);
@@ -179,7 +230,24 @@ public class SearchFilter extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqSearchFilter_createVisibleSearchFilter()}.
+     * Creates a search filter that accepts only visible properties. "Visit children" returns `true`
+     * only if the property being evaluated is visible.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createVisiblePropertyFilter()}.
+     */
+    public static SearchFilter createVisiblePropertyFilter() {
+        return DaqObject.wrap(create$createVisiblePropertyFilter(), SearchFilter.class);
+    }
+
+    private static MemorySegment create$createVisiblePropertyFilter() {
+        return DaqSearchFilter.createVisiblePropertyFilter();
+    }
+
+    /**
+     * Creates a search filter that accepts only visible components. "Visit children" returns `true`
+     * only if the component being evaluated is visible.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSearchFilter_createVisibleSearchFilter()}.
      */
     public static SearchFilter createVisibleSearchFilter() {
         return DaqObject.wrap(create$createVisibleSearchFilter(), SearchFilter.class);

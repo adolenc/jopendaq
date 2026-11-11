@@ -27,6 +27,8 @@ public final class DaqPropertyObjectInternal {
         Ffi.downcallOrNull("daqPropertyObjectInternal_disableCoreEventTrigger", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_enableCoreEventTrigger =
         Ffi.downcallOrNull("daqPropertyObjectInternal_enableCoreEventTrigger", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_getAllPropertiesNoLock =
+        Ffi.downcallOrNull("daqPropertyObjectInternal_getAllPropertiesNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getCoreEventTrigger =
         Ffi.downcallOrNull("daqPropertyObjectInternal_getCoreEventTrigger", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
@@ -41,12 +43,18 @@ public final class DaqPropertyObjectInternal {
         Ffi.downcallOrNull("daqPropertyObjectInternal_getMutexOwner", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getPath =
         Ffi.downcallOrNull("daqPropertyObjectInternal_getPath", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getPropertyNoLock =
+        Ffi.downcallOrNull("daqPropertyObjectInternal_getPropertyNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getPropertySelectionValueNoLock =
         Ffi.downcallOrNull("daqPropertyObjectInternal_getPropertySelectionValueNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getPropertyValueNoLock =
         Ffi.downcallOrNull("daqPropertyObjectInternal_getPropertyValueNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getRecursiveLockGuard =
         Ffi.downcallOrNull("daqPropertyObjectInternal_getRecursiveLockGuard", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getVisiblePropertiesNoLock =
+        Ffi.downcallOrNull("daqPropertyObjectInternal_getVisiblePropertiesNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_hasPropertyNoLock =
+        Ffi.downcallOrNull("daqPropertyObjectInternal_hasPropertyNoLock", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_hasUserReadAccess =
         Ffi.downcallOrNull("daqPropertyObjectInternal_hasUserReadAccess", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_isUpdating =
@@ -116,6 +124,16 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets all properties as `IPropertyObject::getAllProperties` does, without locking the object's mutex.  Calls {@code daqPropertyObjectInternal_getAllPropertiesNoLock()}. */
+    public static MemorySegment getAllPropertiesNoLock(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment propertiesSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getAllPropertiesNoLock, "daqPropertyObjectInternal_getAllPropertiesNoLock").invokeExact(Ffi.orNull(self), propertiesSlot);
+            Ffi.checkError(err, "daqPropertyObjectInternal_getAllPropertiesNoLock");
+            return propertiesSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Calls {@code daqPropertyObjectInternal_getCoreEventTrigger()}. */
     public static MemorySegment getCoreEventTrigger(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
@@ -133,7 +151,7 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets a lock guard that locks the object's mutex.  Calls {@code daqPropertyObjectInternal_getLockGuard()}. */
+    /** Gets a lock guard that locks the object's mutex without recursion.  Calls {@code daqPropertyObjectInternal_getLockGuard()}. */
     public static MemorySegment getLockGuard(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment lockGuardSlot = arena.allocate(ADDRESS);
@@ -143,7 +161,7 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the locking strategy of the object. The locking strategy must be set before the object gets and owner is added to a parent folder.  Calls {@code daqPropertyObjectInternal_getLockingStrategy()}. */
+    /** Gets the locking strategy of the object.  Calls {@code daqPropertyObjectInternal_getLockingStrategy()}. */
     public static LockingStrategy getLockingStrategy(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment strategySlot = arena.allocate(JAVA_INT);
@@ -153,7 +171,7 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the object's mutex. Returns the mutex of the closest `OwnLock` strategy ancestor if using the `InheritLock` strategy.  Calls {@code daqPropertyObjectInternal_getMutex()}. */
+    /** Gets the object's mutex. Returns the mutex of the closest `OwnLock` strategy ancestor  Calls {@code daqPropertyObjectInternal_getMutex()}. */
     public static MemorySegment getMutex(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment mutexSlot = arena.allocate(ADDRESS);
@@ -183,6 +201,16 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets a property as `IPropertyObject::getProperty` does, without locking the object's mutex.  Calls {@code daqPropertyObjectInternal_getPropertyNoLock()}. */
+    public static MemorySegment getPropertyNoLock(MemorySegment self, MemorySegment propertyName) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment propertySlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getPropertyNoLock, "daqPropertyObjectInternal_getPropertyNoLock").invokeExact(Ffi.orNull(self), Ffi.orNull(propertyName), propertySlot);
+            Ffi.checkError(err, "daqPropertyObjectInternal_getPropertyNoLock");
+            return propertySlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Calls {@code daqPropertyObjectInternal_getPropertySelectionValueNoLock()}. */
     public static MemorySegment getPropertySelectionValueNoLock(MemorySegment self, MemorySegment name) {
         try (Arena arena = Arena.ofConfined()) {
@@ -203,13 +231,33 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets a lock guard that locks the object's mutex. The mutex is wrapped to be recursive, allowing for multiple locks to be instantiated on the same thread. Fails if a non-recursive lock was already created on this thread.  Calls {@code daqPropertyObjectInternal_getRecursiveLockGuard()}. */
+    /** Gets a lock guard that locks the object's mutex. The mutex is wrapped to be recursive,  Calls {@code daqPropertyObjectInternal_getRecursiveLockGuard()}. */
     public static MemorySegment getRecursiveLockGuard(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment lockGuardSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_getRecursiveLockGuard, "daqPropertyObjectInternal_getRecursiveLockGuard").invokeExact(Ffi.orNull(self), lockGuardSlot);
             Ffi.checkError(err, "daqPropertyObjectInternal_getRecursiveLockGuard");
             return lockGuardSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the visible properties as `IPropertyObject::getVisibleProperties` does, without locking the object's mutex.  Calls {@code daqPropertyObjectInternal_getVisiblePropertiesNoLock()}. */
+    public static MemorySegment getVisiblePropertiesNoLock(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment propertiesSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getVisiblePropertiesNoLock, "daqPropertyObjectInternal_getVisiblePropertiesNoLock").invokeExact(Ffi.orNull(self), propertiesSlot);
+            Ffi.checkError(err, "daqPropertyObjectInternal_getVisiblePropertiesNoLock");
+            return propertiesSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Checks for a property as `IPropertyObject::hasProperty` does, without locking the object's mutex.  Calls {@code daqPropertyObjectInternal_hasPropertyNoLock()}. */
+    public static boolean hasPropertyNoLock(MemorySegment self, MemorySegment propertyName) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment hasPropertySlot = arena.allocate(JAVA_BYTE);
+            int err = (int) Ffi.require(MH_hasPropertyNoLock, "daqPropertyObjectInternal_hasPropertyNoLock").invokeExact(Ffi.orNull(self), Ffi.orNull(propertyName), hasPropertySlot);
+            Ffi.checkError(err, "daqPropertyObjectInternal_hasPropertyNoLock");
+            return hasPropertySlot.get(JAVA_BYTE, 0) != 0;
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
@@ -241,7 +289,7 @@ public final class DaqPropertyObjectInternal {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the locking strategy of the object. The locking strategy must be set before the object gets and owner is added to a parent folder.  Calls {@code daqPropertyObjectInternal_setLockingStrategy()}. */
+    /** Sets the locking strategy of the object. The locking strategy must be set before the  Calls {@code daqPropertyObjectInternal_setLockingStrategy()}. */
     public static void setLockingStrategy(MemorySegment self, LockingStrategy strategy) {
         try {
             int err = (int) Ffi.require(MH_setLockingStrategy, "daqPropertyObjectInternal_setLockingStrategy").invokeExact(Ffi.orNull(self), strategy.value());

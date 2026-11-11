@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents a semantic version composing of: - major version representing breaking changes - minor version representing new features - patch version representing only bug fixes.
+ * Represents a semantic version
+ * composing of:
+ * - major version representing breaking changes
+ * - minor version representing new features
+ * - patch version representing only bug fixes.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqVersionInfo} interface.
  */

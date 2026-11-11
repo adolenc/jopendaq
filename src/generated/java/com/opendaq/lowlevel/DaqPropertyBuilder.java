@@ -180,7 +180,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a function- or procedure-type Property builder object. Requires the a CallableInfo object to specify the argument type/count and function return type.  Calls {@code daqPropertyBuilder_createFunctionPropertyBuilder()}. */
+    /** Creates a function- or procedure-type Property builder object. Requires the a CallableInfo object  Calls {@code daqPropertyBuilder_createFunctionPropertyBuilder()}. */
     public static MemorySegment createFunctionPropertyBuilder(MemorySegment name, MemorySegment callableInfo) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -240,7 +240,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Reference Property builder object that points at a property specified in the `referencedProperty` parameter.  Calls {@code daqPropertyBuilder_createReferencePropertyBuilder()}. */
+    /** Creates a Reference Property builder object that points at a property specified in the `referencedProperty`  Calls {@code daqPropertyBuilder_createReferencePropertyBuilder()}. */
     public static MemorySegment createReferencePropertyBuilder(MemorySegment name, MemorySegment referencedPropertyEval) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -250,7 +250,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Selection Property builder object with a list of selection values. The default value is an integer index into the default selected value.  Calls {@code daqPropertyBuilder_createSelectionPropertyBuilder()}. */
+    /** Creates a Selection Property builder object with a list of selection values. The default value  Calls {@code daqPropertyBuilder_createSelectionPropertyBuilder()}. */
     public static MemorySegment createSelectionPropertyBuilder(MemorySegment name, MemorySegment selectionValues, MemorySegment defaultValue) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -260,7 +260,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Selection Property builder object with a dictionary of selection values. The default value is an integer key into the provided dictionary.  Calls {@code daqPropertyBuilder_createSparseSelectionPropertyBuilder()}. */
+    /** Creates a Selection Property builder object with a dictionary of selection values. The default value  Calls {@code daqPropertyBuilder_createSparseSelectionPropertyBuilder()}. */
     public static MemorySegment createSparseSelectionPropertyBuilder(MemorySegment name, MemorySegment selectionValues, MemorySegment defaultValue) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -290,7 +290,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.  Calls {@code daqPropertyBuilder_getCallableInfo()}. */
+    /** Gets the Callable information objects of the Property that specifies the argument and return types  Calls {@code daqPropertyBuilder_getCallableInfo()}. */
     public static MemorySegment getCallableInfo(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment callableSlot = arena.allocate(ADDRESS);
@@ -447,7 +447,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list of Suggested values. Contains values that are the optimal gettings for the corresponding Property value. These values, however, are not enforced when getting a new Property value.  Calls {@code daqPropertyBuilder_getSuggestedValues()}. */
+    /** Gets the list of Suggested values. Contains values that are the optimal gettings for the corresponding  Calls {@code daqPropertyBuilder_getSuggestedValues()}. */
     public static MemorySegment getSuggestedValues(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valuesSlot = arena.allocate(ADDRESS);
@@ -497,7 +497,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.  Calls {@code daqPropertyBuilder_setCallableInfo()}. */
+    /** Sets the Callable information objects of the Property that specifies the argument and return types  Calls {@code daqPropertyBuilder_setCallableInfo()}. */
     public static void setCallableInfo(MemorySegment self, MemorySegment callable) {
         try {
             int err = (int) Ffi.require(MH_setCallableInfo, "daqPropertyBuilder_setCallableInfo").invokeExact(Ffi.orNull(self), Ffi.orNull(callable));
@@ -513,7 +513,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Default value of the Property. The Default value must always be configured for a Property to be in a valid state. Exceptions are Function/Procedure and Reference properties. The function will freeze default value if it is freezable.  Calls {@code daqPropertyBuilder_setDefaultValue()}. */
+    /** Sets the Default value of the Property. The Default value must always be configured for a Property to be  Calls {@code daqPropertyBuilder_setDefaultValue()}. */
     public static void setDefaultValue(MemorySegment self, MemorySegment value) {
         try {
             int err = (int) Ffi.require(MH_setDefaultValue, "daqPropertyBuilder_setDefaultValue").invokeExact(Ffi.orNull(self), Ffi.orNull(value));
@@ -553,7 +553,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Name of the Property. The names of Properties in a Property object must be unique. The name is used as the key to the corresponding Property value when getting/setting the value.  Calls {@code daqPropertyBuilder_setName()}. */
+    /** Sets the Name of the Property. The names of Properties in a Property object must be unique.  Calls {@code daqPropertyBuilder_setName()}. */
     public static void setName(MemorySegment self, MemorySegment name) {
         try {
             int err = (int) Ffi.require(MH_setName, "daqPropertyBuilder_setName").invokeExact(Ffi.orNull(self), Ffi.orNull(name));
@@ -601,7 +601,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and `Is referenced` getters will return the value of the `Referenced property`.  Calls {@code daqPropertyBuilder_setReferencedProperty()}. */
+    /** Sets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and  Calls {@code daqPropertyBuilder_setReferencedProperty()}. */
     public static void setReferencedProperty(MemorySegment self, MemorySegment propertyEval) {
         try {
             int err = (int) Ffi.require(MH_setReferencedProperty, "daqPropertyBuilder_setReferencedProperty").invokeExact(Ffi.orNull(self), Ffi.orNull(propertyEval));
@@ -609,7 +609,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the list or dictionary of selection values. If the list/dictionary is not empty, the property is a Selection property, and must have the Value type `ctInt`.  Calls {@code daqPropertyBuilder_setSelectionValues()}. */
+    /** Sets the list or dictionary of selection values. If the list/dictionary is not empty, the property  Calls {@code daqPropertyBuilder_setSelectionValues()}. */
     public static void setSelectionValues(MemorySegment self, MemorySegment values) {
         try {
             int err = (int) Ffi.require(MH_setSelectionValues, "daqPropertyBuilder_setSelectionValues").invokeExact(Ffi.orNull(self), Ffi.orNull(values));
@@ -617,7 +617,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the list of Suggested values. Contains values that are the optimal settings for the corresponding Property value. These values, however, are not enforced when setting a new Property value.  Calls {@code daqPropertyBuilder_setSuggestedValues()}. */
+    /** Sets the list of Suggested values. Contains values that are the optimal settings for the corresponding  Calls {@code daqPropertyBuilder_setSuggestedValues()}. */
     public static void setSuggestedValues(MemorySegment self, MemorySegment values) {
         try {
             int err = (int) Ffi.require(MH_setSuggestedValues, "daqPropertyBuilder_setSuggestedValues").invokeExact(Ffi.orNull(self), Ffi.orNull(values));
@@ -641,7 +641,7 @@ public final class DaqPropertyBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the Value type of the Property. Values written to the corresponding Property value must be of the same type.  Calls {@code daqPropertyBuilder_setValueType()}. */
+    /** Sets the Value type of the Property. Values written to the corresponding Property value  Calls {@code daqPropertyBuilder_setValueType()}. */
     public static void setValueType(MemorySegment self, CoreType type) {
         try {
             int err = (int) Ffi.require(MH_setValueType, "daqPropertyBuilder_setValueType").invokeExact(Ffi.orNull(self), type.value());

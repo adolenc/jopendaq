@@ -13,9 +13,11 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Provides access to private methods of the Component status container.
+ *
  * Said methods allow for adding new statuses and setting a value for existing statuses stored in
  * the component status container. Device connection statuses, however, are managed independently
  * via IConnectionStatusContainerPrivate.
+ *
  * "StatusChanged" Core events are triggered whenever there is a change in the status of the openDAQ Component.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqComponentStatusContainerPrivate} interface.

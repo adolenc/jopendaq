@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A class which describes a permission configuration for openDAQ object.A configuration object can be constructed using the permission builder class.
+ * A class which describes a permission configuration for openDAQ object.A configuration object
+ * can be constructed using the permission builder class.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPermissions} interface.
  */

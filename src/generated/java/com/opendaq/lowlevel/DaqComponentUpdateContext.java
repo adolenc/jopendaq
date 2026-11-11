@@ -150,10 +150,10 @@ public final class DaqComponentUpdateContext {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the root component of the current component. Iterates through the parent components until the root is found and sets it as the root component for the context.  Calls {@code daqComponentUpdateContext_setRootComponent()}. */
-    public static void setRootComponent(MemorySegment self, MemorySegment rootComponent) {
+    /** Sets the root component of the current component. Iterates through the parent components until the root is found and sets it  Calls {@code daqComponentUpdateContext_setRootComponent()}. */
+    public static void setRootComponent(MemorySegment self, MemorySegment baseComponent) {
         try {
-            int err = (int) Ffi.require(MH_setRootComponent, "daqComponentUpdateContext_setRootComponent").invokeExact(Ffi.orNull(self), Ffi.orNull(rootComponent));
+            int err = (int) Ffi.require(MH_setRootComponent, "daqComponentUpdateContext_setRootComponent").invokeExact(Ffi.orNull(self), Ffi.orNull(baseComponent));
             Ffi.checkError(err, "daqComponentUpdateContext_setRootComponent");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

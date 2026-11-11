@@ -13,8 +13,10 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Enables conversion of the object to either Int, Float, or Bool type.
+ *
  * An object which implements `IIntObject` will typically also implement IConvertible,
  * which allows conversion to other types.
+ *
  * Example:
  * &#64;code
  * IIntObject* intObj = ...;
@@ -22,10 +24,12 @@ import com.opendaq.lowlevel.*;
  * auto errCode = intObj.queryInterface(IConvertible::Id, reinterpret_cast&lt;void**&gt;(&amp;conv));
  * if (OPENDAQ_FAILED(errCode))
  * return;
+ *
  * Float val;
  * errCode = conv-&gt;toFloat(&amp;val);
  * if (OPENDAQ_FAILED(errCode))
  * return;
+ *
  * // print val
  * &#64;endcode
  *

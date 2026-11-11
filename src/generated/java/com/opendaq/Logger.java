@@ -15,12 +15,14 @@ import com.opendaq.lowlevel.*;
  * Represents a collection of &#64;ref ILoggerComponent "Logger Components" with multiple
  * &#64;ref ILoggerSink "Logger Sinks" and a single &#64;ref ILoggerThreadPool "Logger Thread Pool"
  * shared between components.
+ *
  * Logger is used to create, manage and maintain Logger Components associated with different parts of
  * the openDAQ SDK. The Logger provides methods, allowing for components to be added and removed dynamically.
  * The components added within the same Logger object should have unique names. Each newly added
  * component inherits threshold log severity level from the Logger. Then this level can be changed
  * independently per component. The set of sinks is initialized on the Logger object creation
  * and cannot be changed after.
+ *
  * Additionally, Logger provides the ability to manage flushing policies for the added components,
  * see `flushOnLevel` method.
  *
@@ -67,7 +69,8 @@ public class Logger extends BaseObject {
     }
 
     /**
-     * Triggers writing out the messages stored in temporary buffers for added components and sinks associated with the Logger object.
+     * Triggers writing out the messages stored in temporary buffers for added components
+     * and sinks associated with the Logger object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLogger_flush()}.
      */

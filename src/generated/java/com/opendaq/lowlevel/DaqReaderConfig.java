@@ -30,7 +30,7 @@ public final class DaqReaderConfig {
     private static final MethodHandle MH_markAsInvalid =
         Ffi.downcallOrNull("daqReaderConfig_markAsInvalid", FunctionDescriptor.of(JAVA_INT, ADDRESS));
 
-    /** Gets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step.  Calls {@code daqReaderConfig_getDomainTransformFunction()}. */
+    /** Gets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor  Calls {@code daqReaderConfig_getDomainTransformFunction()}. */
     public static MemorySegment getDomainTransformFunction(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment transformSlot = arena.allocate(ADDRESS);
@@ -77,7 +77,7 @@ public final class DaqReaderConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the transform function that will be called with the read value-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step.  Calls {@code daqReaderConfig_getValueTransformFunction()}. */
+    /** Gets the transform function that will be called with the read value-data and currently valid Signal-Descriptor  Calls {@code daqReaderConfig_getValueTransformFunction()}. */
     public static MemorySegment getValueTransformFunction(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment transformSlot = arena.allocate(ADDRESS);
@@ -87,7 +87,7 @@ public final class DaqReaderConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Marks the current reader as invalid preventing any additional operations to be performed on the reader except reusing its info and configuration in a new reader.  Calls {@code daqReaderConfig_markAsInvalid()}. */
+    /** Marks the current reader as invalid preventing any additional operations to be performed on the reader  Calls {@code daqReaderConfig_markAsInvalid()}. */
     public static void markAsInvalid(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_markAsInvalid, "daqReaderConfig_markAsInvalid").invokeExact(Ffi.orNull(self));

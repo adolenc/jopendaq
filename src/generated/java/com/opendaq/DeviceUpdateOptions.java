@@ -13,9 +13,11 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Allows for specifying how a device and its subdevices are to be updated when loading a configuration.
+ *
  * The device options object can be created using a serialized openDAQ JSON setup. The options are structured
  * hierarchically, so that options for subdevices are stored in the parent device options. The following metadata
  * is read from the setup: local ID, manufacturer, serial number, and connection string.
+ *
  * For each individual device in the setup, the update mode can be specified. The update mode defines how the device is updated when loading:
  * - Load: Updates the device. Adds the device if missing.
  * - UpdateOnly: The device is updated, but not added if missing.
@@ -23,13 +25,17 @@ import com.opendaq.lowlevel.*;
  * - Remove: Removes the device from the tree, if present.
  * - Remap: Same as load, but removes old device (if present) and uses the new manufacturer, serial number, and connection string to add a new one and update.
  * &#64;subsection opendaq_device_options_remapping Remapping
+ *
  * When the update mode is set to Remap, the device is removed and added again with the new manufacturer, serial number, and connection
  * string. This can be used when swapping out a device with a different one of the same make/model. This option will try and load the same
  * settings used to configure the original device to the new one.
+ *
  * When loading, the new manufacturer + serial number combination will have priority over the new connection string. In case a device with
  * the new manufacturer + serial number combination is not found, the new connection string will be used as fallback.
+ *
  * If the remapping fails (e.g. due to missing device with the new manufacturer + serial number combination and invalid connection string),
  * the original device will be removed (if present) and no new device will be added.
+ *
  * Signal-&gt;Input port connections will be preserved when remapping, assuming the new device has the same signal and input port structure and IDs.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDeviceUpdateOptions} interface.
@@ -86,6 +92,7 @@ public class DeviceUpdateOptions extends BaseObject {
     /**
      * Gets the local ID of the device. The local ID is obtained from the JSON key for the device entry.
      * &#64;param localId The local ID of the device.
+     *
      * The root device might not have the local ID configured. In this case the local ID will be set to "Root".
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceUpdateOptions_getLocalId()}.
@@ -115,6 +122,7 @@ public class DeviceUpdateOptions extends BaseObject {
     /**
      * Gets the new connection string of the device to be used for remapping.
      * &#64;param connectionString The new connection string of the device to be used for remapping.
+     *
      * The manufacturer and serial number combination has priority over the connection string when remapping.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceUpdateOptions_getNewConnectionString()}.
@@ -186,6 +194,7 @@ public class DeviceUpdateOptions extends BaseObject {
     /**
      * Sets the new connection string of the device to be used for remapping.
      * &#64;param connectionString The new connection string of the device to be used for remapping.
+     *
      * The manufacturer and serial number combination has priority over the connection string when remapping.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceUpdateOptions_setNewConnectionString()}.

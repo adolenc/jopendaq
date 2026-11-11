@@ -7,7 +7,8 @@ public enum PacketReadyNotification {
     NONE(0),
     SAME_THREAD(1),
     SCHEDULER(2),
-    SCHEDULER_QUEUE_WAS_EMPTY(3);
+    SCHEDULER_QUEUE_WAS_EMPTY(3),
+    UNSPECIFIED(99);
 
     private final int value;
 

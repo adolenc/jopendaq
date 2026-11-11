@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Callback which is called when external memory is no longer needed and can be freed.
+ *
  * This interface is used with blueberry packets that are created with external memory. Provider
  * of external memory is responsible to provide a custom deleter, which is called when the packet is
  * destroyed.

@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Internal functions of a signal containing event methods that are called on certain events. Eg. when a signal is connected to an input port, or when a signal is used as a domain signal of another.
+ * Internal functions of a signal containing event methods that are called on certain
+ * events. Eg. when a signal is connected to an input port, or when a signal is used as a domain
+ * signal of another.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSignalEvents} interface.
  */
@@ -24,7 +26,8 @@ public class SignalEvents extends BaseObject {
     }
 
     /**
-     * Notifies the signal that it is no longer being used as a domain signal by the signal passed as the function argument.
+     * Notifies the signal that it is no longer being used as a domain signal by the signal passed as
+     * the function argument.
      * &#64;param signal The callee signal on which the domain signal reference has been removed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSignalEvents_domainSignalReferenceRemoved()}.
@@ -39,7 +42,8 @@ public class SignalEvents extends BaseObject {
     }
 
     /**
-     * Notifies the signal that it is being used as a domain signal by the signal passed as the function argument.
+     * Notifies the signal that it is being used as a domain signal by the signal passed as the function
+     * argument.
      * &#64;param signal The callee signal on which the domain signal reference has been set.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSignalEvents_domainSignalReferenceSet()}.
@@ -56,6 +60,7 @@ public class SignalEvents extends BaseObject {
     /**
      * Notifies the signal that it has been connected to an input port forming a new connection.
      * &#64;param connection The formed connection.
+     *
      * The data descriptor of the signal is enqueued on the connection, triggering the `onPacketReceived`
      * callback on the same thread.
      *
@@ -73,6 +78,7 @@ public class SignalEvents extends BaseObject {
     /**
      * Notifies the signal that it has been connected to an input port forming a new connection.
      * &#64;param connection The formed connection.
+     *
      * The data descriptor of the signal is enqueued on the connection, scheduling the `onPacketReceived`
      * callback.
      *

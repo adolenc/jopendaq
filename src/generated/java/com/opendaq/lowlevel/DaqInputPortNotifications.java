@@ -25,7 +25,7 @@ public final class DaqInputPortNotifications {
     private static final MethodHandle MH_packetReceived =
         Ffi.downcallOrNull("daqInputPortNotifications_packetReceived", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Called when the Input port method `acceptsSignal` is called. Should return true if the signal is accepted; false otherwise.  Calls {@code daqInputPortNotifications_acceptsSignal()}. */
+    /** Called when the Input port method `acceptsSignal` is called. Should return true if the signal is  Calls {@code daqInputPortNotifications_acceptsSignal()}. */
     public static boolean acceptsSignal(MemorySegment self, MemorySegment port, MemorySegment signal) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment acceptSlot = arena.allocate(JAVA_BYTE);

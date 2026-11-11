@@ -15,14 +15,18 @@ import com.opendaq.lowlevel.*;
  * Represents string variable as `IString` interface. Use this interface to wrap string
  * variable when you need to add the variable to lists, dictionaries and other containers which
  * accept `IBaseObject` and derived interfaces.
+ *
  * Available factories:
  * &#64;code
  * // Creates a new String object. Throws exception if not successful.
  * IString* String_Create(ConstCharPtr value)
+ *
  * // Creates a new String object with predefined length. Returns error code if not successful.
  * ErrCode createString(IString** obj, ConstCharPtr value)
+ *
  * // Creates a new String object with predefined length. Throws exception if not successful.
  * IString* StringN_Create(ConstCharPtr data, SizeT length)
+ *
  * // Creates a new String object. Returns error code if not successful.
  * ErrCode createStringN(IString** obj, ConstCharPtr data, SizeT length)
  * &#64;endcode
@@ -66,6 +70,7 @@ public class StringObject extends BaseObject {
      * Gets a string value stored in the object.
      * &#64;param[out] value Stored string value.
      * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
      * Call this method to extract the string value that is stored in the object. Method extracts the
      * value as a pointer to 8-bit char type.
      *
@@ -83,6 +88,7 @@ public class StringObject extends BaseObject {
      * Gets length of string.
      * &#64;param[out] size The size of the string.
      * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
      * Call this method to get the length of the string. Null char terminator is not included in
      * the size of the string.
      *

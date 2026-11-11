@@ -12,16 +12,30 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_signal_path
- * &#64;addtogroup opendaq_connection ConnectionInternal
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqConnectionInternal} interface.
+ * Wraps the openDAQ {&#64;code daqConnectionInternal} interface.
  */
 public class ConnectionInternal extends BaseObject {
 
     /** Adopt an owned reference (see {@link DaqObject#DaqObject}). */
     public ConnectionInternal(MemorySegment pointer) {
         super(pointer);
+    }
+
+    /**
+     * Permanently closes the queue: drops all queued packets and rejects all future
+     * enqueues. Called by the signal when the connection is disconnected so that no packet
+     * can remain pinned in (or be added to) an orphaned queue. Unlike the enqueue and
+     * dequeue methods, disconnection is not covered by the owner-serialization rule, so
+     * this call tolerates concurrent producer/consumer operations.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnectionInternal_closeQueue()}.
+     */
+    public void closeQueue() {
+        try {
+            DaqConnectionInternal.closeQueue(requireLivePointer());
+        } finally {
+            Reference.reachabilityFence(this);
+        }
     }
 
     /**

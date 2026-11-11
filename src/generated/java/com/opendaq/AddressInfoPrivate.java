@@ -24,6 +24,7 @@ public class AddressInfoPrivate extends BaseObject {
     /**
      * Sets the reachability status of the address, ignoring the "Frozen" status of the address.
      * &#64;param addressReachability The reachability status of the address.
+     *
      * This status is set to "Unknown" by default. For IPv4 address types, the module manager checks
      * reachability when querying for available devices.
      *

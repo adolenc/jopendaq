@@ -13,8 +13,13 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Provides access to private methods of the component.
+ *
  * Said methods allow for triggering a Core event of the component, and locking/unlocking attributes of
  * the component.
+ *
+ * The set of locked attributes must be set up when the component is constructed and must not change afterwards.
+ * After construction, an attribute may only be unlocked temporarily to apply an internal change to it, and must be
+ * locked again right after. Locking or unlocking an attribute does not trigger a core event.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqComponentPrivate} interface.
  */
@@ -88,6 +93,7 @@ public class ComponentPrivate extends BaseObject {
      * Called by parent component to notify this component about parent's active state change.
      * &#64;param parentActive True if parent is active.
      * &#64;param onUpdate True if the call is triggered from config update, false if the call is triggered by a change of the active state.
+     *
      * The component updates its internal parentActive flag and recomputes its effective active state.
      * If the effective active state changes, triggers an AttributeChanged event.
      * Container components (folders, devices) propagate this call to their children.

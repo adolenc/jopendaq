@@ -16,10 +16,14 @@ public final class DaqSerializer {
 
     private static final MethodHandle MH_createJsonSerializer =
         Ffi.downcallOrNull("daqSerializer_createJsonSerializer", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
+    private static final MethodHandle MH_createJsonSerializerWithVersion =
+        Ffi.downcallOrNull("daqSerializer_createJsonSerializerWithVersion", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG, JAVA_BYTE));
     private static final MethodHandle MH_endList =
         Ffi.downcallOrNull("daqSerializer_endList", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_endObject =
         Ffi.downcallOrNull("daqSerializer_endObject", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqSerializer_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getOutput =
         Ffi.downcallOrNull("daqSerializer_getOutput", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getUser =
@@ -65,6 +69,16 @@ public final class DaqSerializer {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Calls {@code daqSerializer_createJsonSerializerWithVersion()}. */
+    public static MemorySegment createJsonSerializerWithVersion(long version, boolean pretty) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createJsonSerializerWithVersion, "daqSerializer_createJsonSerializerWithVersion").invokeExact(objSlot, version, (byte) (pretty ? 1 : 0));
+            Ffi.checkError(err, "daqSerializer_createJsonSerializerWithVersion");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Calls {@code daqSerializer_endList()}. */
     public static void endList(MemorySegment self) {
         try {
@@ -78,6 +92,13 @@ public final class DaqSerializer {
         try {
             int err = (int) Ffi.require(MH_endObject, "daqSerializer_endObject").invokeExact(Ffi.orNull(self));
             Ffi.checkError(err, "daqSerializer_endObject");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqSerializer_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqSerializer_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

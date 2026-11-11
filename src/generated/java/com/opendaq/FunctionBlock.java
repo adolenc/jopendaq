@@ -12,13 +12,17 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Function blocks perform calculations on inputs/generate data, outputting new data in its output signals as packets.
+ * Function blocks perform calculations on inputs/generate data, outputting new data in its
+ * output signals as packets.
+ *
  * Each function block describes its behaviour and identifiers in its FunctionBlockType structure. It
  * provides a list of input ports that can be connected to signals that the input port accepts, as well as a
  * list of output signals that carry the function block's output data.
+ *
  * Additionally, as each function block is a property object, it can define its own set of properties, providing
  * user-configurable settings. In example, a FFT function block would expose a `blockSize` property, defining the
  * amount of samples to be used for calculation in each block.
+ *
  * Function blocks also provide a status signal, through which a status packet is sent whenever a connection to a
  * new input port is formed, or when the status changes.
  *
@@ -34,7 +38,8 @@ public class FunctionBlock extends Folder {
     /**
      * Creates and adds a function block as the nested of current function block with the provided unique ID and returns it.
      * &#64;param[out] functionBlock The added function block.
-     * &#64;param typeId The unique ID of the function block. Can be obtained from its corresponding Function Block Info object.
+     * &#64;param typeId The unique ID of the function block. Can be obtained from its corresponding Function Block Info
+     * object.
      * &#64;param config A config object to configure a function block with custom settings specific to that function block type.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFunctionBlock_addFunctionBlock()}.
@@ -88,6 +93,7 @@ public class FunctionBlock extends Folder {
      * Gets a list of sub-function blocks.
      * &#64;param searchFilter Provides optional parameters such as "recursive" and "visibleOnly" to modify the search pattern.
      * &#64;param[out] functionBlocks The list of sub-function blocks.
+     *
      * If searchFilter is not provided, the returned list contains only visible function blocks and does not include those of
      * child function blocks.
      *
@@ -111,6 +117,7 @@ public class FunctionBlock extends Folder {
      * Gets a list of the function block's input ports.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] ports The list of input ports.
+     *
      * If searchFilter is not provided, the returned list contains only visible input ports and does not include those of
      * child function blocks.
      *
@@ -134,6 +141,7 @@ public class FunctionBlock extends Folder {
      * Gets the list of the function block's output signals.
      * &#64;param searchFilter Provides an optional filter that filters out unwanted components and allows for recursion.
      * &#64;param[out] signals The list of output signals.
+     *
      * If searchFilter is not provided, the returned list contains only visible signals and does not include those of
      * child function blocks.
      *
@@ -177,6 +185,7 @@ public class FunctionBlock extends Folder {
     /**
      * Gets the function block's status signal.
      * &#64;param[out] statusSignal The status signal.
+     *
      * The status signal sends out a status event packet every time it is connected to an input port.
      * Additionally, a status event packet is sent whenever the status of the function block changes.
      *

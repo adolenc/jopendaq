@@ -71,7 +71,7 @@ public final class DaqModuleManagerUtils {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a device object that can communicate with the device described in the specified connection string. The device object is not automatically added as a sub-device of the caller, but only returned by reference.  Calls {@code daqModuleManagerUtils_createDevice()}. */
+    /** Creates a device object that can communicate with the device described in the specified connection string.  Calls {@code daqModuleManagerUtils_createDevice()}. */
     public static MemorySegment createDevice(MemorySegment self, MemorySegment connectionString, MemorySegment parent, MemorySegment config) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment deviceSlot = arena.allocate(ADDRESS);
@@ -81,7 +81,7 @@ public final class DaqModuleManagerUtils {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates multiple device objects in parallel using the specified connection strings. Each device is created concurrently. None of the created device object are automatically added as a sub-device of the caller, but only returned by reference.  Calls {@code daqModuleManagerUtils_createDevices()}. */
+    /** Creates multiple device objects in parallel using the specified connection strings. Each device is created concurrently.  Calls {@code daqModuleManagerUtils_createDevices()}. */
     public static MemorySegment createDevices(MemorySegment self, MemorySegment connectionArgs, MemorySegment parent, MemorySegment errCodes, MemorySegment errorInfos) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment devicesSlot = arena.allocate(ADDRESS);
@@ -91,7 +91,7 @@ public final class DaqModuleManagerUtils {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates and returns a function block with the specified id. The function block is not automatically added to the FB list of the caller.  Calls {@code daqModuleManagerUtils_createFunctionBlock()}. */
+    /** Creates and returns a function block with the specified id.  Calls {@code daqModuleManagerUtils_createFunctionBlock()}. */
     public static MemorySegment createFunctionBlock(MemorySegment self, MemorySegment id, MemorySegment parent, MemorySegment config, MemorySegment localId) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment functionBlockSlot = arena.allocate(ADDRESS);
@@ -131,7 +131,7 @@ public final class DaqModuleManagerUtils {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Returns a list of known devices info. The implementation can start discovery in background and only return the results in this function.  Calls {@code daqModuleManagerUtils_getAvailableDevices()}. */
+    /** Returns a list of known devices info.  Calls {@code daqModuleManagerUtils_getAvailableDevices()}. */
     public static MemorySegment getAvailableDevices(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment availableDevicesSlot = arena.allocate(ADDRESS);

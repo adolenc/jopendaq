@@ -24,7 +24,8 @@ public class UserInternal extends BaseObject {
     }
 
     /**
-     * Returns the user's password, which can either be in plain text or hashed using the Bcrypt algorithm. Hashed passwords should follow the Modular Crypt Format. For security purposes, hashed passwords are preferred.
+     * Returns the user's password, which can either be in plain text or hashed using the Bcrypt algorithm.
+     * Hashed passwords should follow the Modular Crypt Format. For security purposes, hashed passwords are preferred.
      * &#64;param passwordHash[out] Returns the user's password, which can either be in plain text or hashed using the Bcrypt algorithm.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUserInternal_getPasswordHash()}.

@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup objects_property_object
- * &#64;addtogroup objects_property_object_obj PropertyObjectInternal
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqPropertyObjectInternal} interface.
+ * Wraps the openDAQ {&#64;code daqPropertyObjectInternal} interface.
  */
 public class PropertyObjectInternal extends BaseObject {
 
@@ -96,6 +93,22 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
+     * Gets all properties as `IPropertyObject::getAllProperties` does, without locking the object's mutex.
+     * &#64;param[out] properties The list of properties, bound to the object.
+     *
+     * Call it only while holding the object's lock.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getAllPropertiesNoLock()}.
+     */
+    public java.util.List<Property> getAllPropertiesNoLock() {
+        try {
+            return Wrap.list(DaqPropertyObjectInternal.getAllPropertiesNoLock(requireLivePointer()), p -> Wrap.castOwned(p, Property.class));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getCoreEventTrigger()}.
      */
     public Procedure getCoreEventTrigger() {
@@ -107,7 +120,11 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
-     * Gets a lock guard that locks the object's mutex.
+     * Gets a lock guard that locks the object's mutex without recursion.
+     *
+     * While it is held, the thread must not call a method that takes the object's lock: the property value
+     * getters and setters, `getProperty`, `hasProperty`, `getAllProperties` and `getVisibleProperties` all do,
+     * so only their `NoLock` variants may be used. `clone` has no `NoLock` variant.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getLockGuard()}.
      */
@@ -120,7 +137,7 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
-     * Gets the locking strategy of the object. The locking strategy must be set before the object gets and owner is added to a parent folder.
+     * Gets the locking strategy of the object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getLockingStrategy()}.
      */
@@ -133,13 +150,14 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
-     * Gets the object's mutex. Returns the mutex of the closest `OwnLock` strategy ancestor if using the `InheritLock` strategy.
+     * Gets the object's mutex. Returns the mutex of the closest `OwnLock` strategy ancestor
+     * if using the `InheritLock` strategy.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getMutex()}.
      */
-    public MemorySegment getMutex() {
+    public Mutex getMutex() {
         try {
-            return DaqPropertyObjectInternal.getMutex(requireLivePointer());
+            return DaqObject.wrap(DaqPropertyObjectInternal.getMutex(requireLivePointer()), Mutex.class);
         } finally {
             Reference.reachabilityFence(this);
         }
@@ -162,6 +180,26 @@ public class PropertyObjectInternal extends BaseObject {
     public String getPath() {
         try {
             return Ffi.readDaqStringAndRelease(DaqPropertyObjectInternal.getPath(requireLivePointer()));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Gets a property as `IPropertyObject::getProperty` does, without locking the object's mutex.
+     * &#64;param propertyName The name of the property. Child properties are addressed with a dot ("Child.Value").
+     * &#64;param[out] property The property, bound to the object.
+     *
+     * Call it only while holding the object's lock.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getPropertyNoLock()}.
+     */
+    public Property getPropertyNoLock(String propertyName) {
+        try {
+            MemorySegment propertyName$s = Wrap.daqStringOrNull(propertyName);
+            try {
+                return DaqObject.wrap(DaqPropertyObjectInternal.getPropertyNoLock(requireLivePointer(), propertyName$s), Property.class);
+            } finally { Ffi.releaseRef(propertyName$s); }
         } finally {
             Reference.reachabilityFence(this);
         }
@@ -196,13 +234,51 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
-     * Gets a lock guard that locks the object's mutex. The mutex is wrapped to be recursive, allowing for multiple locks to be instantiated on the same thread. Fails if a non-recursive lock was already created on this thread.
+     * Gets a lock guard that locks the object's mutex. The mutex is wrapped to be recursive,
+     * allowing for multiple locks to be instantiated on the same thread. Fails if a non-recursive lock
+     * was already created on this thread.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getRecursiveLockGuard()}.
      */
     public LockGuard getRecursiveLockGuard() {
         try {
             return DaqObject.wrap(DaqPropertyObjectInternal.getRecursiveLockGuard(requireLivePointer()), LockGuard.class);
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Gets the visible properties as `IPropertyObject::getVisibleProperties` does, without locking the object's mutex.
+     * &#64;param[out] properties The list of visible properties, bound to the object.
+     *
+     * Call it only while holding the object's lock.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_getVisiblePropertiesNoLock()}.
+     */
+    public java.util.List<Property> getVisiblePropertiesNoLock() {
+        try {
+            return Wrap.list(DaqPropertyObjectInternal.getVisiblePropertiesNoLock(requireLivePointer()), p -> Wrap.castOwned(p, Property.class));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Checks for a property as `IPropertyObject::hasProperty` does, without locking the object's mutex.
+     * &#64;param propertyName The name of the property. Child properties are addressed with a dot ("Child.Value").
+     * &#64;param[out] hasProperty True if the property exists.
+     *
+     * Call it only while holding the object's lock.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_hasPropertyNoLock()}.
+     */
+    public boolean hasPropertyNoLock(String propertyName) {
+        try {
+            MemorySegment propertyName$s = Wrap.daqStringOrNull(propertyName);
+            try {
+                return DaqPropertyObjectInternal.hasPropertyNoLock(requireLivePointer(), propertyName$s);
+            } finally { Ffi.releaseRef(propertyName$s); }
         } finally {
             Reference.reachabilityFence(this);
         }
@@ -246,7 +322,11 @@ public class PropertyObjectInternal extends BaseObject {
     }
 
     /**
-     * Sets the locking strategy of the object. The locking strategy must be set before the object gets and owner is added to a parent folder.
+     * Sets the locking strategy of the object. The locking strategy must be set before the
+     * object gets an owner or is added to a parent folder.
+     *
+     * Property objects default to `InheritLock`, so an object stored in an object-type property shares the
+     * lock of the object that holds it. Components default to `OwnLock`. A clone keeps the strategy of its source.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectInternal_setLockingStrategy()}.
      */

@@ -16,12 +16,16 @@ public final class DaqComplexNumber {
 
     private static final MethodHandle MH_createComplexNumber =
         Ffi.downcallOrNull("daqComplexNumber_createComplexNumber", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_DOUBLE, JAVA_DOUBLE));
+    private static final MethodHandle MH_equalsValue =
+        Ffi.downcallOrNull("daqComplexNumber_equalsValue", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID, ADDRESS));
     private static final MethodHandle MH_getImaginary =
         Ffi.downcallOrNull("daqComplexNumber_getImaginary", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqComplexNumber_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getReal =
         Ffi.downcallOrNull("daqComplexNumber_getReal", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getValue =
+        Ffi.downcallOrNull("daqComplexNumber_getValue", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
     /** Calls {@code daqComplexNumber_createComplexNumber()}. */
     public static MemorySegment createComplexNumber(double real, double imaginary) {
@@ -30,6 +34,16 @@ public final class DaqComplexNumber {
             int err = (int) Ffi.require(MH_createComplexNumber, "daqComplexNumber_createComplexNumber").invokeExact(objSlot, real, imaginary);
             Ffi.checkError(err, "daqComplexNumber_createComplexNumber");
             return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Compares stored complex value to the complex number parameter.  Calls {@code daqComplexNumber_equalsValue()}. */
+    public static boolean equalsValue(MemorySegment self, MemorySegment value) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment equalSlot = arena.allocate(JAVA_BYTE);
+            int err = (int) Ffi.require(MH_equalsValue, "daqComplexNumber_equalsValue").invokeExact(Ffi.orNull(self), Ffi.orNull(value), equalSlot);
+            Ffi.checkError(err, "daqComplexNumber_equalsValue");
+            return equalSlot.get(JAVA_BYTE, 0) != 0;
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
@@ -57,6 +71,14 @@ public final class DaqComplexNumber {
             int err = (int) Ffi.require(MH_getReal, "daqComplexNumber_getReal").invokeExact(Ffi.orNull(self), realSlot);
             Ffi.checkError(err, "daqComplexNumber_getReal");
             return realSlot.get(JAVA_DOUBLE, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the number as ComplexFloat64 type.  Calls {@code daqComplexNumber_getValue()} with caller-allocated out slots. */
+    public static void getValue(MemorySegment self, MemorySegment value) {
+        try {
+            int err = (int) Ffi.require(MH_getValue, "daqComplexNumber_getValue").invokeExact(Ffi.orNull(self), Ffi.orNull(value));
+            Ffi.checkError(err, "daqComplexNumber_getValue");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

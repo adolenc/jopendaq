@@ -35,6 +35,24 @@ public class Dict extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqDict_createOwningDict()}.
+     */
+    public static Dict createOwningDict(PropertyObject owner, String ref) {
+        return DaqObject.wrap(create$createOwningDict(owner, ref), Dict.class);
+    }
+
+    private static MemorySegment create$createOwningDict(PropertyObject owner, String ref) {
+        try {
+            MemorySegment ref$s = Wrap.daqStringOrNull(ref);
+            try {
+                return DaqDict.createOwningDict((owner == null ? MemorySegment.NULL : owner.requireLivePointer()), ref$s);
+            } finally { Ffi.releaseRef(ref$s); }
+        } finally {
+            Reference.reachabilityFence(owner);
+        }
+    }
+
+    /**
      * Removes all elements from the list.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_clear()}.
@@ -50,6 +68,7 @@ public class Dict extends BaseObject {
     /**
      * Deletes the element with the specified key.
      * &#64;param key The key of the element to delete.
+     *
      * If the client needs the element deleted, it should use `removeAt` method.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_deleteItem()}.
@@ -69,6 +88,7 @@ public class Dict extends BaseObject {
      * Gets the element with the specified key.
      * &#64;param key The key of the element to get.
      * &#64;param[out] value The element with the specified key.
+     *
      * The reference count of the element that is retrieved is incremented. The client is
      * responsible for calling `releaseRef` when the element is no longer needed.
      *
@@ -102,7 +122,9 @@ public class Dict extends BaseObject {
     /**
      * Gets the list of all keys in the dictionary.
      * &#64;param[out] keys The list of the keys.
+     *
      * The order of the keys is not defined.
+     *
      * The client is responsible for calling `releaseRef` when the list is no longer needed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_getKeyList()}.
@@ -118,7 +140,9 @@ public class Dict extends BaseObject {
     /**
      * Gets the iterable interface of the keys.
      * &#64;param[out] iterable The iterable interface of the keys.
+     *
      * The Iterable interface enables iteration through the keys.
+     *
      * The client is responsible for calling `releaseRef` when the interface is no longer needed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_getKeys()}.
@@ -134,7 +158,9 @@ public class Dict extends BaseObject {
     /**
      * Gets the list of all elements in the dictionary.
      * &#64;param[out] values The list of the elements.
+     *
      * The order of the elements is not defined.
+     *
      * The client is responsible for calling `releaseRef` when the list is no longer needed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_getValueList()}.
@@ -150,7 +176,9 @@ public class Dict extends BaseObject {
     /**
      * Gets the iterable interface of the elements.
      * &#64;param[out] iterable The iterable interface of the elements.
+     *
      * The Iterable interface enables iteration through the elements.
+     *
      * The client is responsible for calling `releaseRef` when the interface is no longer needed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_getValues()}.
@@ -185,6 +213,7 @@ public class Dict extends BaseObject {
      * Removes the element with the specified key.
      * &#64;param key The key of the element to remove.
      * &#64;param[out] value The element with the specified key.
+     *
      * The client is responsible for calling `releaseRef` when the element is no longer needed.
      * If the client does not need the element after it is removed, it should call `delete` method.
      *
@@ -205,6 +234,7 @@ public class Dict extends BaseObject {
      * Sets the element with the specified key.
      * &#64;param key The key of the element to set.
      * &#64;param value The element with the specified key.
+     *
      * The reference count of the key and the element is incremented.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDict_set()}.

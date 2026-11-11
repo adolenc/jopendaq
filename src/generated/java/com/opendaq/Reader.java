@@ -40,6 +40,7 @@ public class Reader extends BaseObject {
     /**
      * Checks if there is data to read.
      * &#64;param[out] empty Set to true if there is data to read, false otherwise.
+     *
      * This method returns true if there is data available to read.
      * The data can be an event packet or a sufficient amount of data samples for minimum reading.
      *
@@ -56,6 +57,7 @@ public class Reader extends BaseObject {
     /**
      * Sets an external listener to the reader.
      * &#64;param listener The external listener.
+     *
      * When an external listener is set, after the reader is done processing the input port notification methods,
      * it also calls the methods of the external listener.
      *
@@ -73,6 +75,7 @@ public class Reader extends BaseObject {
     /**
      * Sets the specified callback function to be called when there is available data in the reader.
      * &#64;param callback The callback function to be set or &#64;c nullptr to unset it.
+     *
      * Pass &#64;c nullptr to unset the callback. The callback should take no arguments.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReader_setOnDataAvailable()}.

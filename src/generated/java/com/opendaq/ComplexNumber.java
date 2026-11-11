@@ -15,11 +15,14 @@ import com.opendaq.lowlevel.*;
  * Represents a complex number as `IComplexNumber` interface. Use this interface to wrap
  * complex number when you need to add the number to lists, dictionaries and
  * other containers which accept `IBaseObject` and derived interfaces.
+ *
  * Complex numbers have two components: real and imaginary. Both of them are of Float type.
+ *
  * Available factories:
  * &#64;code
  * // Creates a new ComplexNumber object. Throws exception if not successful.
  * IComplexNumber* ComplexNumber_Create(ComplexFloat64* value)
+ *
  * // Creates a new ComplexNumber object. Returns error code if not successful.
  * ErrCode createComplexNumber(IComplexNumber** obj, ComplexFloat64 value)
  * &#64;endcode
@@ -42,6 +45,23 @@ public class ComplexNumber extends BaseObject {
 
     private static MemorySegment create$createComplexNumber(double real, double imaginary) {
         return DaqComplexNumber.createComplexNumber(real, imaginary);
+    }
+
+    /**
+     * Compares stored complex value to the complex number parameter.
+     * &#64;param value Value for comparison.
+     * &#64;param[out] equal The result of the comparison.
+     *
+     * Call this method to directly compare the object to the value parameter.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComplexNumber_equalsValue()}.
+     */
+    public boolean equalsValue(MemorySegment value) {
+        try {
+            return DaqComplexNumber.equalsValue(requireLivePointer(), Ffi.orNull(value));
+        } finally {
+            Reference.reachabilityFence(this);
+        }
     }
 
     /**

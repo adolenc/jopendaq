@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Unit objects. Contains setter methods to configure the Unit parameters, and a `build` method that builds the Unit object.
+ * Builder component of Unit objects. Contains setter methods to configure the Unit parameters, and a
+ * `build` method that builds the Unit object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqUnitBuilder} interface.
  */
@@ -69,8 +70,10 @@ public class UnitBuilder extends BaseObject {
     }
 
     /**
-     * Gets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
+     * Gets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used
+     * in International Trade&lt;/a&gt;.
      * &#64;param[out] id The unit ID.
+     *
      * Returns -1 if the unit id is not available.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_getId()}.
@@ -86,6 +89,7 @@ public class UnitBuilder extends BaseObject {
     /**
      * Gets the full name of the unit, i.e. "meters per second".
      * &#64;param[out] name The unit's full name.
+     *
      * `nullptr` if not set.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_getName()}.
@@ -101,6 +105,7 @@ public class UnitBuilder extends BaseObject {
     /**
      * Gets the quantity represented by the unit, i.e. "Velocity"
      * &#64;param[out] quantity The unit's quantity.
+     *
      * `nullptr` if not set.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_getQuantity()}.
@@ -128,8 +133,10 @@ public class UnitBuilder extends BaseObject {
     }
 
     /**
-     * Sets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
+     * Sets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used
+     * in International Trade&lt;/a&gt;.
      * &#64;param id The unit ID.
+     *
      * The ID should be -1 if the unit is not available.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnitBuilder_setId()}.

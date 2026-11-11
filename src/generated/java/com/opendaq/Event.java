@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_events
- * &#64;defgroup types_event Event
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqEvent} interface.
+ * Wraps the openDAQ {&#64;code daqEvent} interface.
  */
 public class Event extends BaseObject {
 

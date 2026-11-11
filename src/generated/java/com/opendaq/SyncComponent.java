@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Interface representing a Synchronization Component in a Test &amp; Measurement system. A SynchronizationComponent ensures synchronization among measurement devices in the system. It can act as a sync source and/or as a sync output, with each component having one sync input and 0 to n sync outputs.
+ * Interface representing a Synchronization Component in a Test &amp; Measurement system.
+ * A SynchronizationComponent ensures synchronization among measurement devices in the system.
+ * It can act as a sync source and/or as a sync output, with each component having one sync input
+ * and 0 to n sync outputs.
+ *
  * SynchronizationComponents are configured via interfaces, which can include PTP, IRIQ, GPS,
  * and CLK sync interfaces, among others.
  * &#64;note Every SynchronizationComponent has at least one interface. Only one interface can be set
@@ -22,6 +26,7 @@ import com.opendaq.lowlevel.*;
  * act as sync sources or outputs.
  * &#64;note A CLK interface can be used to let a device run in Fre-Run mode, where the device
  * syncs internally to an internal quartz.
+ * &#64;deprecated ISyncComponent is deprecated and will be removed in a future release. Use ISynchronization through IDevice::getSynchronization instead.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSyncComponent} interface.
  */
@@ -35,25 +40,26 @@ public class SyncComponent extends Component {
     /**
      * Calls the openDAQ C function {&#64;code daqSyncComponent_createSyncComponent()}.
      */
-    public SyncComponent(Context context, Component ParseFailedException, String localId) {
-        super(create$createSyncComponent(context, ParseFailedException, localId));
+    public SyncComponent(Context context, Component parent, String localId) {
+        super(create$createSyncComponent(context, parent, localId));
     }
 
-    private static MemorySegment create$createSyncComponent(Context context, Component ParseFailedException, String localId) {
+    private static MemorySegment create$createSyncComponent(Context context, Component parent, String localId) {
         try {
             MemorySegment localId$s = Wrap.daqStringOrNull(localId);
             try {
-                return DaqSyncComponent.createSyncComponent((context == null ? MemorySegment.NULL : context.requireLivePointer()), (ParseFailedException == null ? MemorySegment.NULL : ParseFailedException.requireLivePointer()), localId$s);
+                return DaqSyncComponent.createSyncComponent((context == null ? MemorySegment.NULL : context.requireLivePointer()), (parent == null ? MemorySegment.NULL : parent.requireLivePointer()), localId$s);
             } finally { Ffi.releaseRef(localId$s); }
         } finally {
             Reference.reachabilityFence(context);
-            Reference.reachabilityFence(ParseFailedException);
+            Reference.reachabilityFence(parent);
         }
     }
 
     /**
      * Retrieves the list of interfaces associated with this synchronization component.
      * &#64;param[out] interfaces List of interfaces associated with this component.
+     * &#64;deprecated ISyncComponent is deprecated and will be removed in a future release. Use ISynchronization through IDevice::getSynchronization instead.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSyncComponent_getInterfaces()}.
      */
@@ -68,6 +74,7 @@ public class SyncComponent extends Component {
     /**
      * Retrieves the selected sync source interface.
      * &#64;param[out] selectedSource The selected sync source interface.
+     * &#64;deprecated ISyncComponent is deprecated and will be removed in a future release. Use ISynchronization through IDevice::getSynchronization instead.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSyncComponent_getSelectedSource()}.
      */
@@ -82,6 +89,7 @@ public class SyncComponent extends Component {
     /**
      * Retrieves the synchronization lock status.
      * &#64;param[out] synchronizationLocked True if synchronization is locked; false otherwise.
+     * &#64;deprecated ISyncComponent is deprecated and will be removed in a future release. Use ISynchronization through IDevice::getSynchronization instead.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSyncComponent_getSyncLocked()}.
      */
@@ -96,6 +104,7 @@ public class SyncComponent extends Component {
     /**
      * Sets the selected sync source interface.
      * &#64;param selectedSource The selected sync source interface.
+     * &#64;deprecated ISyncComponent is deprecated and will be removed in a future release. Use ISynchronization through IDevice::getSynchronization instead.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSyncComponent_setSelectedSource()}.
      */

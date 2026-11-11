@@ -74,7 +74,7 @@ public final class DaqScalingBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Scaling builder copy factory that creates a configurable Scaling object from a non-configurable one.  Calls {@code daqScalingBuilder_createScalingBuilderFromExisting()}. */
+    /** Scaling builder copy factory that creates a configurable Scaling object from a  Calls {@code daqScalingBuilder_createScalingBuilderFromExisting()}. */
     public static MemorySegment createScalingBuilderFromExisting(MemorySegment scalingToCopy) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -111,7 +111,7 @@ public final class DaqScalingBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list of parameters that are used to calculate the scaling in conjunction with the input data.  Calls {@code daqScalingBuilder_getParameters()}. */
+    /** Gets the list of parameters that are used to calculate the scaling in conjunction with the  Calls {@code daqScalingBuilder_getParameters()}. */
     public static MemorySegment getParameters(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment parametersSlot = arena.allocate(ADDRESS);
@@ -121,7 +121,7 @@ public final class DaqScalingBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.  Calls {@code daqScalingBuilder_getScalingType()}. */
+    /** Gets the type of the scaling that determines how the scaling parameters should be interpreted  Calls {@code daqScalingBuilder_getScalingType()}. */
     public static ScalingType getScalingType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(JAVA_INT);
@@ -155,7 +155,7 @@ public final class DaqScalingBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list of parameters that are used to calculate the scaling in conjunction with the input data.  Calls {@code daqScalingBuilder_setParameters()}. */
+    /** Gets the list of parameters that are used to calculate the scaling in conjunction with the  Calls {@code daqScalingBuilder_setParameters()}. */
     public static void setParameters(MemorySegment self, MemorySegment parameters) {
         try {
             int err = (int) Ffi.require(MH_setParameters, "daqScalingBuilder_setParameters").invokeExact(Ffi.orNull(self), Ffi.orNull(parameters));
@@ -163,7 +163,7 @@ public final class DaqScalingBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.  Calls {@code daqScalingBuilder_setScalingType()}. */
+    /** Sets the type of the scaling that determines how the scaling parameters should be interpreted  Calls {@code daqScalingBuilder_setScalingType()}. */
     public static void setScalingType(MemorySegment self, ScalingType type) {
         try {
             int err = (int) Ffi.require(MH_setScalingType, "daqScalingBuilder_setScalingType").invokeExact(Ffi.orNull(self), type.value());

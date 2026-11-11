@@ -31,7 +31,7 @@ public final class DaqPermissionsBuilder {
     private static final MethodHandle MH_inherit =
         Ffi.downcallOrNull("daqPermissionsBuilder_inherit", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
 
-    /** Allow a specified set of permissions for a given group. If the inherit flag is enabled, this method will allow both the specified permissions and any permissions already allowed for the group on the parent component. Denied permissions will always overrule allowed permissions.  Calls {@code daqPermissionsBuilder_allow()}. */
+    /** Allow a specified set of permissions for a given group. If the inherit flag is enabled, this method will  Calls {@code daqPermissionsBuilder_allow()}. */
     public static void allow(MemorySegment self, MemorySegment groupId, MemorySegment permissions) {
         try {
             int err = (int) Ffi.require(MH_allow, "daqPermissionsBuilder_allow").invokeExact(Ffi.orNull(self), Ffi.orNull(groupId), Ffi.orNull(permissions));
@@ -39,7 +39,7 @@ public final class DaqPermissionsBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Strictly assign a specified set of permissions for a given group. This method allows only the specified permissions and will not inherit any permissions from the parent object for the group, even if the inherit flag is enabled.  Calls {@code daqPermissionsBuilder_assign()}. */
+    /** Strictly assign a specified set of permissions for a given group. This method allows only the specified  Calls {@code daqPermissionsBuilder_assign()}. */
     public static void assign(MemorySegment self, MemorySegment groupId, MemorySegment permissions) {
         try {
             int err = (int) Ffi.require(MH_assign, "daqPermissionsBuilder_assign").invokeExact(Ffi.orNull(self), Ffi.orNull(groupId), Ffi.orNull(permissions));
@@ -67,7 +67,7 @@ public final class DaqPermissionsBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Deny a specified set of permissions for a given group. If the inherit flag is enabled, this method will deny both the specified permissions and any permissions already denied for the group on the parent component. Denied permissions will always overrule allowed permissions.  Calls {@code daqPermissionsBuilder_deny()}. */
+    /** Deny a specified set of permissions for a given group. If the inherit flag is enabled, this method will  Calls {@code daqPermissionsBuilder_deny()}. */
     public static void deny(MemorySegment self, MemorySegment groupId, MemorySegment permissions) {
         try {
             int err = (int) Ffi.require(MH_deny, "daqPermissionsBuilder_deny").invokeExact(Ffi.orNull(self), Ffi.orNull(groupId), Ffi.orNull(permissions));

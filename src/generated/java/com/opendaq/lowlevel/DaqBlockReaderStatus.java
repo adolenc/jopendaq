@@ -38,7 +38,7 @@ public final class DaqBlockReaderStatus {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Returns the number of samples that were read. Sometimes, during the process of reading, an event packet may occur that stops the reading of remaining samples. Developers can use this function to determine how many samples were actually read.  Calls {@code daqBlockReaderStatus_getReadSamples()}. */
+    /** Returns the number of samples that were read.  Calls {@code daqBlockReaderStatus_getReadSamples()}. */
     public static long getReadSamples(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment readSamplesSlot = arena.allocate(JAVA_LONG);

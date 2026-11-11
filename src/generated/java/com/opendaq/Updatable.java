@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_utility
- * &#64;defgroup types_updatable Updatable
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqUpdatable} interface.
+ * Wraps the openDAQ {&#64;code daqUpdatable} interface.
  */
 public class Updatable extends BaseObject {
 

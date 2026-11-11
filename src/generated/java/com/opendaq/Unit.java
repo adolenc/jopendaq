@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Describes a measurement unit with IDs as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
+ * Describes a measurement unit with IDs as defined in
+ * &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
+ *
  * Unit objects implement the Struct methods internally and are Core type `ctStruct`.
  * &#64;subsection unit_components Unit components
  * - ID: The unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
@@ -32,7 +34,8 @@ public class Unit extends BaseObject {
 
     /**
      * Creates a Unit struct with its `id`, `symbol`, `name`, and `quantity` fields configured.
-     * &#64;param id The unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
+     * &#64;param id The unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in
+     * International Trade&lt;/a&gt;.
      * &#64;param symbol The symbol of the unit, i.e. "m/s".
      * &#64;param name The full name of the unit, i.e. "meters per second". (optional)
      * &#64;param quantity The quantity represented by the unit, i.e. "Velocity". (optional)
@@ -59,6 +62,7 @@ public class Unit extends BaseObject {
     /**
      * Gets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.
      * &#64;param[out] id The unit ID.
+     *
      * Returns -1 if the unit id is not available.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnit_getId()}.
@@ -74,6 +78,7 @@ public class Unit extends BaseObject {
     /**
      * Gets the full name of the unit, i.e. "meters per second".
      * &#64;param[out] name The unit's full name.
+     *
      * `nullptr` if not set.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnit_getName()}.
@@ -89,6 +94,7 @@ public class Unit extends BaseObject {
     /**
      * Gets the quantity represented by the unit, i.e. "Velocity"
      * &#64;param[out] quantity The unit's quantity.
+     *
      * `nullptr` if not set.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUnit_getQuantity()}.

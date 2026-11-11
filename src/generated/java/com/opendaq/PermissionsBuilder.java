@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A class which is responsible for assigning permissions to a property object. Permisison builder can specify allowed and denied permissions for each group. It can also inherit or overwrite premissions from parent objects.
+ * A class which is responsible for assigning permissions to a property object.
+ * Permisison builder can specify allowed and denied permissions for each group. It can
+ * also inherit or overwrite premissions from parent objects.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPermissionsBuilder} interface.
  */
@@ -37,7 +39,9 @@ public class PermissionsBuilder extends BaseObject {
     }
 
     /**
-     * Allow a specified set of permissions for a given group. If the inherit flag is enabled, this method will allow both the specified permissions and any permissions already allowed for the group on the parent component. Denied permissions will always overrule allowed permissions.
+     * Allow a specified set of permissions for a given group. If the inherit flag is enabled, this method will
+     * allow both the specified permissions and any permissions already allowed for the group on the parent component.
+     * Denied permissions will always overrule allowed permissions.
      * &#64;param groupId The id of a group to allow permissions for.
      * &#64;param permissions A set of permissions to allow for given group.
      *
@@ -58,7 +62,8 @@ public class PermissionsBuilder extends BaseObject {
     }
 
     /**
-     * Strictly assign a specified set of permissions for a given group. This method allows only the specified permissions and will not inherit any permissions from the parent object for the group, even if the inherit flag is enabled.
+     * Strictly assign a specified set of permissions for a given group. This method allows only the specified
+     * permissions and will not inherit any permissions from the parent object for the group, even if the inherit flag is enabled.
      * &#64;param groupId The id of a group to set permissions for.
      * &#64;param permissions A set of permissions to allow for given group.
      *
@@ -93,7 +98,9 @@ public class PermissionsBuilder extends BaseObject {
     }
 
     /**
-     * Deny a specified set of permissions for a given group. If the inherit flag is enabled, this method will deny both the specified permissions and any permissions already denied for the group on the parent component. Denied permissions will always overrule allowed permissions.
+     * Deny a specified set of permissions for a given group. If the inherit flag is enabled, this method will
+     * deny both the specified permissions and any permissions already denied for the group on the parent component.
+     * Denied permissions will always overrule allowed permissions.
      * &#64;param groupId The id of a group to deny permissions for.
      * &#64;param permissions A set of permissions to deny for given group.
      *
