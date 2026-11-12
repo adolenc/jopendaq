@@ -4,7 +4,7 @@
      * boxed back for the caller.
      */
     public FunctionObject(FunctionCallback callback) {
-        super(DaqFunction.createFunction(Callbacks.functionStub(callback)));
+        super(Callbacks.createFunction(callback));
     }
 
     // Declared argument count from the owning property's callable info (set

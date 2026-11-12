@@ -51,6 +51,24 @@ public class Procedure extends BaseObject {
     }
 
     /**
+     * Creates a procedure that calls a C function with data of the caller's own.
+     * &#64;param call The function to call with the arguments, and userData.
+     * &#64;param userData Passed to every call; owned by the created object.
+     * &#64;param freeUserData Called with userData once the object is destroyed, or if creating it fails; may be null.
+     *
+     * Provided by the C bindings, so that a callback can carry state.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProcedure_createProcedureWithData()}.
+     */
+    public static Procedure createProcedureWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqObject.wrap(create$createProcedureWithData(call, userData, freeUserData), Procedure.class);
+    }
+
+    private static MemorySegment create$createProcedureWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqProcedure.createProcedureWithData(Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+    }
+
+    /**
      * Calls the stored callback.
      * &#64;param params Parameters passed to the callback.
      *
@@ -81,7 +99,7 @@ public class Procedure extends BaseObject {
      * code (a proc property's value, ...).
      */
     public Procedure(ProcedureCallback callback) {
-        super(DaqProcedure.createProcedure(Callbacks.procedureStub(callback)));
+        super(Callbacks.createProcedure(callback));
     }
 
     // Declared argument count from the owning property's callable info (set

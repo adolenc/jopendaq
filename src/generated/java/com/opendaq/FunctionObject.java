@@ -50,6 +50,24 @@ public class FunctionObject extends BaseObject {
         return DaqFunction.createFunction(Ffi.orNull(value));
     }
 
+    /**
+     * Creates a function that calls a C function with data of the caller's own.
+     * &#64;param call The function to call with the arguments and the result, and userData.
+     * &#64;param userData Passed to every call; owned by the created object.
+     * &#64;param freeUserData Called with userData once the object is destroyed, or if creating it fails; may be null.
+     *
+     * Provided by the C bindings, so that a callback can carry state.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFunction_createFunctionWithData()}.
+     */
+    public static FunctionObject createFunctionWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqObject.wrap(create$createFunctionWithData(call, userData, freeUserData), FunctionObject.class);
+    }
+
+    private static MemorySegment create$createFunctionWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqFunction.createFunctionWithData(Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+    }
+
     // ------------------------------------------------------------------
     // Hand-written part (tools/manual/FunctionObject.java.inc)
     // ------------------------------------------------------------------
@@ -60,7 +78,7 @@ public class FunctionObject extends BaseObject {
      * boxed back for the caller.
      */
     public FunctionObject(FunctionCallback callback) {
-        super(DaqFunction.createFunction(Callbacks.functionStub(callback)));
+        super(Callbacks.createFunction(callback));
     }
 
     // Declared argument count from the owning property's callable info (set

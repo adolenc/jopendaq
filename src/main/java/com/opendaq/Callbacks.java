@@ -3,31 +3,38 @@ package com.opendaq;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
-import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
+import com.opendaq.lowlevel.DaqEventHandler;
+import com.opendaq.lowlevel.DaqFunction;
+import com.opendaq.lowlevel.DaqProcedure;
 import com.opendaq.lowlevel.Ffi;
 
+import static java.lang.foreign.ValueLayout.ADDRESS;
+import static java.lang.foreign.ValueLayout.JAVA_INT;
+
 /**
- * Upcall stubs turning Java lambdas into the C callback pointers openDAQ
- * expects ({@code daqEventCall}, {@code daqProcCall}, {@code daqFuncCall}).
+ * Java lambdas as openDAQ callbacks, through the C bindings' {@code ...WithData}
+ * factories.
  *
- * <p>The callback types carry no user-data argument, so each distinct Java
- * callback gets its own native entry point (an FFM upcall stub bound to the
- * lambda).  openDAQ has no destruction hook for callables, so stubs live in
- * the global arena for the rest of the session — mirroring the reference
- * bindings, where each closure-backed callable pins its trampoline for the
- * life of the image.
+ * <p>Those factories take one C callback per signature, a user-data pointer
+ * passed to every call, and a release function openDAQ calls with that
+ * pointer once the object is destroyed.  So each signature has a single
+ * upcall stub, the user data is the id under which the Java callback is
+ * registered, and the release function unregisters it: a callback lives
+ * exactly as long as the native handler, procedure or function.
  *
  * <p>No exception may unwind across the C boundary: a throw inside a callback
  * is caught and reported as {@code OPENDAQ_ERR_GENERALERROR} (or swallowed
- * for the void event callback).  openDAQ may invoke callbacks from its own
- * worker threads; FFM upcall stubs attach those threads automatically.
+ * for the void event callback).  openDAQ may invoke and release callbacks
+ * from its own worker threads; FFM upcall stubs attach those threads
+ * automatically, and the registry is concurrent.
  */
 final class Callbacks {
 
@@ -36,81 +43,101 @@ final class Callbacks {
     static final int OPENDAQ_SUCCESS = 0;
     static final int OPENDAQ_ERR_GENERALERROR = 0x80000014;
 
-    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private static final AtomicLong NEXT_ID = new AtomicLong();
+    private static final Map<Long, Object> REGISTRY = new ConcurrentHashMap<>();
 
-    private static final FunctionDescriptor EVENT_DESCRIPTOR =
-        FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS);
-    private static final FunctionDescriptor PROCEDURE_DESCRIPTOR =
-        FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS);
-    private static final FunctionDescriptor FUNCTION_DESCRIPTOR =
-        FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.ADDRESS);
-
-    private static final MethodHandle EVENT_BRIDGE;
-    private static final MethodHandle PROCEDURE_BRIDGE;
-    private static final MethodHandle FUNCTION_BRIDGE;
+    private static final MemorySegment EVENT_STUB;
+    private static final MemorySegment PROCEDURE_STUB;
+    private static final MemorySegment FUNCTION_STUB;
+    private static final MemorySegment FREE_STUB;
 
     static {
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
         try {
-            EVENT_BRIDGE = LOOKUP.findStatic(Callbacks.class, "eventBridge",
-                MethodType.methodType(void.class, EventCallback.class,
-                                      MemorySegment.class, MemorySegment.class));
-            PROCEDURE_BRIDGE = LOOKUP.findStatic(Callbacks.class, "procedureBridge",
-                MethodType.methodType(int.class, ProcedureCallback.class, MemorySegment.class));
-            FUNCTION_BRIDGE = LOOKUP.findStatic(Callbacks.class, "functionBridge",
-                MethodType.methodType(int.class, FunctionCallback.class,
-                                      MemorySegment.class, MemorySegment.class));
+            EVENT_STUB = stub(lookup, "eventBridge",
+                FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS));
+            PROCEDURE_STUB = stub(lookup, "procedureBridge",
+                FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+            FUNCTION_STUB = stub(lookup, "functionBridge",
+                FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
+            FREE_STUB = stub(lookup, "freeBridge", FunctionDescriptor.ofVoid(ADDRESS));
         } catch (ReflectiveOperationException e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
-    /** A {@code daqEventCall} function pointer invoking {@code callback}. */
-    static MemorySegment eventStub(EventCallback callback) {
-        MethodHandle bound = MethodHandles.insertArguments(EVENT_BRIDGE, 0, callback);
-        return Ffi.linker().upcallStub(bound, EVENT_DESCRIPTOR, Arena.global());
+    private static MemorySegment stub(MethodHandles.Lookup lookup, String name, FunctionDescriptor descriptor)
+            throws ReflectiveOperationException {
+        MethodHandle bridge = lookup.findStatic(Callbacks.class, name, descriptor.toMethodType());
+        return Ffi.linker().upcallStub(bridge, descriptor, Arena.global());
     }
 
-    /** A {@code daqProcCall} function pointer invoking {@code callback}. */
-    static MemorySegment procedureStub(ProcedureCallback callback) {
-        MethodHandle bound = MethodHandles.insertArguments(PROCEDURE_BRIDGE, 0, callback);
-        return Ffi.linker().upcallStub(bound, PROCEDURE_DESCRIPTOR, Arena.global());
+    /** The user data under which {@code callback} is registered until openDAQ releases it. */
+    private static MemorySegment register(Object callback) {
+        long id = NEXT_ID.incrementAndGet();
+        REGISTRY.put(id, callback);
+        return MemorySegment.ofAddress(id);
     }
 
-    /** A {@code daqFuncCall} function pointer invoking {@code callback}. */
-    static MemorySegment functionStub(FunctionCallback callback) {
-        MethodHandle bound = MethodHandles.insertArguments(FUNCTION_BRIDGE, 0, callback);
-        return Ffi.linker().upcallStub(bound, FUNCTION_DESCRIPTOR, Arena.global());
+    private static <T> T registered(MemorySegment userData, Class<T> type) {
+        return type.cast(REGISTRY.get(userData.address()));
+    }
+
+    /** A new openDAQ event handler (an owned reference) invoking {@code callback}. */
+    static MemorySegment createEventHandler(EventCallback callback) {
+        return DaqEventHandler.createEventHandlerWithData(EVENT_STUB, register(callback), FREE_STUB);
+    }
+
+    /** A new openDAQ procedure (an owned reference) invoking {@code callback}. */
+    static MemorySegment createProcedure(ProcedureCallback callback) {
+        return DaqProcedure.createProcedureWithData(PROCEDURE_STUB, register(callback), FREE_STUB);
+    }
+
+    /** A new openDAQ function (an owned reference) invoking {@code callback}. */
+    static MemorySegment createFunction(FunctionCallback callback) {
+        return DaqFunction.createFunctionWithData(FUNCTION_STUB, register(callback), FREE_STUB);
+    }
+
+    /** Whether {@code callback} backs a native object that is still alive. */
+    static boolean isRegistered(Object callback) {
+        return REGISTRY.containsValue(callback);
     }
 
     // ------------------------------------------------------------------
     // Bridges (the static methods the upcall stubs invoke)
     // ------------------------------------------------------------------
 
-    private static void eventBridge(EventCallback callback, MemorySegment sender, MemorySegment args) {
+    private static void freeBridge(MemorySegment userData) {
+        REGISTRY.remove(userData.address());
+    }
+
+    private static void eventBridge(MemorySegment sender, MemorySegment args, MemorySegment userData) {
         try {
             // The C event dispatcher add-refs sender and args before invoking
             // us, so the wrappers own one reference each.
-            callback.handle(wrapOrNull(sender), wrapOrNull(args));
+            DaqObject wrappedSender = wrapOrNull(sender);
+            DaqObject wrappedArgs = wrapOrNull(args);
+            registered(userData, EventCallback.class).handle(wrappedSender, wrappedArgs);
         } catch (Throwable t) {
             // The event callback returns void: nothing to report the error
             // through, but it must not unwind into native frames.
         }
     }
 
-    private static int procedureBridge(ProcedureCallback callback, MemorySegment params) {
+    private static int procedureBridge(MemorySegment params, MemorySegment userData) {
         try {
-            callback.invoke(decodeParams(params));
+            registered(userData, ProcedureCallback.class).invoke(decodeParams(params));
             return OPENDAQ_SUCCESS;
         } catch (Throwable t) {
             return OPENDAQ_ERR_GENERALERROR;
         }
     }
 
-    private static int functionBridge(FunctionCallback callback, MemorySegment params, MemorySegment result) {
+    private static int functionBridge(MemorySegment params, MemorySegment result, MemorySegment userData) {
         try {
-            Object value = callback.invoke(decodeParams(params));
-            MemorySegment slot = result.reinterpret(ValueLayout.ADDRESS.byteSize());
-            slot.set(ValueLayout.ADDRESS, 0, boxTransferringReference(value));
+            Object value = registered(userData, FunctionCallback.class).invoke(decodeParams(params));
+            MemorySegment slot = result.reinterpret(ADDRESS.byteSize());
+            slot.set(ADDRESS, 0, boxTransferringReference(value));
             return OPENDAQ_SUCCESS;
         } catch (Throwable t) {
             return OPENDAQ_ERR_GENERALERROR;

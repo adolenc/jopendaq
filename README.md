@@ -187,9 +187,9 @@ decoded to natural Java values (scalars and containers unboxed, anything else
 wrapped for `asType`); a `FunctionObject`'s return value is boxed back for
 the caller the same way.  An exception thrown inside the lambda is reported
 to the caller as an openDAQ error rather than unwinding across the C
-boundary.  Since openDAQ has no destruction hook for callables, each
-lambda-backed procedure/function keeps its upcall stub alive for the rest of
-the session.
+boundary.  The lambda is kept alive for as long as openDAQ holds the
+procedure or function (which can outlive the Java wrapper, e.g. as a property
+value) and released after that.
 
 ### Readers
 

@@ -10,11 +10,9 @@ import com.opendaq.lowlevel.DaqBoolean;
 import com.opendaq.lowlevel.DaqComplexNumber;
 import com.opendaq.lowlevel.DaqDict;
 import com.opendaq.lowlevel.DaqFloat;
-import com.opendaq.lowlevel.DaqFunction;
 import com.opendaq.lowlevel.DaqInteger;
 import com.opendaq.lowlevel.DaqList;
 import com.opendaq.lowlevel.DaqNumber;
-import com.opendaq.lowlevel.DaqProcedure;
 import com.opendaq.lowlevel.DaqRatio;
 import com.opendaq.lowlevel.DaqString;
 import com.opendaq.lowlevel.Ffi;
@@ -95,10 +93,10 @@ final class Box {
                 return new Boxed(boxDictOwned(map), true, null);
             }
             case FunctionCallback fn -> {
-                return new Boxed(DaqFunction.createFunction(Callbacks.functionStub(fn)), true, null);
+                return new Boxed(Callbacks.createFunction(fn), true, null);
             }
             case ProcedureCallback fn -> {
-                return new Boxed(DaqProcedure.createProcedure(Callbacks.procedureStub(fn)), true, null);
+                return new Boxed(Callbacks.createProcedure(fn), true, null);
             }
             default -> throw new IllegalArgumentException(
                 "Cannot box " + value.getClass().getName() + " as an openDAQ object.");

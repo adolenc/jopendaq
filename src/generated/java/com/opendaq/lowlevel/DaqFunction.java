@@ -18,6 +18,8 @@ public final class DaqFunction {
         Ffi.downcallOrNull("daqFunction_call", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createFunction =
         Ffi.downcallOrNull("daqFunction_createFunction", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createFunctionWithData =
+        Ffi.downcallOrNull("daqFunction_createFunctionWithData", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqFunction_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
 
@@ -38,6 +40,16 @@ public final class DaqFunction {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createFunction, "daqFunction_createFunction").invokeExact(objSlot, Ffi.orNull(value));
             Ffi.checkError(err, "daqFunction_createFunction");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a function that calls a C function with data of the caller's own.  Calls {@code daqFunction_createFunctionWithData()}. */
+    public static MemorySegment createFunctionWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createFunctionWithData, "daqFunction_createFunctionWithData").invokeExact(objSlot, Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+            Ffi.checkError(err, "daqFunction_createFunctionWithData");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

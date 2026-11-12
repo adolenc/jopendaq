@@ -209,8 +209,8 @@ class CoreTypesTest {
 
     @Test
     void eventHandlerRouting() {
-        // Distinct lambda handlers must get distinct upcall stubs routing to
-        // their own callbacks, and removal must not disturb the others.
+        // Distinct lambda handlers must route to their own callbacks, and
+        // removal must not disturb the others.
         Event event = new Event();
         boolean[] a = {false};
         boolean[] b = {false};
@@ -229,6 +229,22 @@ class CoreTypesTest {
         EventHandler handlerC = event.addHandler((s, args) -> a[0] = true);
         handlerC.handleEvent(sender, eventArgs);
         assertTrue(a[0]);
+    }
+
+    @Test
+    void callbackReleasedWithObject() {
+        // openDAQ hands the callback back for release once the native object
+        // is destroyed, here when the only reference is released.
+        ProcedureCallback procedureCallback = params -> {};
+        EventCallback eventCallback = (s, args) -> {};
+        Procedure procedure = new Procedure(procedureCallback);
+        EventHandler handler = new EventHandler(eventCallback);
+        assertTrue(Callbacks.isRegistered(procedureCallback));
+        assertTrue(Callbacks.isRegistered(eventCallback));
+        procedure.release();
+        handler.release();
+        assertFalse(Callbacks.isRegistered(procedureCallback));
+        assertFalse(Callbacks.isRegistered(eventCallback));
     }
 
     @Test

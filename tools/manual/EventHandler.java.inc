@@ -4,5 +4,5 @@
      * event fires; reference counting is handled for you.
      */
     public EventHandler(EventCallback callback) {
-        super(DaqEventHandler.createEventHandler(Callbacks.eventStub(callback)));
+        super(Callbacks.createEventHandler(callback));
     }

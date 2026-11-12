@@ -129,8 +129,7 @@ class LowLevelTest {
     void inOutParameters() {
         // daqFunction_call carries an in-out result slot; the generated
         // wrapper passes the input value and returns the updated one.
-        MemorySegment function = com.opendaq.lowlevel.DaqFunction.createFunction(
-            Callbacks.functionStub(params -> 21L));
+        MemorySegment function = Callbacks.createFunction(params -> 21L);
         MemorySegment result = com.opendaq.lowlevel.DaqFunction.call(
             function, MemorySegment.NULL, MemorySegment.NULL);
         assertEquals(21, DaqInteger.getValue(result));

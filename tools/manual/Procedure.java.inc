@@ -4,7 +4,7 @@
      * code (a proc property's value, ...).
      */
     public Procedure(ProcedureCallback callback) {
-        super(DaqProcedure.createProcedure(Callbacks.procedureStub(callback)));
+        super(Callbacks.createProcedure(callback));
     }
 
     // Declared argument count from the owning property's callable info (set
