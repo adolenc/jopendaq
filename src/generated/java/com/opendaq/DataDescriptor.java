@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Describes the data sent by a signal, defining how they are to be interpreted by anyone receiving the signal's packets.
+ *
  * The data descriptor provides all information required on how to process data buffers, and how to interpret the data.
  * It contains the following fields:
  * - `Name`: A descriptive name of the data being described. In example, when the values describe the amplitude of spectrum data, the name
@@ -42,21 +43,27 @@ import com.opendaq.lowlevel.*;
  * &#64;subsection data_descriptor_dimensions Dimensions
  * The list of dimensions determines the rank of values described by the descriptor. In example, if the list contains 1 dimension, the data
  * values are vectors. If it contains 2, the data values are matrices, if 0, the descriptor describes a single value.
+ *
  * When the data is placed into packet buffers, the values are laid out in packet buffers linearly, where each value fills up
  * `sizeof(sampleType) * (dimensionSize1 * dimensionSize2 *...)` bytes.
+ *
  * Data descriptor objects implement the Struct methods internally and are Core type `ctStruct`.
  * &#64;subsection data_descriptor_struct_fields Struct fields
+ *
  * A DataDescriptor with the `StructFields` field filled with other descriptors is used to represent signal data in the form of structures.
  * It allows for custom and complex structures to be described and sent by a signal.
+ *
  * When evaluating a struct descriptor, their struct field values are laid out in the packet buffers in the order they are placed in
  * the `structFields` list. Eg. a struct with 3 fields, of types [int64_t, float, double] will have a buffer composed of an int64_t value,
  * followed by a float, and lastly a double value.
+ *
  * Note that if the Dimensions field of the DataDescriptor is not empty, struct data can also be of a higher rank
  * (eg. a vector/matrix of structs).
  * &#64;subsection data_descriptor_calculation_order Value calculation
  * Besides the struct fields and dimensions, the Value descriptor also provides 4 fields which need to be taken into account and calculated
  * when reading packet buffers: `Rule`, `Resolution`, `Origin`, and `PostScaling`.
  * &#64;subsubsection data_descriptor_calculation_without_scaling Without `PostScaling`
+ *
  * 1. Check and apply `Rule`:
  * - If the rule is `explicit`, the values of a packet are present in the packet's data buffer
  * - If not `explicit`, the packet's values need to be calculated. To calculate them, take the PacketOffset and SampleCount of the
@@ -71,7 +78,9 @@ import com.opendaq.lowlevel.*;
  * In example, if using the Unix Epoch, a value `1669279690` in seconds would mean Thursday, 24 November 2022 08:48:10 GMT.
  * - If not set, keep the value from 2.
  * &#64;subsubsection data_descriptor_calculation_with_scaling With `PostScaling`
+ *
  * If `PostScaling` is set, the `Rule` must be explicit, while `Resolution` and `Origin` must not be configured.
+ *
  * To calculate the value with `PostScaling` configured, take the values of the packet's data buffer and apply the post scaling to each
  * value in the buffer: `Value = PostScaling(Value)`, eg. `Value = Value * Scale + Offset`
  *
@@ -105,6 +114,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the list of the descriptor's dimension's.
      * &#64;param[out] dimensions The list of dimensions.
+     *
      * The number of dimensions defines the rank of the signal's data (eg. Vector, Matrix).
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getDimensions()}.
@@ -120,6 +130,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets any extra metadata defined by the data descriptor.
      * &#64;param[out] metadata Additional metadata of the descriptor as a dictionary.
+     *
      * All objects in the metadata dictionary must be key value pairs of &lt;String, String&gt;.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getMetadata()}.
@@ -135,6 +146,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets a descriptive name of the signal value.
      * &#64;param[out] name The name of the signal value.
+     *
      * When, for example, describing the amplitude values of spectrum data, the name would be `Amplitude`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getName()}.
@@ -150,9 +162,11 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the absolute origin of a signal value component.
      * &#64;param[out] origin The absolute origin.
+     *
      * An origin can be an arbitrary string that determines the starting point of the signal data.
      * All explicit or implicit values are multiplied by the resolution and added to the origin to obtain
      * absolute data instead of relative.
+     *
      * Most commonly a time reference is used, in which case it should be formatted according to the ISO 8601 standard.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getOrigin()}.
@@ -179,6 +193,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the actual sample size in buffer of one sample in bytes.
      * &#64;param[out] sampleSize The actual size of one sample in buffer in bytes.
+     *
      * The actual size of one sample is calculated on constructor of the data descriptor object.
      * Actual sample size is the sample size that is used in buffer. If the data descriptor includes
      * implicitly generated samples, the actual sample size is less than sample size.
@@ -196,6 +211,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the Reference Domain Info.
      * &#64;param[out] referenceDomainInfo The Reference Domain Info.
+     *
      * If set, gives additional information about the reference domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getReferenceDomainInfo()}.
@@ -211,6 +227,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the value Data rule.
      * &#64;param[out] rule The value Data rule.
+     *
      * If explicit, the values will be contained in the packet buffer. Otherwise they are calculated
      * using the offset packet parameter as the input into the rule.
      *
@@ -227,6 +244,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the size of one sample in bytes.
      * &#64;param[out] sampleSize The size of one sample in bytes.
+     *
      * The size of one sample is calculated on constructor of the data descriptor object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getSampleSize()}.
@@ -256,6 +274,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the fields of the struct, forming a recursive value descriptor definition.
      * &#64;param[out] structFields The list of data descriptors forming the struct fields.
+     *
      * Contains a list of value descriptors, defining the data layout: the data described by the first DataDescriptor
      * of the list is at the start, followed by the data described by the second and so on.
      *
@@ -270,7 +289,8 @@ public class DataDescriptor extends BaseObject {
     }
 
     /**
-     * Gets the Resolution which scales the explicit or implicit value to the physical unit defined in `unit`. It is defined as domain (usually time) between two consecutive ticks.
+     * Gets the Resolution which scales the explicit or implicit value to the physical unit defined in `unit`.
+     * It is defined as domain (usually time) between two consecutive ticks.
      * &#64;param[out] tickResolution The Resolution.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getTickResolution()}.
@@ -300,6 +320,7 @@ public class DataDescriptor extends BaseObject {
     /**
      * Gets the value range of the data in a signal's packets defining the lowest and highest expected values.
      * &#64;param[out] range The value range the signal's data.
+     *
      * The range is not enforced by openDAQ.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataDescriptor_getValueRange()}.

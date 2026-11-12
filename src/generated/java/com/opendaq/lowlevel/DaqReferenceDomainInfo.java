@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandle;
 
 import static java.lang.foreign.ValueLayout.*;
 import com.opendaq.TimeProtocol;
-import com.opendaq.UsesOffset;
 
 /** Raw FFI bindings for the daqReferenceDomainInfo_* functions of the openDAQ C API. */
 public final class DaqReferenceDomainInfo {
@@ -22,12 +21,12 @@ public final class DaqReferenceDomainInfo {
         Ffi.downcallOrNull("daqReferenceDomainInfo_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getReferenceDomainId =
         Ffi.downcallOrNull("daqReferenceDomainInfo_getReferenceDomainId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getReferenceDomainIds =
+        Ffi.downcallOrNull("daqReferenceDomainInfo_getReferenceDomainIds", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getReferenceDomainOffset =
         Ffi.downcallOrNull("daqReferenceDomainInfo_getReferenceDomainOffset", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getReferenceTimeProtocol =
         Ffi.downcallOrNull("daqReferenceDomainInfo_getReferenceTimeProtocol", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
-    private static final MethodHandle MH_getUsesOffset =
-        Ffi.downcallOrNull("daqReferenceDomainInfo_getUsesOffset", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
     /** Creates a Reference Domain Info using Builder  Calls {@code daqReferenceDomainInfo_createReferenceDomainInfoFromBuilder()}. */
     public static MemorySegment createReferenceDomainInfoFromBuilder(MemorySegment builder) {
@@ -56,6 +55,16 @@ public final class DaqReferenceDomainInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets the list of Reference Domain IDs.  Calls {@code daqReferenceDomainInfo_getReferenceDomainIds()}. */
+    public static MemorySegment getReferenceDomainIds(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment referenceDomainIdsSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getReferenceDomainIds, "daqReferenceDomainInfo_getReferenceDomainIds").invokeExact(Ffi.orNull(self), referenceDomainIdsSlot);
+            Ffi.checkError(err, "daqReferenceDomainInfo_getReferenceDomainIds");
+            return referenceDomainIdsSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Gets the Reference Domain Offset.  Calls {@code daqReferenceDomainInfo_getReferenceDomainOffset()}. */
     public static MemorySegment getReferenceDomainOffset(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
@@ -73,16 +82,6 @@ public final class DaqReferenceDomainInfo {
             int err = (int) Ffi.require(MH_getReferenceTimeProtocol, "daqReferenceDomainInfo_getReferenceTimeProtocol").invokeExact(Ffi.orNull(self), referenceTimeProtocolSlot);
             Ffi.checkError(err, "daqReferenceDomainInfo_getReferenceTimeProtocol");
             return TimeProtocol.fromValue(referenceTimeProtocolSlot.get(JAVA_INT, 0));
-        } catch (Throwable t) { throw Ffi.rethrow(t); }
-    }
-
-    /** Gets the value that indicates if offset is used.  Calls {@code daqReferenceDomainInfo_getUsesOffset()}. */
-    public static UsesOffset getUsesOffset(MemorySegment self) {
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment usesOffsetSlot = arena.allocate(JAVA_INT);
-            int err = (int) Ffi.require(MH_getUsesOffset, "daqReferenceDomainInfo_getUsesOffset").invokeExact(Ffi.orNull(self), usesOffsetSlot);
-            Ffi.checkError(err, "daqReferenceDomainInfo_getUsesOffset");
-            return UsesOffset.fromValue(usesOffsetSlot.get(JAVA_INT, 0));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

@@ -175,7 +175,7 @@ public final class DaqDataDescriptor {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Resolution which scales the explicit or implicit value to the physical unit defined in `unit`. It is defined as domain (usually time) between two consecutive ticks.  Calls {@code daqDataDescriptor_getTickResolution()}. */
+    /** Gets the Resolution which scales the explicit or implicit value to the physical unit defined in `unit`.  Calls {@code daqDataDescriptor_getTickResolution()}. */
     public static MemorySegment getTickResolution(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment tickResolutionSlot = arena.allocate(ADDRESS);

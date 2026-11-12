@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Internal functions used by openDAQ core. This interface should never be used in client SDK or module code.
+ * Internal functions used by openDAQ core. This interface should never be used in
+ * client SDK or module code.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSignalPrivate} interface.
  */

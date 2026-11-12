@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents an openDAQ mirrored client device. Allows accessing streaming data sources associated with the device.
+ * Represents an openDAQ mirrored client device.
+ * Allows accessing streaming data sources associated with the device.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqMirroredDevice} interface.
  */

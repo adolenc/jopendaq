@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * The configuration component of a Signal. Allows for configuration of its properties, managing its streaming sources, and sending packets through its connections.
+ * The configuration component of a Signal. Allows for configuration of its properties,
+ * managing its streaming sources, and sending packets through its connections.
+ *
  * The Signal config is most often accessible only to the devices or function blocks that own
  * the signal. They react on property, or input signal changes to modify a signal's data descriptor,
  * and send processed/acquired data down its signal path.
@@ -134,6 +136,7 @@ public class SignalConfig extends Signal {
     /**
      * Sends a packet through all connections of the signal. Ownership of the packet is transfered.
      * &#64;param packet The packet to be sent.
+     *
      * After calling the method, the packet should not be touched again. The ownership of the packet
      * is taken by underlying connections and it could be destroyed before the function returns.
      *
@@ -151,6 +154,7 @@ public class SignalConfig extends Signal {
     /**
      * Sends multiple packets through all connections of the signal.
      * &#64;param packets The packets to be sent.
+     *
      * Sending multiple packets creates a single notification to input port.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSignalConfig_sendPackets()}.
@@ -169,6 +173,7 @@ public class SignalConfig extends Signal {
     /**
      * Sends multiple packets through all connections of the signal. Ownership of the packets is transfered.
      * &#64;param packets The packets to be sent.
+     *
      * After calling the method, the packets should not be touched again. The ownership of the packets
      * is taken by underlying connections and they could be destroyed before the function returns.
      *
@@ -188,6 +193,7 @@ public class SignalConfig extends Signal {
     /**
      * Sets the data descriptor.
      * &#64;param descriptor The data descriptor.
+     *
      * Setting the data descriptor triggers a Descriptor changed event packet to be sent to
      * all connections of the signal. If the signal is a domain signal of another, that signal
      * also sends a Descriptor changed event to all its connections.
@@ -206,6 +212,7 @@ public class SignalConfig extends Signal {
     /**
      * Sets the domain signal reference.
      * &#64;param signal The domain signal.
+     *
      * Setting a new domain signal triggers a Descriptor changed event packet to be sent to
      * all connections of the signal.
      *
@@ -223,6 +230,7 @@ public class SignalConfig extends Signal {
     /**
      * Sets the last value of the signal.
      * &#64;param lastValue The lastValue.
+     *
      * This method is used to manually set the last value of the signal. Useful when automatic calculation of
      * last value is disabled, usually due to performance reasons.
      *

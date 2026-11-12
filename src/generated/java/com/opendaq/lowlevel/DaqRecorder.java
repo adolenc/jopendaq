@@ -30,7 +30,7 @@ public final class DaqRecorder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Checks whether data from connected signals is currently being recorded to the persistent storage medium.  Calls {@code daqRecorder_getIsRecording()}. */
+    /** Checks whether data from connected signals is currently being recorded to the  Calls {@code daqRecorder_getIsRecording()}. */
     public static boolean getIsRecording(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment isRecordingSlot = arena.allocate(JAVA_BYTE);

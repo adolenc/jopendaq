@@ -30,6 +30,8 @@ public final class DaqStreaming {
         Ffi.downcallOrNull("daqStreaming_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getOwnerDeviceRemoteId =
         Ffi.downcallOrNull("daqStreaming_getOwnerDeviceRemoteId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getProtocolGroupId =
+        Ffi.downcallOrNull("daqStreaming_getProtocolGroupId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getProtocolId =
         Ffi.downcallOrNull("daqStreaming_getProtocolId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_removeAllInputPorts =
@@ -89,7 +91,7 @@ public final class DaqStreaming {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the string representation of a connection address used to connect to the streaming service of the device.  Calls {@code daqStreaming_getConnectionString()}. */
+    /** Gets the string representation of a connection address used to connect to the streaming  Calls {@code daqStreaming_getConnectionString()}. */
     public static MemorySegment getConnectionString(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment connectionStringSlot = arena.allocate(ADDRESS);
@@ -106,7 +108,7 @@ public final class DaqStreaming {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the global ID of the device (as it appears on the remote instance) to which this streaming object establishes a connection.  Calls {@code daqStreaming_getOwnerDeviceRemoteId()}. */
+    /** Gets the global ID of the device (as it appears on the remote instance)  Calls {@code daqStreaming_getOwnerDeviceRemoteId()}. */
     public static MemorySegment getOwnerDeviceRemoteId(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment deviceRemoteIdSlot = arena.allocate(ADDRESS);
@@ -116,7 +118,17 @@ public final class DaqStreaming {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the identifier of the data transfer protocol (e.g., "OpenDAQNativeStreaming", "OpenDAQLTStreaming") used by this streaming object.  Calls {@code daqStreaming_getProtocolId()}. */
+    /** Gets the group identifier of the data transfer protocol (e.g., "OpenDAQNativeStreamingGroup", "OpenDAQLTStreamingGroup")  Calls {@code daqStreaming_getProtocolGroupId()}. */
+    public static MemorySegment getProtocolGroupId(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment protocolGroupIdSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getProtocolGroupId, "daqStreaming_getProtocolGroupId").invokeExact(Ffi.orNull(self), protocolGroupIdSlot);
+            Ffi.checkError(err, "daqStreaming_getProtocolGroupId");
+            return protocolGroupIdSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the identifier of the data transfer protocol (e.g., "OpenDAQNativeStreaming", "OpenDAQLTStreaming")  Calls {@code daqStreaming_getProtocolId()}. */
     public static MemorySegment getProtocolId(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment protocolIdSlot = arena.allocate(ADDRESS);

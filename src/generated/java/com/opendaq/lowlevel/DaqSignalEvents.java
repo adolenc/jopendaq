@@ -27,7 +27,7 @@ public final class DaqSignalEvents {
     private static final MethodHandle MH_listenerDisconnected =
         Ffi.downcallOrNull("daqSignalEvents_listenerDisconnected", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Notifies the signal that it is no longer being used as a domain signal by the signal passed as the function argument.  Calls {@code daqSignalEvents_domainSignalReferenceRemoved()}. */
+    /** Notifies the signal that it is no longer being used as a domain signal by the signal passed as  Calls {@code daqSignalEvents_domainSignalReferenceRemoved()}. */
     public static void domainSignalReferenceRemoved(MemorySegment self, MemorySegment signal) {
         try {
             int err = (int) Ffi.require(MH_domainSignalReferenceRemoved, "daqSignalEvents_domainSignalReferenceRemoved").invokeExact(Ffi.orNull(self), Ffi.orNull(signal));
@@ -35,7 +35,7 @@ public final class DaqSignalEvents {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Notifies the signal that it is being used as a domain signal by the signal passed as the function argument.  Calls {@code daqSignalEvents_domainSignalReferenceSet()}. */
+    /** Notifies the signal that it is being used as a domain signal by the signal passed as the function  Calls {@code daqSignalEvents_domainSignalReferenceSet()}. */
     public static void domainSignalReferenceSet(MemorySegment self, MemorySegment signal) {
         try {
             int err = (int) Ffi.require(MH_domainSignalReferenceSet, "daqSignalEvents_domainSignalReferenceSet").invokeExact(Ffi.orNull(self), Ffi.orNull(signal));

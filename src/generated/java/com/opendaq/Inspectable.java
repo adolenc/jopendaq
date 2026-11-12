@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqInspectable} interface.
+ * Provides introspection into the object providing openDAQ interface implementations.
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqInspectable} interface.
  */
 public class Inspectable extends BaseObject {
 

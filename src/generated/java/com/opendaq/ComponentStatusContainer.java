@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * A container of Component Statuses and their corresponding values.
+ *
  * Each status has a unique name and represents an actual status related to the openDAQ Component,
  * such as connection status, synchronization status, etc. The statuses' values are represented
  * by Enumeration objects.
@@ -76,6 +77,7 @@ public class ComponentStatusContainer extends BaseObject {
     /**
      * Gets the current values of all Component statuses.
      * &#64;param[out] statuses The Component statuses as a dictionary.
+     *
      * All objects in the statuses dictionary are key value pairs of &lt;IString, IEnumeration&gt;.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentStatusContainer_getStatuses()}.

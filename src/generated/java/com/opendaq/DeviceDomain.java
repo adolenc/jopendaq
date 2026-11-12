@@ -13,13 +13,16 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Contains information about the domain of the device.
+ *
  * The device domain contains a general view into the device's domain data. While devices most often operate
  * in the time domain, this interface allows for description of any other domain commonly used in signal processing.
  * For example, common domains include the angle domain, frequency domain, the spatial domain, and the wavelet domain.
+ *
  * The device domain allows for users to query a device for its current domain value via `getTicksSinceOrigin`
  * and convert that into its domain unit by multiplying the tick count with the resolution. To get the absolute
  * domain value, we can then also add the value to the Origin, which is most often provided
  * as a time epoch in the ISO 8601 format.
+ *
  * Note that all devices might note provide a device domain implementation. Such devices cannot be directly queried
  * for their domain data. In such a case, the domain data can be obtained through the device's output signals.
  *
@@ -92,6 +95,7 @@ public class DeviceDomain extends BaseObject {
     /**
      * Gets the Reference Domain Info.
      * &#64;param[out] referenceDomainInfo The Reference Domain Info.
+     *
      * If set, gives additional information about the reference domain.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceDomain_getReferenceDomainInfo()}.

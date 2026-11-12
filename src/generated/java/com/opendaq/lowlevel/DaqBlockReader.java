@@ -93,7 +93,7 @@ public final class DaqBlockReader {
     /** Result of {@link #read}. */
     public record ReadResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` blocks of unread samples to the values buffer. The amount actually read is returned through the `count` parameter.  Calls {@code daqBlockReader_read()}. */
+    /** Copies at maximum the next `count` blocks of unread samples to the values buffer.  Calls {@code daqBlockReader_read()}. */
     public static ReadResult read(MemorySegment self, MemorySegment blocks, long count, long timeoutMs) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);
@@ -108,7 +108,7 @@ public final class DaqBlockReader {
     /** Result of {@link #readWithDomain}. */
     public record ReadWithDomainResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` blocks of unread samples and clock-stamps to the `dataBlocks` and `domainBlocks` buffers. The amount actually read is returned through the `count` parameter.  Calls {@code daqBlockReader_readWithDomain()}. */
+    /** Copies at maximum the next `count` blocks of unread samples and clock-stamps to the `dataBlocks` and `domainBlocks` buffers.  Calls {@code daqBlockReader_readWithDomain()}. */
     public static ReadWithDomainResult readWithDomain(MemorySegment self, MemorySegment dataBlocks, MemorySegment domainBlocks, long count, long timeoutMs) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);

@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Represents the configuration interface for mirrored input ports.
+ *
  * Allows listing available streaming sources and selecting the active source for a mirrored input port.
  * Only sources that support client-to-device streaming are allowed. The active sources sends client signal
  * (and the associated domain signal) data to the device, which is then consumed by the connection formed
@@ -72,7 +73,8 @@ public class MirroredInputPortConfig extends InputPortConfig {
     /**
      * Sets the active streaming source of the input port.
      * &#64;param streamingConnectionString The connection string of streaming source to be set as active.
-     * &#64;retval OPENDAQ_ERR_NOTFOUND if the streaming source with the corresponding connection string is not part of the available streaming sources for the input port.
+     * &#64;retval OPENDAQ_ERR_NOTFOUND if the streaming source with the corresponding connection string is not
+     * part of the available streaming sources for the input port.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMirroredInputPortConfig_setActiveStreamingSource()}.
      */

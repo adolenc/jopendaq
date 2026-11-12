@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup objects_property
- * &#64;addtogroup objects_property_obj PropertyInternal
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqPropertyInternal} interface.
+ * Wraps the openDAQ {&#64;code daqPropertyInternal} interface.
  */
 public class PropertyInternal extends BaseObject {
 
@@ -39,6 +36,7 @@ public class PropertyInternal extends BaseObject {
 
     /**
      * Clones the property, setting the passed PropertyObject as its owner.
+     *
      * If the provided owner is the same as the current owner of the property, the property is not cloned.
      * Instead the property itself is returned as-is.
      *
@@ -109,7 +107,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property default value in an as either a BaseObject or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property default value in an as either a BaseObject or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getDefaultValueUnresolved()}.
      */
@@ -133,7 +132,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property description in an as either a String or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property description in an as either a String or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getDescriptionUnresolved()}.
      */
@@ -223,7 +223,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property max value in an as either a Number or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property max value in an as either a Number or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getMaxValueUnresolved()}.
      */
@@ -247,7 +248,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property min value in an as either a Number or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property min value in an as either a Number or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getMinValueUnresolved()}.
      */
@@ -271,7 +273,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property read-only field in an as either a Boolean or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property read-only field in an as either a Boolean or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getReadOnlyUnresolved()}.
      */
@@ -295,7 +298,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property referenced property in an as either a Property or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property referenced property in an as either a Property or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getReferencedPropertyUnresolved()}.
      */
@@ -319,7 +323,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property selection values in an as either a Dictionary of Int-BaseObject pairs, List of BaseObjects, or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property selection values in an as either a Dictionary of Int-BaseObject pairs, List of BaseObjects,
+     * or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getSelectionValuesUnresolved()}.
      */
@@ -354,7 +359,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property suggested values in an as either a List of BaseObjects or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property suggested values in an as either a List of BaseObjects or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getSuggestedValuesUnresolved()}.
      */
@@ -378,7 +384,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property unit in an as either a String (TODO: as an IUnit once supported) or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property unit in an as either a String (TODO: as an IUnit once supported)
+     * or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getUnitUnresolved()}.
      */
@@ -437,7 +444,8 @@ public class PropertyInternal extends BaseObject {
     }
 
     /**
-     * Gets the Property visible field in an as either a Boolean or unresolved EvalValue. The EvalValue is bound to the owner, if the Property has an owner.
+     * Gets the Property visible field in an as either a Boolean or unresolved EvalValue. The EvalValue
+     * is bound to the owner, if the Property has an owner.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyInternal_getVisibleUnresolved()}.
      */

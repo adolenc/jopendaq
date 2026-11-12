@@ -14,8 +14,33 @@ public final class DaqInspectable {
 
     private DaqInspectable() {}
 
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqInspectable_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_getInterfaceIds =
+        Ffi.downcallOrNull("daqInspectable_getInterfaceIds", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getRuntimeClassName =
         Ffi.downcallOrNull("daqInspectable_getRuntimeClassName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+
+    /** Calls {@code daqInspectable_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqInspectable_getInterfaceId").invokeExact(Ffi.orNull(intfId));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Result of {@link #getInterfaceIds}. */
+    public record GetInterfaceIdsResult(long idCount, MemorySegment ids) {}
+
+    /** Retrieves the Ids of interfaces this object implements.  Calls {@code daqInspectable_getInterfaceIds()}. */
+    public static GetInterfaceIdsResult getInterfaceIds(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment idCountSlot = arena.allocate(JAVA_LONG);
+            MemorySegment idsSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getInterfaceIds, "daqInspectable_getInterfaceIds").invokeExact(Ffi.orNull(self), idCountSlot, idsSlot);
+            Ffi.checkError(err, "daqInspectable_getInterfaceIds");
+            return new GetInterfaceIdsResult(idCountSlot.get(JAVA_LONG, 0), idsSlot.get(ADDRESS, 0));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
 
     /** Calls {@code daqInspectable_getRuntimeClassName()}. */
     public static MemorySegment getRuntimeClassName(MemorySegment self) {

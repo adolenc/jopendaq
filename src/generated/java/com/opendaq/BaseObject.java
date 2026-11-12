@@ -22,14 +22,30 @@ public class BaseObject extends DaqObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqBaseObject_create()}.
+     * Calls the openDAQ C function {&#64;code daqBaseObject_createBaseObject()}.
      */
-    public static BaseObject create() {
-        return DaqObject.wrap(DaqBaseObject.create(), BaseObject.class);
+    public BaseObject() {
+        super(create$createBaseObject());
+    }
+
+    private static MemorySegment create$createBaseObject() {
+        return DaqBaseObject.createBaseObject();
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqBaseObject_dispose()}.
+     * Disposes all references held by the object.
+     * &#64;return OPENDAQ_SUCCESS if succeeded, error code if failed.
+     *
+     * An object that holds references to other interfaces must reset these references to null in `dispose`.
+     * This method is called automatically when the reference count drops to zero.
+     *
+     * Call this method manually to break cycle references. If two objects have reference to each other,
+     * calling `dispose` will break cycle references.
+     *
+     * After `dispose` is called, the object should not be accessed again, except by calling `releaseRef`
+     * function.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBaseObject_dispose()}.
      */
     public void dispose() {
         try {
@@ -40,7 +56,17 @@ public class BaseObject extends DaqObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqBaseObject_equals()}.
+     * Compares object to another object for equality.
+     * &#64;param other Interface to another object for comparison.
+     * &#64;param equal Value indicating if the &#64;c other is equivalent to this one.
+     *
+     * For reference objects, it compares the address of the object. For value objects, such as numbers and
+     * strings, it compares values.
+     *
+     * `ImplementationOf` which provides default implementation of `IBaseObject` uses
+     * pointer address to compare for equality.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBaseObject_equals()}.
      */
     public boolean coreEquals(Object other) {
         try {
@@ -54,7 +80,22 @@ public class BaseObject extends DaqObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqBaseObject_getHashCode()}.
+     * Returns hash code of the object.
+     * &#64;param[out] hashCode Hash code.
+     * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
+     * The object should calculate and return the hash code. For reference objects, it is usually
+     * calculated from pointer address. For value objects, such as numbers and strings, it is
+     * calculated from value.
+     *
+     * `ImplementationOf` object which provides default implementation of `IBaseObject` uses
+     * pointer address to calculate hash code.
+     *
+     * If the object calculates the hash code from some value stored in the object, it is
+     * mandatory to make this value (or the object) immutable. The hash code of the object should
+     * not change. If a dictionary stores the object as a key, it will corrupt the hash table.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBaseObject_getHashCode()}.
      */
     public long getHashCode() {
         try {
@@ -65,7 +106,18 @@ public class BaseObject extends DaqObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqBaseObject_toString()}.
+     * Returns a string representation of the object.
+     * &#64;param[out] str String representation of the object.
+     * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
+     * Call this method to convert the object to its string representation.
+     *
+     * `ImplementationOf` object which provides default implementation of `IBaseObject` uses
+     * pointer address for string representation.
+     *
+     * Return value `str` should be de-allocated by the caller using `daqFreeMemory` function.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBaseObject_toString()}.
      */
     public MemorySegment coreToString() {
         try {

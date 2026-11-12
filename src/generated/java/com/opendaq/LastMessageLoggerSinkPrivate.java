@@ -38,7 +38,8 @@ public class LastMessageLoggerSinkPrivate extends BaseObject {
     /**
      * Wait for receiving a new log message
      * &#64;param timeoutMs The timeout in milliseconds until which wait for a new log message. If timeout set as 0 ms waiting will be skipped.
-     * &#64;param[out] success The success will return true if there was a new unread log message before waiting or sink got a new logger message before timeout. False if timeout was reached.
+     * &#64;param[out] success The success will return true if there was a new unread log message before waiting
+     * or sink got a new logger message before timeout. False if timeout was reached.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqLastMessageLoggerSinkPrivate_waitForMessage()}.
      */

@@ -15,10 +15,12 @@ import com.opendaq.lowlevel.*;
  * Represents int number as `IInteger` interface. Use this interface to wrap integer
  * variable when you need to add the number to lists, dictionaries and other containers which
  * accept `IBaseObject` and derived interfaces.
+ *
  * Available factories:
  * &#64;code
  * // Creates a new Integer. Throws exception if not successful.
  * IInteger* Integer_Create(Int value)
+ *
  * // Creates a new IntObject. Returns error code if not successful.
  * ErrCode createInteger(IInteger** obj, Int value)
  * &#64;endcode
@@ -44,9 +46,21 @@ public class IntegerObject extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqInteger_createIntegerFromPool()}.
+     */
+    public static IntegerObject createIntegerFromPool(long value) {
+        return DaqObject.wrap(create$createIntegerFromPool(value), IntegerObject.class);
+    }
+
+    private static MemorySegment create$createIntegerFromPool(long value) {
+        return DaqInteger.createIntegerFromPool(value);
+    }
+
+    /**
      * Compares stored int value to the int parameter.
      * &#64;param value Value for comparison.
      * &#64;param[out] equals The result of the comparison.
+     *
      * Call this method to directly compare the object to the value parameter.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInteger_equalsValue()}.
@@ -62,6 +76,7 @@ public class IntegerObject extends BaseObject {
     /**
      * Gets an int value stored in the object.
      * &#64;param[out] value Stored int value.
+     *
      * Call this method to extract the int value that is stored in the object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqInteger_getValue()}.

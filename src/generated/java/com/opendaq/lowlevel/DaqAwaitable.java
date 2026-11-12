@@ -42,7 +42,7 @@ public final class DaqAwaitable {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Waits until the awaitable has a valid result and retrieves it or re-throws the exception that occurred during the execution.  Calls {@code daqAwaitable_getResult()}. */
+    /** Waits until the awaitable has a valid result and retrieves it or  Calls {@code daqAwaitable_getResult()}. */
     public static MemorySegment getResult(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment resultSlot = arena.allocate(ADDRESS);

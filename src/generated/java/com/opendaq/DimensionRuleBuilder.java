@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Configuration component of Dimension rule objects. Contains setter methods that allow for Dimension rule parameter configuration, and a `build` method that builds the Dimension rule.
+ * Configuration component of Dimension rule objects. Contains setter methods that allow for Dimension rule
+ * parameter configuration, and a `build` method that builds the Dimension rule.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDimensionRuleBuilder} interface.
  */
@@ -159,6 +160,7 @@ public class DimensionRuleBuilder extends BaseObject {
     /**
      * Sets the type of the dimension rule. Rule parameters must be configured to match the requirements of the rule type.
      * &#64;param type The type of the dimension rule.
+     *
      * The required rule parameters are as follows:
      * - Linear: `delta`, `start`, and `size` number parameters. Calculated as: &lt;em&gt;index * delta + start&lt;/em&gt; for `size` number of elements.
      * - Logarithmic: `delta`, `start`, `base`, and `size` number parameters. Calculated as: &lt;em&gt;base ^ (index * delta + start)&lt;/em&gt; for `size` number of elements.

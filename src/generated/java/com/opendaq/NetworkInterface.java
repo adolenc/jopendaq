@@ -12,8 +12,12 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Provides an interface to manipulate the configuration of a device's (server's) network interface. Offers methods to update the IP configuration and retrieve the currently active one, if the corresponding feature supported by the device. Additionally, includes a helper method to create a prebuilt property object with valid default configuration.
+ * Provides an interface to manipulate the configuration of a device's (server's) network interface.
+ * Offers methods to update the IP configuration and retrieve the currently active one, if the corresponding feature
+ * supported by the device. Additionally, includes a helper method to create a prebuilt property object with valid default configuration.
+ *
  * The configuration property object, passed as a parameter to said methods, should include the following properties:
+ *
  * - **"dhcp4"**: A boolean property indicating whether DHCP is enabled for IPv4. Defaults to `True` (DHCP enabled).
  * If set to `False` (DHCP disabled), non-empty static configuration properties are required.
  * - **"address4"**: A string property specifying the statically assigned IPv4 address in the format `address/netmask` (e.g. 192.168.1.2/24).
@@ -56,6 +60,7 @@ public class NetworkInterface extends BaseObject {
     /**
      * Creates a property object containing default configuration values for a network interface.
      * &#64;param[out] defaultConfig The configuration object containing default settings for configuring device's network interface.
+     *
      * The created object can be modified or directly submitted using the `submitConfiguration` method.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqNetworkInterface_createDefaultConfiguration()}.
@@ -87,6 +92,7 @@ public class NetworkInterface extends BaseObject {
      * Submits a new configuration for the network interface.
      * &#64;param config The new configuration to apply.
      * &#64;retval OPENDAQ_SUCCESS if the new configuration is applied successfully; otherwise, returns an informative error code.
+     *
      * The provided configuration must adhere to the required properties, including "dhcp4", "address4", "gateway4", and their IPv6 equivalents,
      * as described in the class-level documentation.
      *

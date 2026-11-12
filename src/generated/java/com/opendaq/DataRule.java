@@ -12,17 +12,23 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Rule that defines how a signal value is calculated from an implicit initialization value when the rule type is not `Explicit`.
+ * Rule that defines how a signal value is calculated from an implicit initialization
+ * value when the rule type is not `Explicit`.
+ *
  * Data rule objects implement the Struct methods internally and are Core type `ctStruct`.
  * &#64;subsection data_rule_explicit Explicit rule
  * When the rule type of the Data rule is set to `Explicit`, the values passed through the signal path, described by
  * the Value descriptor are stored in packet buffers.
+ *
  * The Explicit rule can have 2 optional parameters:
+ *
  * - `minExpectedDelta`: Specifies the minimum difference in value between two subsequent samples
  * - `maxExpectedDelta`: Specifies the maximum difference in value between two subsequent samples
+ *
  * These are mostly used for domain signals to specify the expected rate of a signal, or the expected timeout of a signal.
  * The delta parameters should be configured to match the deltas in terms of the raw signal values (before scaling/resolution
  * are applied).
+ *
  * An explicit rule must have either both or none of these parameters. To use only one, the other must be set to 0.
  * &#64;subsection data_rule_implicit Implicit rule
  * When the rule type of the Data rule is not `Explicit`, the buffers of packets are empty. The values must instead be
@@ -110,6 +116,7 @@ public class DataRule extends BaseObject {
      * Creates a DataRule with an Explicit rule type configuration two optional parameters.
      * &#64;param minExpectedDelta The lowest expected distance between two samples.
      * &#64;param maxExpectedDelta The highest expected distance between two samples.
+     *
      * Most often used for domain signals to specify estimates on how close together/far apart two
      * subsequent samples might be.
      *
@@ -133,6 +140,7 @@ public class DataRule extends BaseObject {
      * Creates a DataRule with a Linear rule type configuration.
      * &#64;param delta Coefficient by which the input data is to be multiplied.
      * &#64;param start Constant that is added to the &lt;em&gt;scale * value&lt;/em&gt; multiplication result.
+     *
      * The scale and offset are stored within the `parameters` member of the Rule object
      * with the scale being at the first position of the list, and the offset at the second.
      *

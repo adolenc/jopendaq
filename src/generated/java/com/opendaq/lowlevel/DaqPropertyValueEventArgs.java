@@ -17,6 +17,8 @@ public final class DaqPropertyValueEventArgs {
 
     private static final MethodHandle MH_createPropertyValueEventArgs =
         Ffi.downcallOrNull("daqPropertyValueEventArgs_createPropertyValueEventArgs", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS, JAVA_INT, JAVA_BYTE));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqPropertyValueEventArgs_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_getIsUpdating =
         Ffi.downcallOrNull("daqPropertyValueEventArgs_getIsUpdating", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getOldValue =
@@ -37,6 +39,13 @@ public final class DaqPropertyValueEventArgs {
             int err = (int) Ffi.require(MH_createPropertyValueEventArgs, "daqPropertyValueEventArgs_createPropertyValueEventArgs").invokeExact(objSlot, Ffi.orNull(prop), Ffi.orNull(value), Ffi.orNull(oldValue), type.value(), (byte) (isUpdating ? 1 : 0));
             Ffi.checkError(err, "daqPropertyValueEventArgs_createPropertyValueEventArgs");
             return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqPropertyValueEventArgs_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqPropertyValueEventArgs_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

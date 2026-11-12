@@ -64,7 +64,7 @@ public final class DaqDataRuleBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Data rule copy factory that creates a configurable Data rule builder object from a possibly non-configurable Data rule.  Calls {@code daqDataRuleBuilder_createDataRuleBuilderFromExisting()}. */
+    /** Data rule copy factory that creates a configurable Data rule builder object from a  Calls {@code daqDataRuleBuilder_createDataRuleBuilderFromExisting()}. */
     public static MemorySegment createDataRuleBuilderFromExisting(MemorySegment ruleToCopy) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);

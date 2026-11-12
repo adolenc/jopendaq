@@ -24,8 +24,10 @@ public class ContextInternal extends BaseObject {
     }
 
     /**
-     * Gets the Module Manager. Moves the strong reference to the manager to the first caller and retains a weak reference internally.
+     * Gets the Module Manager. Moves the strong reference to the manager to the first
+     * caller and retains a weak reference internally.
      * &#64;param[out] manager The module manager.
+     *
      * Returns a nullptr on subsequent invocations, and if the manager is not assigned.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqContextInternal_moveModuleManager()}.
@@ -33,6 +35,23 @@ public class ContextInternal extends BaseObject {
     public ModuleManager moveModuleManager() {
         try {
             return DaqObject.wrap(DaqContextInternal.moveModuleManager(requireLivePointer()), ModuleManager.class);
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Sets the root device of the openDAQ instance.
+     * &#64;param device The root device.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqContextInternal_setRootDevice()}.
+     */
+    public void setRootDevice(Object device) {
+        try {
+            Box.Boxed device$b = Box.box(device);
+            try {
+                DaqContextInternal.setRootDevice(requireLivePointer(), device$b.segment());
+            } finally { Box.releaseBoxed(device$b); }
         } finally {
             Reference.reachabilityFence(this);
         }

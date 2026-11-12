@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_server_capability
- * &#64;addtogroup opendaq_connected_client_info Connected client info
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqConnectedClientInfo} interface.
+ * Wraps the openDAQ {&#64;code daqConnectedClientInfo} interface.
  */
 public class ConnectedClientInfo extends PropertyObject {
 

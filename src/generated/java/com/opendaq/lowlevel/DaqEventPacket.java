@@ -74,7 +74,7 @@ public final class DaqEventPacket {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Dictionary containing parameters as &lt;String, BaseObject&gt; pairs relevant to the event signalized by the Event packet.  Calls {@code daqEventPacket_getParameters()}. */
+    /** Dictionary containing parameters as &lt;String, BaseObject&gt; pairs relevant to the event  Calls {@code daqEventPacket_getParameters()}. */
     public static MemorySegment getParameters(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment parametersSlot = arena.allocate(ADDRESS);

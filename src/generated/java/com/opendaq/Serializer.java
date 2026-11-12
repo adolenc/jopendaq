@@ -33,6 +33,17 @@ public class Serializer extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqSerializer_createJsonSerializerWithVersion()}.
+     */
+    public static Serializer createJsonSerializerWithVersion(long version, boolean pretty) {
+        return DaqObject.wrap(create$createJsonSerializerWithVersion(version, pretty), Serializer.class);
+    }
+
+    private static MemorySegment create$createJsonSerializerWithVersion(long version, boolean pretty) {
+        return DaqSerializer.createJsonSerializerWithVersion(version, pretty);
+    }
+
+    /**
      * Calls the openDAQ C function {&#64;code daqSerializer_endList()}.
      */
     public void endList() {

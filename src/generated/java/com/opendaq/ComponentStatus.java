@@ -2,15 +2,15 @@
 
 package com.opendaq;
 
-/** The openDAQ {@code daqUsesOffset} enumeration. */
-public enum UsesOffset {
-    UNKNOWN(0),
-    TRUE(1),
-    FALSE(2);
+/** The openDAQ {@code daqComponentStatus} enumeration. */
+public enum ComponentStatus {
+    OK(0),
+    WARNING(1),
+    ERROR(2);
 
     private final int value;
 
-    UsesOffset(int value) {
+    ComponentStatus(int value) {
         this.value = value;
     }
 
@@ -20,10 +20,10 @@ public enum UsesOffset {
     }
 
     /** The constant for a raw C enum value (first match on duplicates). */
-    public static UsesOffset fromValue(int value) {
-        for (UsesOffset entry : values()) {
+    public static ComponentStatus fromValue(int value) {
+        for (ComponentStatus entry : values()) {
             if (entry.value == value) return entry;
         }
-        throw new IllegalArgumentException("Unknown UsesOffset value: " + value);
+        throw new IllegalArgumentException("Unknown ComponentStatus value: " + value);
     }
 }

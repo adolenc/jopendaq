@@ -65,7 +65,7 @@ public final class DaqReaderStatus {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Retrieves the current reading status, indicating whether the reading process is in an "Ok" state, has encountered an Event, has failed, or is in an Unknown state.  Calls {@code daqReaderStatus_getReadStatus()}. */
+    /** Retrieves the current reading status, indicating whether the reading process is in an "Ok" state,  Calls {@code daqReaderStatus_getReadStatus()}. */
     public static ReadStatus getReadStatus(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment statusSlot = arena.allocate(JAVA_INT);

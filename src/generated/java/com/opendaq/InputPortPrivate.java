@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Internal functions used by openDAQ core. This interface should never be used in client SDK or module code.
+ * Internal functions used by openDAQ core. This interface should never be used in
+ * client SDK or module code.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqInputPortPrivate} interface.
  */
@@ -26,6 +27,7 @@ public class InputPortPrivate extends BaseObject {
     /**
      * Connects the signal to the input port, forming a Connection.
      * &#64;param signal The signal to be connected to the input port.
+     *
      * On connect, an event packet is enqueued in the connection. This method schedules the
      * `onPacketReceived` notification instead of invoking it on the same thread.
      *

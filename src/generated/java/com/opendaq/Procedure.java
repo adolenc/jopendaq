@@ -12,7 +12,25 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqProcedure} interface.
+ * Holds a callback function without return value.
+ *
+ * Represents a callable object without return value. The openDAQ SDK uses this interface when
+ * it needs to make a call back to the client.
+ *
+ * Although the implementation of this interface is provided by openDAQ, C++ and other
+ * bindings provide their implementation which allows passing function as a lambda
+ * functions and other constructs.
+ *
+ * Available factories:
+ * &#64;code
+ * // Creates a new Procedure object. Throws exception if not successful.
+ * IFunction* Procedure_Create(ProcCall value)
+ *
+ * // Creates a new Procedure object. Returns error code if not successful.
+ * ErrCode createProcedure(IFuncObject** obj, ProcCall value)
+ * &#64;endcode
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqProcedure} interface.
  */
 public class Procedure extends BaseObject {
 
@@ -33,7 +51,32 @@ public class Procedure extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqProcedure_dispatch()}.
+     * Creates a procedure that calls a C function with data of the caller's own.
+     * &#64;param call The function to call with the arguments, and userData.
+     * &#64;param userData Passed to every call; owned by the created object.
+     * &#64;param freeUserData Called with userData once the object is destroyed, or if creating it fails; may be null.
+     *
+     * Provided by the C bindings, so that a callback can carry state.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProcedure_createProcedureWithData()}.
+     */
+    public static Procedure createProcedureWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqObject.wrap(create$createProcedureWithData(call, userData, freeUserData), Procedure.class);
+    }
+
+    private static MemorySegment create$createProcedureWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqProcedure.createProcedureWithData(Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+    }
+
+    /**
+     * Calls the stored callback.
+     * &#64;param params Parameters passed to the callback.
+     *
+     * If the callback expects no parameters, the `params` parameter has to be `nullptr`. If it
+     * expects a single parameter, pass any openDAQ object as the `params` parameter.
+     * If it expects multiple parameters, pass an IList&lt;IBaseObject&gt; as the `params` parameter.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqProcedure_dispatch()}.
      */
     public void dispatch(Object params) {
         try {
@@ -56,7 +99,7 @@ public class Procedure extends BaseObject {
      * code (a proc property's value, ...).
      */
     public Procedure(ProcedureCallback callback) {
-        super(DaqProcedure.createProcedure(Callbacks.procedureStub(callback)));
+        super(Callbacks.createProcedure(callback));
     }
 
     // Declared argument count from the owning property's callable info (set

@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_utility
- * &#64;defgroup types_updatable Updatable
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqComponentUpdateContext} interface.
+ * Wraps the openDAQ {&#64;code daqComponentUpdateContext} interface.
  */
 public class ComponentUpdateContext extends BaseObject {
 
@@ -28,6 +25,7 @@ public class ComponentUpdateContext extends BaseObject {
      * Adds a device remapping from the original device's local ID to the new device local ID.
      * &#64;param originalDeviceId The local ID of the original device to be remapped.
      * &#64;param newDeviceId The local ID of the new device to be used for remapping.
+     *
      * Used to remap signal -&gt; input port connections to the remapped device when loading.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentUpdateContext_addDeviceRemapping()}.
@@ -160,6 +158,7 @@ public class ComponentUpdateContext extends BaseObject {
 
     /**
      * Internal method that uses the device mapping to remap the input port connections.
+     *
      * Should be called after the initial update, but before `onUpdatableUpdateEnd`.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentUpdateContext_remapInputPortConnections()}.
@@ -215,19 +214,21 @@ public class ComponentUpdateContext extends BaseObject {
     }
 
     /**
-     * Sets the root component of the current component. Iterates through the parent components until the root is found and sets it as the root component for the context.
+     * Sets the root component of the current component. Iterates through the parent components until the root is found and sets it
+     * as the root component for the context.
      * &#64;param baseComponent The base component from which we iterate to the openDAQ root.
+     *
      * This method shortcuts the need for callers to provide the openDAQ root device as the component, by automatically iterating
      * to the root component from any component in the hierarchy.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponentUpdateContext_setRootComponent()}.
      */
-    public void setRootComponent(Component rootComponent) {
+    public void setRootComponent(Component baseComponent) {
         try {
-            DaqComponentUpdateContext.setRootComponent(requireLivePointer(), (rootComponent == null ? MemorySegment.NULL : rootComponent.requireLivePointer()));
+            DaqComponentUpdateContext.setRootComponent(requireLivePointer(), (baseComponent == null ? MemorySegment.NULL : baseComponent.requireLivePointer()));
         } finally {
             Reference.reachabilityFence(this);
-            Reference.reachabilityFence(rootComponent);
+            Reference.reachabilityFence(baseComponent);
         }
     }
 

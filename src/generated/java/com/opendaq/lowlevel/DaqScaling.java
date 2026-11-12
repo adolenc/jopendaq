@@ -34,7 +34,7 @@ public final class DaqScaling {
     private static final MethodHandle MH_getType =
         Ffi.downcallOrNull("daqScaling_getType", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Creates a Scaling with a Linear scaling type configuration. The returned Scaling object is already frozen.  Calls {@code daqScaling_createLinearScaling()}. */
+    /** Creates a Scaling with a Linear scaling type configuration.  Calls {@code daqScaling_createLinearScaling()}. */
     public static MemorySegment createLinearScaling(MemorySegment scale, MemorySegment offset, SampleType inputDataType, ScaledSampleType outputDataType) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -101,7 +101,7 @@ public final class DaqScaling {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.  Calls {@code daqScaling_getType()}. */
+    /** Gets the type of the scaling that determines how the scaling parameters should be interpreted  Calls {@code daqScaling_getType()}. */
     public static ScalingType getType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(JAVA_INT);

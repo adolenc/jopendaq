@@ -69,7 +69,7 @@ public final class DaqArgumentInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the item type of list/dict-type Argument Info objects. The item type specifies the type of values in the list or dictionary arguments.  Calls {@code daqArgumentInfo_getItemType()}. */
+    /** Gets the item type of list/dict-type Argument Info objects. The item type specifies the  Calls {@code daqArgumentInfo_getItemType()}. */
     public static CoreType getItemType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment itemTypeSlot = arena.allocate(JAVA_INT);
@@ -79,7 +79,7 @@ public final class DaqArgumentInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the key type of dict-type Argument Info objects. The item type specifies the type of keys in dictionary arguments.  Calls {@code daqArgumentInfo_getKeyType()}. */
+    /** Gets the key type of dict-type Argument Info objects. The item type specifies the type of  Calls {@code daqArgumentInfo_getKeyType()}. */
     public static CoreType getKeyType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment keyTypeSlot = arena.allocate(JAVA_INT);

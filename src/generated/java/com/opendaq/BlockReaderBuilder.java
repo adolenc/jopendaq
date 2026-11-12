@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Block reader objects. Contains setter methods to configure the Block reader parameters and a `build` method that builds the Unit object.
+ * Builder component of Block reader objects. Contains setter methods to configure the Block reader parameters
+ * and a `build` method that builds the Unit object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqBlockReaderBuilder} interface.
  */

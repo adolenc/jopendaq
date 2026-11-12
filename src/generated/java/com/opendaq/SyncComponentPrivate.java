@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Interface representing a Synchronization Component in a Test &amp; Measurement system. A SynchronizationComponent ensures synchronization among measurement devices in the system. It can act as a sync source and/or as a sync output, with each component having one sync input and 0 to n sync outputs.
+ * Interface representing a Synchronization Component in a Test &amp; Measurement system.
+ * A SynchronizationComponent ensures synchronization among measurement devices in the system.
+ * It can act as a sync source and/or as a sync output, with each component having one sync input
+ * and 0 to n sync outputs.
+ *
  * SynchronizationComponents are configured via interfaces, which can include PTP, IRIQ, GPS,
  * and CLK sync interfaces, among others.
  * &#64;note Every SynchronizationComponent has at least one interface. Only one interface can be set

@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Describes a range of values between the `lowValue` and `highValue` boundaries.
+ *
  * Range objects implement the Struct methods internally and are Core type `ctStruct`.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqRange} interface.

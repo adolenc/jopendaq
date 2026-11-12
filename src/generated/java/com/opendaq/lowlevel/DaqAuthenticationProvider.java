@@ -33,7 +33,7 @@ public final class DaqAuthenticationProvider {
     private static final MethodHandle MH_isAnonymousAllowed =
         Ffi.downcallOrNull("daqAuthenticationProvider_isAnonymousAllowed", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Authenticate user using username and password. If authentication is successful, a User instance is returned. Otherwise an exception is thrown.  Calls {@code daqAuthenticationProvider_authenticate()}. */
+    /** Authenticate user using username and password. If authentication is successful, a User instance is returned.  Calls {@code daqAuthenticationProvider_authenticate()}. */
     public static MemorySegment authenticate(MemorySegment self, MemorySegment username, MemorySegment password) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment userOutSlot = arena.allocate(ADDRESS);
@@ -110,7 +110,7 @@ public final class DaqAuthenticationProvider {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Returns true if anonymous authentication is allowed. When anonymous authentication is enabled, user can connect to the server without providing username or password.  Calls {@code daqAuthenticationProvider_isAnonymousAllowed()}. */
+    /** Returns true if anonymous authentication is allowed. When anonymous authentication is enabled, user can connect  Calls {@code daqAuthenticationProvider_isAnonymousAllowed()}. */
     public static boolean isAnonymousAllowed(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment allowedOutSlot = arena.allocate(JAVA_BYTE);

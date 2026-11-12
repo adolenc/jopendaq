@@ -14,34 +14,22 @@ public final class DaqBaseObject {
 
     private DaqBaseObject() {}
 
-    private static final MethodHandle MH_addRef =
-        Ffi.downcallOrNull("daqBaseObject_addRef", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_borrowInterface =
         Ffi.downcallOrNull("daqBaseObject_borrowInterface", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID, ADDRESS));
-    private static final MethodHandle MH_create =
-        Ffi.downcallOrNull("daqBaseObject_create", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_createBaseObject =
+        Ffi.downcallOrNull("daqBaseObject_createBaseObject", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_dispose =
         Ffi.downcallOrNull("daqBaseObject_dispose", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_equals =
         Ffi.downcallOrNull("daqBaseObject_equals", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getHashCode =
         Ffi.downcallOrNull("daqBaseObject_getHashCode", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
-    private static final MethodHandle MH_queryInterface =
-        Ffi.downcallOrNull("daqBaseObject_queryInterface", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID, ADDRESS));
-    private static final MethodHandle MH_releaseRef =
-        Ffi.downcallOrNull("daqBaseObject_releaseRef", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqBaseObject_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_toString =
         Ffi.downcallOrNull("daqBaseObject_toString", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Calls {@code daqBaseObject_addRef()}. */
-    public static int addRef(MemorySegment self) {
-        try {
-            int result = (int) Ffi.require(MH_addRef, "daqBaseObject_addRef").invokeExact(Ffi.orNull(self));
-            return result;
-        } catch (Throwable t) { throw Ffi.rethrow(t); }
-    }
-
-    /** Calls {@code daqBaseObject_borrowInterface()}. */
+    /** Returns another interface which is supported by the object without incrementing the reference count.  Calls {@code daqBaseObject_borrowInterface()}. */
     public static MemorySegment borrowInterface(MemorySegment self, MemorySegment intfId) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment interfacePtrSlot = arena.allocate(ADDRESS);
@@ -51,17 +39,17 @@ public final class DaqBaseObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_create()}. */
-    public static MemorySegment create() {
+    /** Calls {@code daqBaseObject_createBaseObject()}. */
+    public static MemorySegment createBaseObject() {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment baseObjectSlot = arena.allocate(ADDRESS);
-            int err = (int) Ffi.require(MH_create, "daqBaseObject_create").invokeExact(baseObjectSlot);
-            Ffi.checkError(err, "daqBaseObject_create");
-            return baseObjectSlot.get(ADDRESS, 0);
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createBaseObject, "daqBaseObject_createBaseObject").invokeExact(objSlot);
+            Ffi.checkError(err, "daqBaseObject_createBaseObject");
+            return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_dispose()}. */
+    /** Disposes all references held by the object.  Calls {@code daqBaseObject_dispose()}. */
     public static void dispose(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_dispose, "daqBaseObject_dispose").invokeExact(Ffi.orNull(self));
@@ -69,7 +57,7 @@ public final class DaqBaseObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_equals()}. */
+    /** Compares object to another object for equality.  Calls {@code daqBaseObject_equals()}. */
     public static boolean equals(MemorySegment self, MemorySegment other) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment equalSlot = arena.allocate(JAVA_BYTE);
@@ -79,7 +67,7 @@ public final class DaqBaseObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_getHashCode()}. */
+    /** Returns hash code of the object.  Calls {@code daqBaseObject_getHashCode()}. */
     public static long getHashCode(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment hashCodeSlot = arena.allocate(JAVA_LONG);
@@ -89,25 +77,14 @@ public final class DaqBaseObject {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_queryInterface()}. */
-    public static MemorySegment queryInterface(MemorySegment self, MemorySegment intfId) {
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment interfacePtrSlot = arena.allocate(ADDRESS);
-            int err = (int) Ffi.require(MH_queryInterface, "daqBaseObject_queryInterface").invokeExact(Ffi.orNull(self), Ffi.orNull(intfId), interfacePtrSlot);
-            Ffi.checkError(err, "daqBaseObject_queryInterface");
-            return interfacePtrSlot.get(ADDRESS, 0);
-        } catch (Throwable t) { throw Ffi.rethrow(t); }
-    }
-
-    /** Calls {@code daqBaseObject_releaseRef()}. */
-    public static int releaseRef(MemorySegment self) {
+    /** Calls {@code daqBaseObject_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
         try {
-            int result = (int) Ffi.require(MH_releaseRef, "daqBaseObject_releaseRef").invokeExact(Ffi.orNull(self));
-            return result;
+            Ffi.require(MH_getInterfaceId, "daqBaseObject_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqBaseObject_toString()}. */
+    /** Returns a string representation of the object.  Calls {@code daqBaseObject_toString()}. */
     public static MemorySegment toString(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment strSlot = arena.allocate(ADDRESS);

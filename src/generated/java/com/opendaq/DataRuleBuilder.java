@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Configuration component of Data rule objects. Contains setter methods that allow for Data rule parameter configuration, and a `build` method that builds the Data rule.
+ * Configuration component of Data rule objects. Contains setter methods that allow for Data rule
+ * parameter configuration, and a `build` method that builds the Data rule.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDataRuleBuilder} interface.
  */
@@ -37,7 +38,8 @@ public class DataRuleBuilder extends BaseObject {
     }
 
     /**
-     * Data rule copy factory that creates a configurable Data rule builder object from a possibly non-configurable Data rule.
+     * Data rule copy factory that creates a configurable Data rule builder object from a
+     * possibly non-configurable Data rule.
      * &#64;param ruleToCopy The rule of which configuration should be copied.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDataRuleBuilder_createDataRuleBuilderFromExisting()}.

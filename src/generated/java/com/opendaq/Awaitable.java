@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_scheduler_components
- * &#64;addtogroup opendaq_awaitable Awaitable
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqAwaitable} interface.
+ * Wraps the openDAQ {&#64;code daqAwaitable} interface.
  */
 public class Awaitable extends BaseObject {
 
@@ -26,7 +23,8 @@ public class Awaitable extends BaseObject {
 
     /**
      * Cancels the outstanding work if it has not already started.
-     * &#64;param[out] canceled Is &#64;c true if the execution was canceled or &#64;c false if the execution has already completed
+     * &#64;param[out] canceled Is &#64;c true if the execution was canceled
+     * or &#64;c false if the execution has already completed
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAwaitable_cancel()}.
      */
@@ -39,7 +37,8 @@ public class Awaitable extends BaseObject {
     }
 
     /**
-     * Waits until the awaitable has a valid result and retrieves it or re-throws the exception that occurred during the execution.
+     * Waits until the awaitable has a valid result and retrieves it or
+     * re-throws the exception that occurred during the execution.
      * &#64;param[out] result The execution result if any otherwise &#64;c nullptr.
      * &#64;retval OPENDAQ_ERR_EMPTY_AWAITABLE when there is no work associated with the awaitable.
      *
@@ -55,7 +54,8 @@ public class Awaitable extends BaseObject {
 
     /**
      * Checks if the execution has already finished.
-     * &#64;param[out] completed Is &#64;c true if the execution has finished or &#64;c false if the execution is in progress or there is no work associated
+     * &#64;param[out] completed Is &#64;c true if the execution has finished
+     * or &#64;c false if the execution is in progress or there is no work associated
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqAwaitable_hasCompleted()}.
      */

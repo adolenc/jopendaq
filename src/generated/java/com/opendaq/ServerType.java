@@ -28,7 +28,8 @@ public class ServerType extends ComponentType {
      * &#64;param id The unique type ID of the server.
      * &#64;param name The name of the server type.
      * &#64;param description A short description of the server type.
-     * &#64;param defaultConfig The property object, to be cloned and returned, each time user creates default configuration object. This way each instance of the server has its own configuration object.
+     * &#64;param defaultConfig The property object, to be cloned and returned, each time user creates default
+     * configuration object. This way each instance of the server has its own configuration object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServerType_createServerType()}.
      */

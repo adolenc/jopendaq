@@ -13,9 +13,11 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Used by openDAQ properties to validate whether a value fits the value restrictions of the Property.
+ *
  * Whenever a value is set to on a Property object, if the corresponding Property has a validator configured, the value will
  * be validated, throwing a validation error, if the value is not compliant with the validation restrictions. For example,
  * a validator can check the written value for lower-than, greater-than, equality, or other number relations.
+ *
  * The validation conditions are configured with an evaluation string when the validator is constructed. The string constructs an
  * Eval value that replaces any instance of the keyword "value" or "val" with the value being set. The result of the Eval
  * value evaluation is the output of the `validate` function call. For example, validators created with the string

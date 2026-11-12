@@ -104,7 +104,7 @@ public final class DaqMirroredSignalPrivate {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Handles event packet e.g. packet with changes of the signals descriptors or signal properties  Calls {@code daqMirroredSignalPrivate_triggerEvent()}. */
+    /** Handles event packet e.g. packet with changes of the signals descriptors or  Calls {@code daqMirroredSignalPrivate_triggerEvent()}. */
     public static boolean triggerEvent(MemorySegment self, MemorySegment eventPacket) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment forwardSlot = arena.allocate(JAVA_BYTE);

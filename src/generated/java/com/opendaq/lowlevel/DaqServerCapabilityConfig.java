@@ -35,10 +35,14 @@ public final class DaqServerCapabilityConfig {
         Ffi.downcallOrNull("daqServerCapabilityConfig_setPort", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setPrefix =
         Ffi.downcallOrNull("daqServerCapabilityConfig_setPrefix", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setProtocolGroupId =
+        Ffi.downcallOrNull("daqServerCapabilityConfig_setProtocolGroupId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setProtocolId =
         Ffi.downcallOrNull("daqServerCapabilityConfig_setProtocolId", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setProtocolName =
         Ffi.downcallOrNull("daqServerCapabilityConfig_setProtocolName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_setProtocolSecurityLevel =
+        Ffi.downcallOrNull("daqServerCapabilityConfig_setProtocolSecurityLevel", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_setProtocolType =
         Ffi.downcallOrNull("daqServerCapabilityConfig_setProtocolType", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT));
     private static final MethodHandle MH_setProtocolVersion =
@@ -125,6 +129,14 @@ public final class DaqServerCapabilityConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Sets the ID of protocol group. Empty protocol group ID means that the protocol is not part of any group.  Calls {@code daqServerCapabilityConfig_setProtocolGroupId()}. */
+    public static void setProtocolGroupId(MemorySegment self, MemorySegment protocolGroupId) {
+        try {
+            int err = (int) Ffi.require(MH_setProtocolGroupId, "daqServerCapabilityConfig_setProtocolGroupId").invokeExact(Ffi.orNull(self), Ffi.orNull(protocolGroupId));
+            Ffi.checkError(err, "daqServerCapabilityConfig_setProtocolGroupId");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Sets the ID of protocol  Calls {@code daqServerCapabilityConfig_setProtocolId()}. */
     public static void setProtocolId(MemorySegment self, MemorySegment protocolId) {
         try {
@@ -138,6 +150,14 @@ public final class DaqServerCapabilityConfig {
         try {
             int err = (int) Ffi.require(MH_setProtocolName, "daqServerCapabilityConfig_setProtocolName").invokeExact(Ffi.orNull(self), Ffi.orNull(protocolName));
             Ffi.checkError(err, "daqServerCapabilityConfig_setProtocolName");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Sets the security level of the protocol.  Calls {@code daqServerCapabilityConfig_setProtocolSecurityLevel()}. */
+    public static void setProtocolSecurityLevel(MemorySegment self, MemorySegment securityLevel) {
+        try {
+            int err = (int) Ffi.require(MH_setProtocolSecurityLevel, "daqServerCapabilityConfig_setProtocolSecurityLevel").invokeExact(Ffi.orNull(self), Ffi.orNull(securityLevel));
+            Ffi.checkError(err, "daqServerCapabilityConfig_setProtocolSecurityLevel");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

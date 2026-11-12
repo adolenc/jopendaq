@@ -17,14 +17,23 @@ public final class DaqCoreType {
 
     private static final MethodHandle MH_getCoreType =
         Ffi.downcallOrNull("daqCoreType_getCoreType", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqCoreType_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
 
-    /** Calls {@code daqCoreType_getCoreType()}. */
+    /** Gets the object's CoreType.  Calls {@code daqCoreType_getCoreType()}. */
     public static CoreType getCoreType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment coreTypeSlot = arena.allocate(JAVA_INT);
             int err = (int) Ffi.require(MH_getCoreType, "daqCoreType_getCoreType").invokeExact(Ffi.orNull(self), coreTypeSlot);
             Ffi.checkError(err, "daqCoreType_getCoreType");
             return CoreType.fromValue(coreTypeSlot.get(JAVA_INT, 0));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqCoreType_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqCoreType_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

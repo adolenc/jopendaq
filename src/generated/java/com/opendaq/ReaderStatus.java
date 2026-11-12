@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Represents the status of the reading process returned by the reader::read function.
+ *
  * The `IReaderStatus` class provides information about the outcome of the reading operation,
  * including the validity of the reader and the potential encounter of event packets during processing.
  * Objects of this class are typically returned as a result of the `read` function of the Readers,
@@ -74,8 +75,9 @@ public class ReaderStatus extends BaseObject {
     }
 
     /**
-     * Retrieves the current reading status, indicating whether the reading process is in an "Ok" state, has encountered an Event, has failed, or is in an Unknown state.
-     * &#64;param[out] status a ReadStatus enum variable where the current reading status will be stored.
+     * Retrieves the current reading status, indicating whether the reading process is in an "Ok" state,
+     * has encountered an Event, has failed, or is in an Unknown state.
+     * &#64;param[out] status  a ReadStatus enum variable where the current reading status will be stored.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReaderStatus_getReadStatus()}.
      */

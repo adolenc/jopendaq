@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_devices
- * &#64;addtogroup opendaq_device_info Device info internal
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqDeviceInfoInternal} interface.
+ * Wraps the openDAQ {&#64;code daqDeviceInfoInternal} interface.
  */
 public class DeviceInfoInternal extends BaseObject {
 
@@ -26,7 +23,9 @@ public class DeviceInfoInternal extends BaseObject {
 
     /**
      * Registers a newly connected client or re-registers a reconnected client.
-     * &#64;param clientNumber If provided, represents the original ordinal number of the re-registered client. If unassigned or exceeding the total number of clients ever registered (including those that were later deregistered), it is set to the incremented total count; otherwise, the client is registered under the specified number.
+     * &#64;param[in,out] clientNumber If provided, represents the original ordinal number of the re-registered client.
+     * If unassigned or exceeding the total number of clients ever registered (including those that were later deregistered),
+     * it is set to the incremented total count; otherwise, the client is registered under the specified number.
      * &#64;param clientInfo The connected client information object.
      * &#64;return OPENDAQ_ERR_ALREADYEXISTS if a client with the specified number already registered.
      *
@@ -45,6 +44,7 @@ public class DeviceInfoInternal extends BaseObject {
      * Adds a network interface to the dictionary of available interfaces.
      * &#64;param networkInterface The available interface to add.
      * &#64;param name The name of available interface to add.
+     *
      * The provided name should be unique within the device info as used as the key in the dictionary of available interfaces.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDeviceInfoInternal_addNetworkInteface()}.

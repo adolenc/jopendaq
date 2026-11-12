@@ -20,6 +20,8 @@ public final class DaqDict {
         Ffi.downcallOrNull("daqDict_createDict", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_createDictWithExpectedTypes =
         Ffi.downcallOrNull("daqDict_createDictWithExpectedTypes", FunctionDescriptor.of(JAVA_INT, ADDRESS, Ffi.INTF_ID, Ffi.INTF_ID));
+    private static final MethodHandle MH_createOwningDict =
+        Ffi.downcallOrNull("daqDict_createOwningDict", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_deleteItem =
         Ffi.downcallOrNull("daqDict_deleteItem", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_get =
@@ -67,6 +69,16 @@ public final class DaqDict {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createDictWithExpectedTypes, "daqDict_createDictWithExpectedTypes").invokeExact(objSlot, Ffi.orNull(keyType), Ffi.orNull(valueType));
             Ffi.checkError(err, "daqDict_createDictWithExpectedTypes");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqDict_createOwningDict()}. */
+    public static MemorySegment createOwningDict(MemorySegment owner, MemorySegment ref) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createOwningDict, "daqDict_createOwningDict").invokeExact(objSlot, Ffi.orNull(owner), Ffi.orNull(ref));
+            Ffi.checkError(err, "daqDict_createOwningDict");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

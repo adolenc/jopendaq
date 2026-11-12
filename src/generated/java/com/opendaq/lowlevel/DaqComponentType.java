@@ -27,7 +27,7 @@ public final class DaqComponentType {
     private static final MethodHandle MH_getName =
         Ffi.downcallOrNull("daqComponentType_getName", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** The function clones and returns default configuration. On each call, we need to create new object, because we want that each instance of the component has its own configuration object.  Calls {@code daqComponentType_createDefaultConfig()}. */
+    /** The function clones and returns default configuration. On each call, we need to create new object,  Calls {@code daqComponentType_createDefaultConfig()}. */
     public static MemorySegment createDefaultConfig(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment defaultConfigSlot = arena.allocate(ADDRESS);

@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A class which is responsible for creating a permission mask. This is a collection of Permission values which are allowed or denied for a given group id. Permission mask is defined as a 64-bit integer, where each bit corespond to a specific permission defined by Permission enum.
+ * A class which is responsible for creating a permission mask. This is a collection of Permission
+ * values which are allowed or denied for a given group id. Permission mask is defined as a 64-bit integer,
+ * where each bit corespond to a specific permission defined by Permission enum.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqPermissionMaskBuilder} interface.
  */
@@ -38,7 +40,8 @@ public class PermissionMaskBuilder extends BaseObject {
 
     /**
      * Creates a permission mask builder object from integer permission mask.
-     * &#64;param permissionMask Permission mask defined as 64-bit integer where each bit corresponds to a specific permission defined in Permission enum.
+     * &#64;param permissionMask Permission mask defined as 64-bit integer where each bit corresponds
+     * to a specific permission defined in Permission enum.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_createPermissionMaskBuilderFromMask()}.
      */
@@ -52,7 +55,8 @@ public class PermissionMaskBuilder extends BaseObject {
 
     /**
      * Build permission mask and return it as 64-bit integer.
-     * &#64;param permissionMask[out] Permission mask defined as 64-bit integer where each bit corresponds to a specific permissoin defined by Permission enum.
+     * &#64;param permissionMask[out] Permission mask defined as 64-bit integer where each bit corresponds
+     * to a specific permissoin defined by Permission enum.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPermissionMaskBuilder_build()}.
      */

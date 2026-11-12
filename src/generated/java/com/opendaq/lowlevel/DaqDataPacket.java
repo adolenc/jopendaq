@@ -14,6 +14,10 @@ public final class DaqDataPacket {
 
     private DaqDataPacket() {}
 
+    private static final MethodHandle MH_createBinaryDataPacket =
+        Ffi.downcallOrNull("daqDataPacket_createBinaryDataPacket", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG));
+    private static final MethodHandle MH_createBinaryDataPacketWithExternalMemory =
+        Ffi.downcallOrNull("daqDataPacket_createBinaryDataPacketWithExternalMemory", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createConstantDataPacketWithDomain =
         Ffi.downcallOrNull("daqDataPacket_createConstantDataPacketWithDomain", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG));
     private static final MethodHandle MH_createDataPacket =
@@ -22,6 +26,8 @@ public final class DaqDataPacket {
         Ffi.downcallOrNull("daqDataPacket_createDataPacketWithDomain", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG, ADDRESS));
     private static final MethodHandle MH_createDataPacketWithExternalMemory =
         Ffi.downcallOrNull("daqDataPacket_createDataPacketWithExternalMemory", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG, ADDRESS, ADDRESS, ADDRESS, JAVA_LONG));
+    private static final MethodHandle MH_createWrappedDataPacket =
+        Ffi.downcallOrNull("daqDataPacket_createWrappedDataPacket", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getData =
         Ffi.downcallOrNull("daqDataPacket_getData", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getDataDescriptor =
@@ -51,7 +57,27 @@ public final class DaqDataPacket {
     private static final MethodHandle MH_getValueByIndex =
         Ffi.downcallOrNull("daqDataPacket_getValueByIndex", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, JAVA_LONG, ADDRESS));
 
-    /** Creates a Data packet with a given constat rule descriptor, initial constant value, and other constant values.  Calls {@code daqDataPacket_createConstantDataPacketWithDomain()}. */
+    /** Creates a binary value packet that contains exactly one sample.  Calls {@code daqDataPacket_createBinaryDataPacket()}. */
+    public static MemorySegment createBinaryDataPacket(MemorySegment domainPacket, MemorySegment descriptor, long sampleMemSize) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createBinaryDataPacket, "daqDataPacket_createBinaryDataPacket").invokeExact(objSlot, Ffi.orNull(domainPacket), Ffi.orNull(descriptor), sampleMemSize);
+            Ffi.checkError(err, "daqDataPacket_createBinaryDataPacket");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a binary value packet with external memory and a deleter that contains exactly one sample.  Calls {@code daqDataPacket_createBinaryDataPacketWithExternalMemory()}. */
+    public static MemorySegment createBinaryDataPacketWithExternalMemory(MemorySegment domainPacket, MemorySegment descriptor, long sampleMemSize, MemorySegment data, MemorySegment deleter) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createBinaryDataPacketWithExternalMemory, "daqDataPacket_createBinaryDataPacketWithExternalMemory").invokeExact(objSlot, Ffi.orNull(domainPacket), Ffi.orNull(descriptor), sampleMemSize, Ffi.orNull(data), Ffi.orNull(deleter));
+            Ffi.checkError(err, "daqDataPacket_createBinaryDataPacketWithExternalMemory");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a Data packet with a given constat rule descriptor, initial constant value,  Calls {@code daqDataPacket_createConstantDataPacketWithDomain()}. */
     public static MemorySegment createConstantDataPacketWithDomain(MemorySegment domainPacket, MemorySegment descriptor, long sampleCount, MemorySegment initialValue, MemorySegment otherValues, long otherValueCount) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -61,7 +87,7 @@ public final class DaqDataPacket {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Data packet with a given descriptor, sample count, memory size of each sample, and an optional packet offset.  Calls {@code daqDataPacket_createDataPacket()}. */
+    /** Creates a Data packet with a given descriptor, sample count, memory size of each sample,  Calls {@code daqDataPacket_createDataPacket()}. */
     public static MemorySegment createDataPacket(MemorySegment descriptor, long sampleCount, MemorySegment offset) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -71,7 +97,7 @@ public final class DaqDataPacket {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Data packet with a given descriptor, sample count, memory size of each sample, and an optional implicit value.  Calls {@code daqDataPacket_createDataPacketWithDomain()}. */
+    /** Creates a Data packet with a given descriptor, sample count, memory size of each sample,  Calls {@code daqDataPacket_createDataPacketWithDomain()}. */
     public static MemorySegment createDataPacketWithDomain(MemorySegment domainPacket, MemorySegment descriptor, long sampleCount, MemorySegment offset) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -81,12 +107,22 @@ public final class DaqDataPacket {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Data packet with a given descriptor, sample count, an optional packet offset, external memory location for data, custom deleter function and buffer size of external memory.  Calls {@code daqDataPacket_createDataPacketWithExternalMemory()}. */
+    /** Creates a Data packet with a given descriptor, sample count, an optional packet offset,  Calls {@code daqDataPacket_createDataPacketWithExternalMemory()}. */
     public static MemorySegment createDataPacketWithExternalMemory(MemorySegment domainPacket, MemorySegment descriptor, long sampleCount, MemorySegment offset, MemorySegment externalMemory, MemorySegment deleter, long bufferSize) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createDataPacketWithExternalMemory, "daqDataPacket_createDataPacketWithExternalMemory").invokeExact(objSlot, Ffi.orNull(domainPacket), Ffi.orNull(descriptor), sampleCount, Ffi.orNull(offset), Ffi.orNull(externalMemory), Ffi.orNull(deleter), bufferSize);
             Ffi.checkError(err, "daqDataPacket_createDataPacketWithExternalMemory");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates a wrapped data packet.  Calls {@code daqDataPacket_createWrappedDataPacket()}. */
+    public static MemorySegment createWrappedDataPacket(MemorySegment sourcePacket, MemorySegment descriptor) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createWrappedDataPacket, "daqDataPacket_createWrappedDataPacket").invokeExact(objSlot, Ffi.orNull(sourcePacket), Ffi.orNull(descriptor));
+            Ffi.checkError(err, "daqDataPacket_createWrappedDataPacket");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
@@ -146,7 +182,7 @@ public final class DaqDataPacket {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets current packet offset. This offset is later applied to the data rule used by a signal to calculate actual data value. This value is usually a time or other domain value. Packet offset is particularly useful when one wants to transfer a gap in otherwise equidistant samples. If we have a linear data rule, defined by equation f(x) = k*x + n, then the data value will be calculated by the equation g(x) = offset + f(x).  Calls {@code daqDataPacket_getOffset()}. */
+    /** Gets current packet offset. This offset is later applied to the data rule used by a signal to calculate  Calls {@code daqDataPacket_getOffset()}. */
     public static MemorySegment getOffset(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment offsetSlot = arena.allocate(ADDRESS);

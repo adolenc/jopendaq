@@ -24,7 +24,8 @@ public class SampleReader extends Reader {
     }
 
     /**
-     * Gets the sample-type the signal domain samples will be converted to when read or &#64;c SampleType::Invalid if read-type has not been determined yet.
+     * Gets the sample-type the signal domain samples will be converted to when read
+     * or &#64;c SampleType::Invalid if read-type has not been determined yet.
      * &#64;param[out] sampleType The sample-type type of the read samples otherwise &#64;c SampleType::Invalid.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSampleReader_getDomainReadType()}.
@@ -52,7 +53,8 @@ public class SampleReader extends Reader {
     }
 
     /**
-     * Gets the sample-type the signal value samples will be converted to when read or &#64;c SampleType::Invalid if read-type has not been determined yet.
+     * Gets the sample-type the signal value samples will be converted to when read
+     * or &#64;c SampleType::Invalid if read-type has not been determined yet.
      * &#64;param[out] sampleType The sample-type type of the read samples otherwise &#64;c SampleType::Invalid.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSampleReader_getValueReadType()}.
@@ -66,7 +68,8 @@ public class SampleReader extends Reader {
     }
 
     /**
-     * Sets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step. The function should have a signature compatible with:
+     * Sets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor
+     * giving the user the chance add a custom post-processing step. The function should have a signature compatible with:
      * &#64;code
      * transform(Int inputBuffer, Int outputBuffer, SizeT toRead, IDataDescriptor* descriptor)
      * &#64;endcode
@@ -84,7 +87,8 @@ public class SampleReader extends Reader {
     }
 
     /**
-     * Sets the transform function that will be called with the read value-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step. The function should have a signature compatible with:
+     * Sets the transform function that will be called with the read value-data and currently valid Signal-Descriptor
+     * giving the user the chance add a custom post-processing step. The function should have a signature compatible with:
      * &#64;code
      * transform(Int inputBuffer, Int outputBuffer, SizeT toRead, IDataDescriptor* descriptor)
      * &#64;endcode

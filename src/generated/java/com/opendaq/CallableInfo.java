@@ -12,10 +12,14 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Provides information about the argument count and types, as well as the return type of Function/Procedure-type properties.
+ * Provides information about the argument count and types, as well as the return type of
+ * Function/Procedure-type properties.
+ *
  * A callable should be invoked with the parameter types specified in the `arguments` field, in the
  * order listed.
+ *
  * A Procedure-type Property will not have a return type configured in its Callable info field.
+ *
  * Argument info objects implement the Struct methods internally and are Core type `ctStruct`.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqCallableInfo} interface.
@@ -31,7 +35,8 @@ public class CallableInfo extends BaseObject {
      * Creates a CallableInfo object with the specified arguments and return type.
      * &#64;param argumentInfo The list of `ArgumentInfo` type argument information.
      * &#64;param returnType The return type of the described callable object.
-     * &#64;param constFlag A flag indicating if the function is marked as const or not. A const function promises not to modify the state of the device or any other objects under the openDAQ instance.
+     * &#64;param constFlag A flag indicating if the function is marked as const or not. A const function promises not to modify the state
+     * of the device or any other objects under the openDAQ instance.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqCallableInfo_createCallableInfo()}.
      */
@@ -75,7 +80,8 @@ public class CallableInfo extends BaseObject {
     }
 
     /**
-     * A flag indicating if function is marked as const. A const function promises not to modify the state of the device or any other objects under the openDAQ instance.
+     * A flag indicating if function is marked as const. A const function promises not to modify the state
+     * of the device or any other objects under the openDAQ instance.
      * &#64;param[out] constFlag a flag indicating if the function is marked as const or not.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqCallableInfo_isConst()}.

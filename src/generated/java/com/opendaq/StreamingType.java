@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Provides information on what streaming type can be created by a given module. Can be used to obtain the default configuration used when either adding/creating a new device, or establishing a new streaming connection.
+ * Provides information on what streaming type can be created by a given module. Can be used
+ * to obtain the default configuration used when either adding/creating a new device, or establishing
+ * a new streaming connection.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqStreamingType} interface.
  */
@@ -28,7 +30,8 @@ public class StreamingType extends ComponentType {
      * &#64;param id The unique type ID of the Streaming.
      * &#64;param name The name of the Streaming. Eg. FFT.
      * &#64;param description A short description of the Streaming and its behaviour.
-     * &#64;param defaultConfig The property object, to be cloned and returned, each time user creates default configuration object. This way each instance of the Streaming has its own configuration object.
+     * &#64;param defaultConfig The property object, to be cloned and returned, each time user creates default
+     * configuration object. This way each instance of the Streaming has its own configuration object.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamingType_createStreamingType()}.
      */

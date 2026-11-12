@@ -69,6 +69,8 @@ public final class DaqDevice {
         Ffi.downcallOrNull("daqDevice_getSignalsRecursive", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getSyncComponent =
         Ffi.downcallOrNull("daqDevice_getSyncComponent", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getSynchronization =
+        Ffi.downcallOrNull("daqDevice_getSynchronization", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getTicksSinceOrigin =
         Ffi.downcallOrNull("daqDevice_getTicksSinceOrigin", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_isLocked =
@@ -102,7 +104,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Connects to multiple devices in parallel using the provided connection strings and returns the connected devices. Each connection is established concurrently to improve performance when handling multiple devices. The additions, in turn, are performed sequentially in the order specified by connectionArgs.  Calls {@code daqDevice_addDevices()}. */
+    /** Connects to multiple devices in parallel using the provided connection strings and returns the connected devices.  Calls {@code daqDevice_addDevices()}. */
     public static MemorySegment addDevices(MemorySegment self, MemorySegment connectionArgs, MemorySegment errCodes, MemorySegment errorInfos) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment devicesSlot = arena.allocate(ADDRESS);
@@ -132,7 +134,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Connects to a streaming at the given connection string, adds it as a streaming source of device and returns created streaming object.  Calls {@code daqDevice_addStreaming()}. */
+    /** Connects to a streaming at the given connection string, adds it as a streaming source of device  Calls {@code daqDevice_addStreaming()}. */
     public static MemorySegment addStreaming(MemorySegment self, MemorySegment connectionString, MemorySegment config) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment streamingSlot = arena.allocate(ADDRESS);
@@ -152,7 +154,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates config object that can be used when adding a device. Contains Device and Streaming default configuration for all available Device/Streaming types. Also contains general add-device configuration settings.  Calls {@code daqDevice_createDefaultAddDeviceConfig()}. */
+    /** Creates config object that can be used when adding a device. Contains Device and Streaming default configuration  Calls {@code daqDevice_createDefaultAddDeviceConfig()}. */
     public static MemorySegment createDefaultAddDeviceConfig(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment defaultConfigSlot = arena.allocate(ADDRESS);
@@ -252,7 +254,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the device's domain data. It allows for querying the device for its domain (time) values.  Calls {@code daqDevice_getDomain()}. */
+    /** Gets the device's domain data. It allows for querying the device for its  Calls {@code daqDevice_getDomain()}. */
     public static MemorySegment getDomain(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment domainSlot = arena.allocate(ADDRESS);
@@ -272,7 +274,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the device info. It contains data about the device such as the device's serial number, location, and connection string.  Calls {@code daqDevice_getInfo()}. */
+    /** Gets the device info. It contains data about the device such as the device's  Calls {@code daqDevice_getInfo()}. */
     public static MemorySegment getInfo(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment infoSlot = arena.allocate(ADDRESS);
@@ -359,6 +361,16 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Gets the synchronization object of the device.  Calls {@code daqDevice_getSynchronization()}. */
+    public static MemorySegment getSynchronization(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment syncSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getSynchronization, "daqDevice_getSynchronization").invokeExact(Ffi.orNull(self), syncSlot);
+            Ffi.checkError(err, "daqDevice_getSynchronization");
+            return syncSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Gets the number of ticks passed since the device's absolute origin.  Calls {@code daqDevice_getTicksSinceOrigin()}. */
     public static long getTicksSinceOrigin(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
@@ -387,7 +399,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Lock a device with a session user. Once locked, no properties of the device can be changed via the protocol layer. Only the same user who locked the device can unlock it. If no user was specified when the device was locked, any user will be able to unlock it.  Calls {@code daqDevice_lock()}. */
+    /** Lock a device with a session user. Once locked, no properties of the device can be changed via the protocol layer.  Calls {@code daqDevice_lock()}. */
     public static void lock(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_lock, "daqDevice_lock").invokeExact(Ffi.orNull(self));
@@ -445,7 +457,7 @@ public final class DaqDevice {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Unlock a device with a session user. A device can only be unlocked by the same user who locked it. If no user was specified when the device was locked, any user will be able to unlock it.  Calls {@code daqDevice_unlock()}. */
+    /** Unlock a device with a session user. A device can only be unlocked by the same user who locked it.  Calls {@code daqDevice_unlock()}. */
     public static void unlock(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_unlock, "daqDevice_unlock").invokeExact(Ffi.orNull(self));

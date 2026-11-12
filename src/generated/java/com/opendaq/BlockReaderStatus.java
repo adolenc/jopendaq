@@ -42,7 +42,9 @@ public class BlockReaderStatus extends ReaderStatus {
     }
 
     /**
-     * Returns the number of samples that were read. Sometimes, during the process of reading, an event packet may occur that stops the reading of remaining samples. Developers can use this function to determine how many samples were actually read.
+     * Returns the number of samples that were read.
+     * Sometimes, during the process of reading, an event packet may occur that stops the reading of remaining samples.
+     * Developers can use this function to determine how many samples were actually read.
      * &#64;param[out] samplesCount the amount of samples that were read.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqBlockReaderStatus_getReadSamples()}.

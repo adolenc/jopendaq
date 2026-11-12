@@ -51,8 +51,10 @@ public class MirroredSignalConfig extends SignalConfig {
     }
 
     /**
-     * Gets the Event that is triggered whenever the acknowledgment for signal subscription completion is received from the streaming server.
+     * Gets the Event that is triggered whenever the acknowledgment for signal subscription
+     * completion is received from the streaming server.
      * &#64;param[out] event The Event representing the acknowledgment of signal subscription completion.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever
      * the event is triggered. The callback function requires two parameters - a MirroredSignalConfig
      * object, as well as a "Subscription event args" object.
@@ -71,8 +73,10 @@ public class MirroredSignalConfig extends SignalConfig {
     }
 
     /**
-     * Gets the Event that is triggered whenever the acknowledgment for signal unsubscription completion is received from the streaming server.
+     * Gets the Event that is triggered whenever the acknowledgment for signal unsubscription
+     * completion is received from the streaming server.
      * &#64;param[out] event The Event representing the acknowledgment of signal unsubscription completion.
+     *
      * A handler can be added to the event containing a callback function which is invoked whenever
      * the event is triggered. The callback function requires two parameters - a MirroredSignalConfig
      * object, as well as a "Subscription event args" object.
@@ -121,7 +125,8 @@ public class MirroredSignalConfig extends SignalConfig {
     /**
      * Sets the active streaming source of the signal.
      * &#64;param streamingConnectionString The connection string of streaming source to be set as active.
-     * &#64;retval OPENDAQ_ERR_NOTFOUND if the streaming source with the corresponding connection string is not part of the available streaming sources for the signal.
+     * &#64;retval OPENDAQ_ERR_NOTFOUND if the streaming source with the corresponding connection string is not
+     * part of the available streaming sources for the signal.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMirroredSignalConfig_setActiveStreamingSource()}.
      */

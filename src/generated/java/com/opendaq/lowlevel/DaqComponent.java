@@ -237,7 +237,7 @@ public final class DaqComponent {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the component to be either active or inactive. Sets the local active state and notifies children about the parent active state change.  Calls {@code daqComponent_setActive()}. */
+    /** Sets the component to be either active or inactive. Sets the local active state  Calls {@code daqComponent_setActive()}. */
     public static void setActive(MemorySegment self, boolean active) {
         try {
             int err = (int) Ffi.require(MH_setActive, "daqComponent_setActive").invokeExact(Ffi.orNull(self), (byte) (active ? 1 : 0));

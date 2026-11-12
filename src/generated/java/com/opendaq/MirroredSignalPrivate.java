@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Internal functions used by openDAQ core. This interface should never be used in client SDK or module code.
+ * Internal functions used by openDAQ core. This interface should never be used in
+ * client SDK or module code.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqMirroredSignalPrivate} interface.
  */
@@ -103,7 +104,8 @@ public class MirroredSignalPrivate extends BaseObject {
 
     /**
      * Handles the completion of subscription acknowledged by the specified streaming source.
-     * &#64;param streamingConnectionString The connection string of the streaming source that completed the subscription for the signal.
+     * &#64;param streamingConnectionString The connection string of the streaming source that completed
+     * the subscription for the signal.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMirroredSignalPrivate_subscribeCompleted()}.
      */
@@ -119,7 +121,8 @@ public class MirroredSignalPrivate extends BaseObject {
     }
 
     /**
-     * Handles event packet e.g. packet with changes of the signals descriptors or signal properties
+     * Handles event packet e.g. packet with changes of the signals descriptors or
+     * signal properties
      * &#64;param eventPacket The event packet to be handled.
      * &#64;returns True if the eventPacket should be sent along the signal path; False otherwise.
      *
@@ -136,7 +139,8 @@ public class MirroredSignalPrivate extends BaseObject {
 
     /**
      * Handles the completion of unsubscription acknowledged by the specified streaming source.
-     * &#64;param streamingConnectionString The connection string of the streaming source that completed the unsubscription for the signal.
+     * &#64;param streamingConnectionString The connection string of the streaming source that completed
+     * the unsubscription for the signal.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMirroredSignalPrivate_unsubscribeCompleted()}.
      */
@@ -153,7 +157,8 @@ public class MirroredSignalPrivate extends BaseObject {
 
     /**
      * Acts the same as unsubscribeCompleted() but does not enter a critical section.
-     * &#64;param streamingConnectionString The connection string of the streaming source that completed the unsubscription for the signal.
+     * &#64;param streamingConnectionString The connection string of the streaming source that completed
+     * the unsubscription for the signal.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMirroredSignalPrivate_unsubscribeCompletedNoLock()}.
      */

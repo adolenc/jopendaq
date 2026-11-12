@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_packets
- * &#64;addtogroup opendaq_reusable_data_packet Reusable Data packet
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqReusableDataPacket} interface.
+ * Wraps the openDAQ {&#64;code daqReusableDataPacket} interface.
  */
 public class ReusableDataPacket extends BaseObject {
 

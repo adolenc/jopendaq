@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.opendaq.lowlevel.DaqBaseObject;
+import com.opendaq.lowlevel.DaqUnknown;
 import com.opendaq.lowlevel.Ffi;
 
 /**
@@ -54,7 +55,7 @@ final class TypeRegistry {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment id = arena.allocate(Ffi.INTF_ID);
             interfaceIdWriter.accept(id);
-            return DaqBaseObject.queryInterface(raw, id);
+            return DaqUnknown.queryInterface(raw, id);
         }
     }
 

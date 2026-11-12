@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Acts as a base interface for components, such as device, function block, channel and signal.
+ *
  * The IComponent provides a set of methods that are common to all components:
  * LocalID, GlobalID and Active properties.
  *
@@ -56,7 +57,9 @@ public class Component extends PropertyObject {
      * Finds the component (signal/device/function block) with the specified (global) id.
      * &#64;param id The id of the component to search for.
      * &#64;param[out] outComponent The resulting component.
+     *
      * If the component parameter is true, the starting component is the root device.
+     *
      * The id provided should be in relative form from the starting component. E.g., to find a signal in
      * the starting component, the id should be in the form of "Dev/dev_id/Ch/ch_id/Sig/sig_id.
      *
@@ -76,6 +79,7 @@ public class Component extends PropertyObject {
     /**
      * Returns true if the component is active; false otherwise.
      * &#64;param[out] active True if the component is active; false otherwise.
+     *
      * A component is active if its local active state is true and its parent is active.
      * An active component acquires data, performs calculations and send packets on the signal path.
      *
@@ -106,6 +110,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the description of the component.
      * &#64;param[out] description The description of the component. Empty if not configured.
+     *
      * The object that implements this interface defines how the description is specified.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_getDescription()}.
@@ -121,6 +126,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the global ID of the component.
      * &#64;param[out] globalId The global ID of the component.
+     *
      * Represents the identifier that is globally unique. Globally unique identifier is composed
      * from local identifiers from the parent components separated by '/' character. Device component
      * must make sure that its ID is globally unique.
@@ -138,6 +144,7 @@ public class Component extends PropertyObject {
     /**
      * Returns true if the component is local active; false otherwise.
      * &#64;param[out] localActive True if the component is local active; false otherwise.
+     *
      * An active component acquires data, performs calculations and send packets on the signal path.
      * Note that is local active is True, the component may still be inactive if its parents are inactive.
      *
@@ -154,6 +161,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the local ID of the component.
      * &#64;param[out] localId The local ID of the component.
+     *
      * Represents the identifier that is unique in a relation to the
      * parent component. There is no predefined format for local ID. It is a string defined
      * by its parent component.
@@ -170,6 +178,8 @@ public class Component extends PropertyObject {
 
     /**
      * Gets a list of the component's locked attributes. The locked attributes cannot be modified via their respective setters.
+     *
+     * The set is fixed when the component is constructed.
      * &#64;param[out] attributes A list of strings containing the names of locked attributes in capital case (eg. "Name", "Description").
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_getLockedAttributes()}.
@@ -185,6 +195,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the name of the component.
      * &#64;param[out] name The name of the component. Local ID if name is not configured.
+     *
      * The object that implements this interface defines how the name is specified.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_getName()}.
@@ -200,6 +211,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the Core Event object that triggers whenever a change to this component happens within the openDAQ core structure.
      * &#64;param[out] event The Core Event object. The event triggers with a Component reference and a CoreEventArgs object as arguments.
+     *
      * The Core Event is triggered on various changes to the openDAQ Components. This includes changes to property values,
      * addition/removal of child components, connecting signals to input ports and others. The event type can be identified
      * via the event ID available within the CoreEventArgs object. Each event type has a set of predetermined parameters
@@ -233,6 +245,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the parent of the component.
      * &#64;param[out] parent The parent of the component.
+     *
      * Every openDAQ component has a parent, except for instance. Parent should be passed as
      * a parameter to the constructor/factory. Once the component is created, the parent
      * cannot be changed.
@@ -278,6 +291,7 @@ public class Component extends PropertyObject {
     /**
      * Gets the tags of the component.
      * &#64;param[out] tags The tags of the component.
+     *
      * Tags are user definable labels that can be attached to the component.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_getTags()}.
@@ -293,6 +307,7 @@ public class Component extends PropertyObject {
     /**
      * Gets `visible` metadata state of the component
      * &#64;param[out] visible True if the component is visible; False otherwise.
+     *
      * Visible determines whether search/getter methods return find the component by default.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_getVisible()}.
@@ -306,9 +321,12 @@ public class Component extends PropertyObject {
     }
 
     /**
-     * Sets the component to be either active or inactive. Sets the local active state and notifies children about the parent active state change.
+     * Sets the component to be either active or inactive. Sets the local active state
+     * and notifies children about the parent active state change.
      * &#64;param active The new local active state of the component.
-     * &#64;retval OPENDAQ_IGNORED if "Active" is part of the component's list of locked attributes, or if the new active value is equal to the previous.
+     * &#64;retval OPENDAQ_IGNORED if "Active" is part of the component's list of locked attributes,
+     * or if the new active value is equal to the previous.
+     *
      * An active component acquires data, performs calculations and send packets on the signal path.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_setActive()}.
@@ -324,7 +342,9 @@ public class Component extends PropertyObject {
     /**
      * Sets the description of the component.
      * &#64;param description The description of the component.
-     * &#64;retval OPENDAQ_IGNORED if "Description" is part of the component's list of locked attributes, or if the new description value is equal to the previous.
+     * &#64;retval OPENDAQ_IGNORED if "Description" is part of the component's list of locked attributes,
+     * or if the new description value is equal to the previous.
+     *
      * The object that implements this interface defines how the description is specified.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_setDescription()}.
@@ -343,7 +363,9 @@ public class Component extends PropertyObject {
     /**
      * Sets the name of the component.
      * &#64;param name The name of the component.
-     * &#64;retval OPENDAQ_IGNORED if "Name" is part of the component's list of locked attributes, or if the new name value is equal to the previous.
+     * &#64;retval OPENDAQ_IGNORED if "Name" is part of the component's list of locked attributes,
+     * or if the new name value is equal to the previous.
+     *
      * The object that implements this interface defines how the name is specified.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_setName()}.
@@ -363,6 +385,7 @@ public class Component extends PropertyObject {
      * Sets `visible` attribute state of the component
      * &#64;param visible True if the component is visible; False otherwise.
      * &#64;retval OPENDAQ_IGNORED if "Visible" is part of the component's list of locked attributes.
+     *
      * Visible determines whether search/getter methods return find the component by default.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqComponent_setVisible()}.

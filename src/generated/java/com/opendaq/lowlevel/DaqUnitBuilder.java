@@ -69,7 +69,7 @@ public final class DaqUnitBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.  Calls {@code daqUnitBuilder_getId()}. */
+    /** Gets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used  Calls {@code daqUnitBuilder_getId()}. */
     public static long getId(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment idSlot = arena.allocate(JAVA_LONG);
@@ -116,7 +116,7 @@ public final class DaqUnitBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used in International Trade&lt;/a&gt;.  Calls {@code daqUnitBuilder_setId()}. */
+    /** Sets the unit ID as defined in &lt;a href="https://unece.org/trade/cefact/UNLOCODE-Download"&gt;Codes for Units of Measurement used  Calls {@code daqUnitBuilder_setId()}. */
     public static void setId(MemorySegment self, long id) {
         try {
             int err = (int) Ffi.require(MH_setId, "daqUnitBuilder_setId").invokeExact(Ffi.orNull(self), id);

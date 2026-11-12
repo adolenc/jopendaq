@@ -102,7 +102,7 @@ public final class DaqMultiReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the common sample rate in case input signal have different rates. The value of common sample rate is such that sample rate of any individual signal can be represented as commonSampleRate / Div, where Div is an integer. Unless the required common sample rate is specified in the MultiReader constructor, common sample rate is lowest common multiple of individual signal's sample rates. The number of samples to be read is specified in common sample rate.  Calls {@code daqMultiReader_getCommonSampleRate()}. */
+    /** Gets the common sample rate in case input signal have different rates. The value of common sample rate is such  Calls {@code daqMultiReader_getCommonSampleRate()}. */
     public static long getCommonSampleRate(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment commonSampleRateSlot = arena.allocate(JAVA_LONG);
@@ -147,7 +147,7 @@ public final class DaqMultiReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the origin the reader aligned all the signals to. This is usually the earliest (lowest value) from all the signals.  Calls {@code daqMultiReader_getOrigin()}. */
+    /** Gets the origin the reader aligned all the signals to.  Calls {@code daqMultiReader_getOrigin()}. */
     public static MemorySegment getOrigin(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment originSlot = arena.allocate(ADDRESS);
@@ -157,7 +157,7 @@ public final class DaqMultiReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the resolution the reader aligned all the signals to. This is the highest resolution (lowest value) of all the signals to not loose the precision.  Calls {@code daqMultiReader_getTickResolution()}. */
+    /** Gets the resolution the reader aligned all the signals to.  Calls {@code daqMultiReader_getTickResolution()}. */
     public static MemorySegment getTickResolution(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment resolutionSlot = arena.allocate(ADDRESS);
@@ -170,7 +170,7 @@ public final class DaqMultiReader {
     /** Result of {@link #read}. */
     public record ReadResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` unread samples to the values buffer. The amount actually read is returned through the `count` parameter.  Calls {@code daqMultiReader_read()}. */
+    /** Copies at maximum the next `count` unread samples to the values buffer.  Calls {@code daqMultiReader_read()}. */
     public static ReadResult read(MemorySegment self, MemorySegment samples, long count, long timeoutMs) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);
@@ -185,7 +185,7 @@ public final class DaqMultiReader {
     /** Result of {@link #readWithDomain}. */
     public record ReadWithDomainResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` unread samples and clock-stamps to the `samples` and `domain` buffers. The amount actually read is returned through the `count` parameter.  Calls {@code daqMultiReader_readWithDomain()}. */
+    /** Copies at maximum the next `count` unread samples and clock-stamps to the `samples` and `domain` buffers.  Calls {@code daqMultiReader_readWithDomain()}. */
     public static ReadWithDomainResult readWithDomain(MemorySegment self, MemorySegment samples, MemorySegment domain, long count, long timeoutMs) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);

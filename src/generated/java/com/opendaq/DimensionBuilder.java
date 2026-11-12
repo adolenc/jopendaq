@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Configuration component of Dimension objects. Contains setter methods that allow for Dimension parameter configuration, and a `build` method that builds the Dimension.
+ * Configuration component of Dimension objects. Contains setter methods that allow for Dimension
+ * parameter configuration, and a `build` method that builds the Dimension.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqDimensionBuilder} interface.
  */
@@ -113,6 +114,7 @@ public class DimensionBuilder extends BaseObject {
     /**
      * Sets the name of the dimension.
      * &#64;param name The name of the dimension.
+     *
      * The name that best describes the dimension, in example "Frequency" for spectrum data.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqDimensionBuilder_setName()}.
@@ -134,6 +136,7 @@ public class DimensionBuilder extends BaseObject {
      * Sets the rule that defines the labels and size of the dimension.
      * &#64;param rule The dimension rule.
      * &#64;retval OPENDAQ_ERR_FROZEN if the dimension object is frozen.
+     *
      * The rule takes as input the index of data value in a sample and produces a label associated
      * with that index.
      *

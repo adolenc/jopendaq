@@ -13,7 +13,9 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Provides the name and type of a single function/procedure argument
+ *
  * Usually part of a list of arguments in a Callable info object.
+ *
  * Argument info objects implement the Struct methods internally and are Core type `ctStruct`.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqArgumentInfo} interface.
@@ -81,9 +83,12 @@ public class ArgumentInfo extends BaseObject {
     }
 
     /**
-     * Gets the item type of list/dict-type Argument Info objects. The item type specifies the type of values in the list or dictionary arguments.
+     * Gets the item type of list/dict-type Argument Info objects. The item type specifies the
+     * type of values in the list or dictionary arguments.
      * &#64;param[out] itemType The item type of the list/dictionary argument.
+     *
      * In list-type Argument Info, the type of each item corresponds to the item type.
+     *
      * In dict-type Argument Info, the type of each value in the &lt;key, value&gt; pairing corresponds to the
      * item type.
      *
@@ -98,7 +103,8 @@ public class ArgumentInfo extends BaseObject {
     }
 
     /**
-     * Gets the key type of dict-type Argument Info objects. The item type specifies the type of keys in dictionary arguments.
+     * Gets the key type of dict-type Argument Info objects. The item type specifies the type of
+     * keys in dictionary arguments.
      * &#64;param[out] keyType The key type of the dictionary argument.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqArgumentInfo_getKeyType()}.
@@ -128,6 +134,7 @@ public class ArgumentInfo extends BaseObject {
     /**
      * Gets the core type of the argument.
      * &#64;param[out] type The type of the argument.
+     *
      * Dictionary, List and Object types should be avoided in public function/procedure callable objects
      * as their key, item, or base interface type cannot be determined without internal knowledge
      * of the function/procedure.

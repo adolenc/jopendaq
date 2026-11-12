@@ -24,7 +24,8 @@ public class ReaderConfig extends BaseObject {
     }
 
     /**
-     * Gets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step.
+     * Gets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor
+     * giving the user the chance add a custom post-processing step.
      * &#64;param[out] transform The function performing the post-processing or &#64;c nullptr if not assigned.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReaderConfig_getDomainTransformFunction()}.
@@ -77,7 +78,8 @@ public class ReaderConfig extends BaseObject {
     }
 
     /**
-     * Gets the transform function that will be called with the read value-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step.
+     * Gets the transform function that will be called with the read value-data and currently valid Signal-Descriptor
+     * giving the user the chance add a custom post-processing step.
      * &#64;param[out] transform The function performing the post-processing or &#64;c nullptr if not assigned.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReaderConfig_getValueTransformFunction()}.
@@ -91,7 +93,8 @@ public class ReaderConfig extends BaseObject {
     }
 
     /**
-     * Marks the current reader as invalid preventing any additional operations to be performed on the reader except reusing its info and configuration in a new reader.
+     * Marks the current reader as invalid preventing any additional operations to be performed on the reader
+     * except reusing its info and configuration in a new reader.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqReaderConfig_markAsInvalid()}.
      */

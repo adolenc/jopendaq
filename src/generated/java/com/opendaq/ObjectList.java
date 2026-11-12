@@ -35,6 +35,24 @@ public class ObjectList extends BaseObject {
     }
 
     /**
+     * Calls the openDAQ C function {&#64;code daqList_createOwningList()}.
+     */
+    public static ObjectList createOwningList(PropertyObject owner, String ref) {
+        return DaqObject.wrap(create$createOwningList(owner, ref), ObjectList.class);
+    }
+
+    private static MemorySegment create$createOwningList(PropertyObject owner, String ref) {
+        try {
+            MemorySegment ref$s = Wrap.daqStringOrNull(ref);
+            try {
+                return DaqList.createOwningList((owner == null ? MemorySegment.NULL : owner.requireLivePointer()), ref$s);
+            } finally { Ffi.releaseRef(ref$s); }
+        } finally {
+            Reference.reachabilityFence(owner);
+        }
+    }
+
+    /**
      * Removes all elements from the list.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_clear()}.
@@ -50,6 +68,7 @@ public class ObjectList extends BaseObject {
     /**
      * Creates and returns the stop iterator of the list.
      * &#64;param[out] iterator The stop iterator.
+     *
      * Use iterators to iterate through the elements.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_createEndIterator()}.
@@ -65,6 +84,7 @@ public class ObjectList extends BaseObject {
     /**
      * Creates and returns the start iterator of the list.
      * &#64;param[out] iterator The start iterator.
+     *
      * Use iterators to iterate through the elements.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_createStartIterator()}.
@@ -80,6 +100,7 @@ public class ObjectList extends BaseObject {
     /**
      * Deletes the element at a specific position.
      * &#64;param index The zero-based index of the element to remove.
+     *
      * If the client needs the element deleted, it should use `removeAt` method.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_deleteAt()}.
@@ -110,6 +131,7 @@ public class ObjectList extends BaseObject {
      * Gets the element at a specific position.
      * &#64;param index The zero-based index of the element to get.
      * &#64;param[out] obj The element at the specified index.
+     *
      * The reference count of the element that is retrieved is incremented. The client is
      * responsible for calling `releaseRef` when the element is no longer needed.
      *
@@ -127,6 +149,7 @@ public class ObjectList extends BaseObject {
      * Inserts the element at a specific position.
      * &#64;param index The zero-based index of the element to insert.
      * &#64;param obj The element to insert at the specified index.
+     *
      * The reference count of the element is incremented.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_insertAt()}.
@@ -145,6 +168,7 @@ public class ObjectList extends BaseObject {
     /**
      * Inserts the element at the end of the list without incrementing the reference count.
      * &#64;param obj The element to insert.
+     *
      * The reference count of the element is not incremented. The client can use this method when it no
      * longer needs to access the element after calling the method.
      *
@@ -164,6 +188,7 @@ public class ObjectList extends BaseObject {
     /**
      * Inserts the element at the start of the list without incrementing the reference count.
      * &#64;param obj The element to insert.
+     *
      * The reference count of the element is not incremented. The client can use this method when it no
      * longer needs to access the element after calling the method.
      *
@@ -183,6 +208,7 @@ public class ObjectList extends BaseObject {
     /**
      * Gets the element from the end of the list.
      * &#64;param[out] obj The extracted element.
+     *
      * The reference count of the element that is retrieved is incremented. The client is
      * responsible for calling `releaseRef` when the element is no longer needed.
      *
@@ -199,6 +225,7 @@ public class ObjectList extends BaseObject {
     /**
      * Gets the element from the start of the list.
      * &#64;param[out] obj The extracted element.
+     *
      * The reference count of the element that is retrieved is incremented. The client is
      * responsible for calling `releaseRef` when the element is no longer needed.
      *
@@ -215,6 +242,7 @@ public class ObjectList extends BaseObject {
     /**
      * Inserts the element at the end of the list.
      * &#64;param obj The element to insert.
+     *
      * The reference count of the element is incremented.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_pushBack()}.
@@ -233,6 +261,7 @@ public class ObjectList extends BaseObject {
     /**
      * Inserts the element at the start of the list.
      * &#64;param obj The element to insert.
+     *
      * The reference count of the element is incremented.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_pushFront()}.
@@ -252,6 +281,7 @@ public class ObjectList extends BaseObject {
      * Removes the element at a specific position.
      * &#64;param index The zero-based index of the element to remove.
      * &#64;param[out] obj The removed element.
+     *
      * The client is responsible for calling `releaseRef` when the element is no longer needed.
      * If the client does not need the element after it is removed, it should call `delete` method.
      *
@@ -269,6 +299,7 @@ public class ObjectList extends BaseObject {
      * Sets the element at a specific position.
      * &#64;param index The zero-based index of the element to set.
      * &#64;param obj The element to set at the specified index.
+     *
      * The reference count of the element is incremented.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqList_setItemAt()}.

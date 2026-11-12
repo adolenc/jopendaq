@@ -92,7 +92,7 @@ public final class DaqDataDescriptorBuilder {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Data descriptor copy factory that creates a Data descriptor builder object from a different Data descriptor, copying its parameters.  Calls {@code daqDataDescriptorBuilder_createDataDescriptorBuilderFromExisting()}. */
+    /** Data descriptor copy factory that creates a Data descriptor builder object from a  Calls {@code daqDataDescriptorBuilder_createDataDescriptorBuilderFromExisting()}. */
     public static MemorySegment createDataDescriptorBuilderFromExisting(MemorySegment descriptorToCopy) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);

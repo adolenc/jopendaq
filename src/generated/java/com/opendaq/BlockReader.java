@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A signal data reader that abstracts away reading of signal packets by keeping an internal read-position and automatically advances it on subsequent reads. The difference to a StreamReader is that instead of reading on per sample basis it always returns only a full block of samples. This means that even if more samples are available they will not be read until there is enough of them to fill at least one block.
+ * A signal data reader that abstracts away reading of signal packets by keeping an
+ * internal read-position and automatically advances it on subsequent reads. The difference to
+ * a StreamReader is that instead of reading on per sample basis it always returns only a full block of samples.
+ * This means that even if more samples are available they will not be read until there is enough of them to fill
+ * at least one block.
  * &#64;remark Currently only supports single-dimensional scalar sample-types and RangeInt64
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqBlockReader} interface.

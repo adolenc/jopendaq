@@ -28,10 +28,10 @@ public final class DaqSyncComponent {
         Ffi.downcallOrNull("daqSyncComponent_setSelectedSource", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG));
 
     /** Calls {@code daqSyncComponent_createSyncComponent()}. */
-    public static MemorySegment createSyncComponent(MemorySegment context, MemorySegment ParseFailedException, MemorySegment localId) {
+    public static MemorySegment createSyncComponent(MemorySegment context, MemorySegment parent, MemorySegment localId) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
-            int err = (int) Ffi.require(MH_createSyncComponent, "daqSyncComponent_createSyncComponent").invokeExact(objSlot, Ffi.orNull(context), Ffi.orNull(ParseFailedException), Ffi.orNull(localId));
+            int err = (int) Ffi.require(MH_createSyncComponent, "daqSyncComponent_createSyncComponent").invokeExact(objSlot, Ffi.orNull(context), Ffi.orNull(parent), Ffi.orNull(localId));
             Ffi.checkError(err, "daqSyncComponent_createSyncComponent");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }

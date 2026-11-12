@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A thread-pool scheduler that supports scheduling one-off functions as well as dependency graphs.
+ * A thread-pool scheduler that supports scheduling one-off functions as well as
+ * dependency graphs.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqScheduler} interface.
  */
@@ -56,6 +57,7 @@ public class Scheduler extends BaseObject {
     /**
      * Checks if the main loop is currently set.
      * &#64;param[out] isSet Returns &#64;c true if the main loop is set and running.
+     *
      * This method does not gauarantee that the main loop is currently running, only that it has been set up.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScheduler_isMainLoopSet()}.
@@ -85,6 +87,7 @@ public class Scheduler extends BaseObject {
     /**
      * Starts and blocks the main event loop, executing scheduled tasks.
      * &#64;param loopTime The maximum time to block the loop, in milliseconds.
+     *
      * This method runs the main loop, processing all enqueued work (including repetitive tasks)
      * until &#64;ref stopMainLoop is called. Typically executed on the main thread or in a dedicated loop thread.
      *
@@ -105,6 +108,7 @@ public class Scheduler extends BaseObject {
 
     /**
      * Executes a single iteration of the main loop, processing scheduled tasks.
+     *
      * This non-blocking method runs one iteration of the main loop, executing one-time tasks
      * and advancing any repetitive tasks. Intended for cases where the main loop is polled manually,
      * such as in GUI frameworks or embedded systems.
@@ -120,7 +124,9 @@ public class Scheduler extends BaseObject {
     }
 
     /**
-     * Schedules the specified &#64;p work function to run on the thread-pool. The call does not block but immediately returns an &#64;p awaitable that represents the asynchronous execution. It can be waited upon and queried for status and result.
+     * Schedules the specified &#64;p work function to run on the thread-pool.
+     * The call does not block but immediately returns an &#64;p awaitable that represents
+     * the asynchronous execution. It can be waited upon and queried for status and result.
      * &#64;param function The function to schedule for execution.
      * &#64;param[out] awaitable The object representing the state and result of the execution.
      * &#64;retval OPENDAQ_ERR_SCHEDULER_STOPPED when the scheduler already stopped and is not accepting any more work.
@@ -137,7 +143,10 @@ public class Scheduler extends BaseObject {
     }
 
     /**
-     * Schedules the specified dependency &#64;p graph to run on the thread-pool. The call does not block but immediately returns an &#64;p awaitable that represents the asynchronous execution. It can be waited upon and queried for status and result. &lt;b&gt;Any exceptions that occur during the graph execution are silently ignored.&lt;/b&gt;
+     * Schedules the specified dependency &#64;p graph to run on the thread-pool.
+     * The call does not block but immediately returns an &#64;p awaitable that represents
+     * the asynchronous execution. It can be waited upon and queried for status and result.
+     * &lt;b&gt;Any exceptions that occur during the graph execution are silently ignored.&lt;/b&gt;
      * &#64;param graph The dependency graph (acyclic directed graph) to schedule.
      * &#64;param[out] awaitable The object representing the state and result of the execution.
      * &#64;retval OPENDAQ_ERR_SCHEDULER_STOPPED when the scheduler already stopped and is not accepting any more work.
@@ -154,9 +163,11 @@ public class Scheduler extends BaseObject {
     }
 
     /**
-     * Schedules the specified work callback to run on the thread-pool. The call does not block.
+     * Schedules the specified work callback to run on the thread-pool.
+     * The call does not block.
      * &#64;param work The function to schedule for execution.
      * &#64;retval OPENDAQ_ERR_SCHEDULER_STOPPED when the scheduler already stopped and is not accepting any more work.
+     *
      * Work is a lightweight callback that returns no value and accepts no procedure. It has less overhead than
      * function. The function does not return awaitable object.
      *
@@ -173,6 +184,7 @@ public class Scheduler extends BaseObject {
 
     /**
      * Schedules a task to be executed by the main loop.
+     *
      * The provided work object is queued for execution during a call to either
      * &#64;ref runMainLoop or &#64;ref runMainLoopIteration. This mechanism is commonly used
      * to marshal tasks from background threads to the main loop thread.
@@ -190,7 +202,8 @@ public class Scheduler extends BaseObject {
     }
 
     /**
-     * Cancels all outstanding work and waits for the remaining to complete. After this point the scheduler does not allow any new work or graphs for scheduling.
+     * Cancels all outstanding work and waits for the remaining to complete.
+     * After this point the scheduler does not allow any new work or graphs for scheduling.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScheduler_stop()}.
      */
@@ -204,6 +217,7 @@ public class Scheduler extends BaseObject {
 
     /**
      * Signals the main loop to stop processing and return from &#64;ref runMainLoop.
+     *
      * This method unblocks the loop and requests graceful shutdown. It is typically called
      * from another thread or in response to an application shutdown signal.
      * Has no effect if the loop is not currently running.

@@ -55,7 +55,7 @@ public final class DaqModule {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a device object that can communicate with the device described in the specified connection string. The device object is not automatically added as a sub-device of the caller, but only returned by reference.  Calls {@code daqModule_createDevice()}. */
+    /** Creates a device object that can communicate with the device described in the specified connection string.  Calls {@code daqModule_createDevice()}. */
     public static MemorySegment createDevice(MemorySegment self, MemorySegment connectionString, MemorySegment parent, MemorySegment config) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment deviceSlot = arena.allocate(ADDRESS);
@@ -65,7 +65,7 @@ public final class DaqModule {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates and returns a function block with the specified id. The function block is not automatically added to the FB list of the caller.  Calls {@code daqModule_createFunctionBlock()}. */
+    /** Creates and returns a function block with the specified id.  Calls {@code daqModule_createFunctionBlock()}. */
     public static MemorySegment createFunctionBlock(MemorySegment self, MemorySegment id, MemorySegment parent, MemorySegment localId, MemorySegment config) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment functionBlockSlot = arena.allocate(ADDRESS);
@@ -105,7 +105,7 @@ public final class DaqModule {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Returns a list of known devices info. The implementation can start discovery in background and only return the results in this function.  Calls {@code daqModule_getAvailableDevices()}. */
+    /** Returns a list of known devices info.  Calls {@code daqModule_getAvailableDevices()}. */
     public static MemorySegment getAvailableDevices(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment availableDevicesSlot = arena.allocate(ADDRESS);
@@ -182,7 +182,7 @@ public final class DaqModule {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Used for loading a license, when the module requires one. Licenses can specify the degree to which the module is unlocked to the user (i.e. which and/or how many concurrent function blocks from this modules are accessible with the license).  Calls {@code daqModule_loadLicense()}. */
+    /** Used for loading a license, when the module requires one. Licenses can specify the degree to which the module is unlocked to the user  Calls {@code daqModule_loadLicense()}. */
     public static boolean loadLicense(MemorySegment self, MemorySegment licenseConfig) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment succeededSlot = arena.allocate(JAVA_BYTE);

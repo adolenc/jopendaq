@@ -100,7 +100,7 @@ public final class DaqModuleManager {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Loads all modules from the directory path specified during manager construction. The Context is passed to all loaded modules for internal use.  Calls {@code daqModuleManager_loadModules()}. */
+    /** Loads all modules from the directory path specified during manager construction. The  Calls {@code daqModuleManager_loadModules()}. */
     public static void loadModules(MemorySegment self, MemorySegment context) {
         try {
             int err = (int) Ffi.require(MH_loadModules, "daqModuleManager_loadModules").invokeExact(Ffi.orNull(self), Ffi.orNull(context));

@@ -32,12 +32,14 @@ public final class DaqContext {
         Ffi.downcallOrNull("daqContext_getOnCoreEvent", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getOptions =
         Ffi.downcallOrNull("daqContext_getOptions", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getRootDevice =
+        Ffi.downcallOrNull("daqContext_getRootDevice", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getScheduler =
         Ffi.downcallOrNull("daqContext_getScheduler", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getTypeManager =
         Ffi.downcallOrNull("daqContext_getTypeManager", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** &#64;ingroup opendaq_context  Calls {@code daqContext_createContext()}. */
+    /** Calls {@code daqContext_createContext()}. */
     public static MemorySegment createContext(MemorySegment Scheduler, MemorySegment Logger, MemorySegment typeManager, MemorySegment moduleManager, MemorySegment authenticationProvider, MemorySegment options, MemorySegment discoveryServers) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -121,6 +123,16 @@ public final class DaqContext {
             int err = (int) Ffi.require(MH_getOptions, "daqContext_getOptions").invokeExact(Ffi.orNull(self), optionsSlot);
             Ffi.checkError(err, "daqContext_getOptions");
             return optionsSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Gets the root device of the openDAQ instance.  Calls {@code daqContext_getRootDevice()}. */
+    public static MemorySegment getRootDevice(MemorySegment self) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment deviceSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_getRootDevice, "daqContext_getRootDevice").invokeExact(Ffi.orNull(self), deviceSlot);
+            Ffi.checkError(err, "daqContext_getRootDevice");
+            return deviceSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

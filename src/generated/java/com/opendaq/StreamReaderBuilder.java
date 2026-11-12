@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Stream reader objects. Contains setter methods to configure the Stream reader parameters and a `build` method that builds the Unit object.
+ * Builder component of Stream reader objects. Contains setter methods to configure the Stream reader parameters
+ * and a `build` method that builds the Unit object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqStreamReaderBuilder} interface.
  */
@@ -106,7 +107,9 @@ public class StreamReaderBuilder extends BaseObject {
 
     /**
      * Gets the read timeout mode
-     * &#64;param type The timeout mode. if "Any" returns immediately if there is available data otherwise time-out is exceeded. if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
+     * &#64;param type The timeout mode.
+     * if "Any" returns immediately if there is available data otherwise time-out is exceeded.
+     * if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_getReadTimeoutType()}.
      */
@@ -227,7 +230,9 @@ public class StreamReaderBuilder extends BaseObject {
 
     /**
      * Sets the read timeout mode
-     * &#64;param type The timeout mode. if "Any" returns immediately if there is available data otherwise time-out is exceeded. if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
+     * &#64;param type The timeout mode.
+     * if "Any" returns immediately if there is available data otherwise time-out is exceeded.
+     * if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqStreamReaderBuilder_setReadTimeoutType()}.
      * @return this builder, to allow call chaining

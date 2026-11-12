@@ -62,7 +62,7 @@ public final class DaqUserLock {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Lock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user, or with an anonymous user, any user can unlock it.  Calls {@code daqUserLock_lock()}. */
+    /** Lock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user,  Calls {@code daqUserLock_lock()}. */
     public static void lock(MemorySegment self, MemorySegment user) {
         try {
             int err = (int) Ffi.require(MH_lock, "daqUserLock_lock").invokeExact(Ffi.orNull(self), Ffi.orNull(user));
@@ -70,7 +70,7 @@ public final class DaqUserLock {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Unlock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user, or with an anonymous user, any user can unlock it.  Calls {@code daqUserLock_unlock()}. */
+    /** Unlock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user,  Calls {@code daqUserLock_unlock()}. */
     public static void unlock(MemorySegment self, MemorySegment user) {
         try {
             int err = (int) Ffi.require(MH_unlock, "daqUserLock_unlock").invokeExact(Ffi.orNull(self), Ffi.orNull(user));

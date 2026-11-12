@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_modules
- * &#64;addtogroup opendaq_module_manager Module manager utils
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqModuleManagerUtils} interface.
+ * Wraps the openDAQ {&#64;code daqModuleManagerUtils} interface.
  */
 public class ModuleManagerUtils extends BaseObject {
 
@@ -30,6 +27,7 @@ public class ModuleManagerUtils extends BaseObject {
      * &#64;param manufacturer The manufacturer's name identifying the device owning the network interface.
      * &#64;param serialNumber The serial number of the device owning the network interface.
      * &#64;param config A property object containing the configuration parameters to be applied.
+     *
      * The manufacturer name and serial number are used to uniquely identify the target device. Once the config modification is invoked,
      * the new config parameters are advertised via multicast to all devices in the subnet. The target device compares the received
      * identification parameters with its own and, if they match, attempts to apply the new configuration parameters for the specified interface.
@@ -81,11 +79,13 @@ public class ModuleManagerUtils extends BaseObject {
     }
 
     /**
-     * Creates a device object that can communicate with the device described in the specified connection string. The device object is not automatically added as a sub-device of the caller, but only returned by reference.
+     * Creates a device object that can communicate with the device described in the specified connection string.
+     * The device object is not automatically added as a sub-device of the caller, but only returned by reference.
      * &#64;param[out] device The device object created to communicate with and control the device.
      * &#64;param connectionString Describes the connection info of the device to connect to.
      * &#64;param parent The parent component/device to which the device attaches.
      * &#64;param config A configuration object that contains parameters used to configure a device in the form of key-value pairs.
+     *
      * Iterates through all loaded modules and creates a device with the first module that accepts the provided connection string.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManagerUtils_createDevice()}.
@@ -109,12 +109,19 @@ public class ModuleManagerUtils extends BaseObject {
     }
 
     /**
-     * Creates multiple device objects in parallel using the specified connection strings. Each device is created concurrently. None of the created device object are automatically added as a sub-device of the caller, but only returned by reference.
-     * &#64;param[out] devices A dictionary which maps each connection string to the corresponding created device object. If a device creation attempt fails, the value will be `nullptr` for that entry.
-     * &#64;param connectionArgs A dictionary where each key is a connection string identifying the target device (e.g., IPv4/IPv6), and each value is a configuration object that customizes the connection. The configuration may specify parameters such as maximum sample rate, communication port, number of channels, or other device-specific settings. A `nullptr` value indicates that the default configuration should be used.
+     * Creates multiple device objects in parallel using the specified connection strings. Each device is created concurrently.
+     * None of the created device object are automatically added as a sub-device of the caller, but only returned by reference.
+     * &#64;param[out] devices A dictionary which maps each connection string to the corresponding created device object.
+     * If a device creation attempt fails, the value will be `nullptr` for that entry.
+     * &#64;param connectionArgs A dictionary where each key is a connection string identifying the target device
+     * (e.g., IPv4/IPv6), and each value is a configuration object that customizes the connection.
+     * The configuration may specify parameters such as maximum sample rate, communication port, number of channels,
+     * or other device-specific settings. A `nullptr` value indicates that the default configuration should be used.
      * &#64;param parent The parent component/device to which the created devices attach.
-     * &#64;param errCodes An optional dictionary to populate error codes for failed connections. For each failed connection, the key is the connection string, and the value contains error code.
-     * &#64;param errorInfos An optional dictionary to populate error info details for failed connections. For each failed connection, the key is the connection string, and the value contains error info object.
+     * &#64;param[in,out] errCodes An optional dictionary to populate error codes for failed connections.
+     * For each failed connection, the key is the connection string, and the value contains error code.
+     * &#64;param[in,out] errorInfos An optional dictionary to populate error info details for failed connections.
+     * For each failed connection, the key is the connection string, and the value contains error info object.
      * &#64;return OPENDAQ_PARTIAL_SUCCESS if at least one device was successfully created, but not all of them;
      * OPENDAQ_ERR_GENERALERROR if no devices were created.
      *
@@ -149,12 +156,14 @@ public class ModuleManagerUtils extends BaseObject {
     }
 
     /**
-     * Creates and returns a function block with the specified id. The function block is not automatically added to the FB list of the caller.
+     * Creates and returns a function block with the specified id.
+     * The function block is not automatically added to the FB list of the caller.
      * &#64;param id The id of the function block to create. Ids can be retrieved by calling `getAvailableFunctionBlockTypes()`.
      * &#64;param parent The parent component/device to which the function block attaches.
      * &#64;param config Function block configuration. In case of a null value, implementation should use default configuration.
      * &#64;param localId Custom local ID for the function block. Overrides the "LocalId" property of the "config" object, if present.
      * &#64;param[out] functionBlock The created function block.
+     *
      * Iterates through all loaded modules and creates a function block with the first module that accepts the provided connection string.
      * The local ID is equal to the name of the function block type with a "_n" suffix, where "n" is an integer, equal to that of the greatest
      * integer suffix amongst the function blocks of the same function block type already added to a given parent. The initial value of "n" is 0.
@@ -193,8 +202,10 @@ public class ModuleManagerUtils extends BaseObject {
      * Creates and returns a server with the provided serverType and configuration.
      * &#64;param serverTypeId Type id of the server. Can be obtained from its corresponding Server type object.
      * &#64;param rootDevice The root device
-     * &#64;param serverConfig Config of the server. Can be created from its corresponding Server type object. In case of a null value, it will use the default configuration.
+     * &#64;param serverConfig Config of the server. Can be created from its corresponding Server type object.
+     * In case of a null value, it will use the default configuration.
      * &#64;param[out] server The created server.
+     *
      * Iterates through all loaded modules and creates a server with the first module that accepts the provided serverTypeId.
      * The servers folder of the root device is automatically assigned as parent for created server component.
      * The local ID of created server component is equal to the name of the server type.
@@ -224,6 +235,7 @@ public class ModuleManagerUtils extends BaseObject {
      * &#64;param[out] streaming The created streaming object.
      * &#64;param connectionString Describes the connection parameters of the streaming.
      * &#64;param config A configuration object that contains parameters used to configure a streaming connection in the form of key-value pairs.
+     *
      * Iterates through all loaded modules and creates a streaming connection with the first module that accepts the provided connection string.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManagerUtils_createStreaming()}.
@@ -248,6 +260,7 @@ public class ModuleManagerUtils extends BaseObject {
     /**
      * Returns a dictionary of known and available device types this module can create.
      * &#64;param[out] deviceTypes The dictionary of known device types.
+     *
      * Contains information on devices available in all loaded modules.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManagerUtils_getAvailableDeviceTypes()}.
@@ -261,8 +274,10 @@ public class ModuleManagerUtils extends BaseObject {
     }
 
     /**
-     * Returns a list of known devices info. The implementation can start discovery in background and only return the results in this function.
+     * Returns a list of known devices info.
+     * The implementation can start discovery in background and only return the results in this function.
      * &#64;param[out] availableDevices The list of known devices information.
+     *
      * Contains information on devices available in all loaded modules.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManagerUtils_getAvailableDevices()}.
@@ -278,6 +293,7 @@ public class ModuleManagerUtils extends BaseObject {
     /**
      * Returns a dictionary of known and available function block types this module can create.
      * &#64;param[out] functionBlockTypes The dictionary of known function block types.
+     *
      * Contains information on function blocks available in all loaded modules.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqModuleManagerUtils_getAvailableFunctionBlockTypes()}.
@@ -306,6 +322,7 @@ public class ModuleManagerUtils extends BaseObject {
      * &#64;param[out] deviceInfo The device information object containing discovery data.
      * &#64;param manufacturer The manufacturer's name identifying the device.
      * &#64;param serialNumber The serial number of the device.
+     *
      * The manufacturer name and serial number are used to uniquely identify the target device.
      * This method searches through the available devices discovered during the last scan.
      *
@@ -331,6 +348,7 @@ public class ModuleManagerUtils extends BaseObject {
      * &#64;param manufacturer The manufacturer's name identifying the device owning the network interface.
      * &#64;param serialNumber The serial number of the device owning the network interface.
      * &#64;param[out] config A property object where the retrieved configuration parameters are stored.
+     *
      * The manufacturer name and serial number are used to uniquely identify the target device. The method queries the current
      * IP configuration parameters of the specified network interface via multicast addressing query to all devices in the subnet.
      * The target device compares the received identification parameters with its own and, if they match, attempts to retrieve

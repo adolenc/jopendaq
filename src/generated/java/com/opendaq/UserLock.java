@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * This class manages the lock state of an object, usually a device. A device can be locked either with a specific user or without one. If the device is locked with a specific user, only that user can unlock it. If the device is locked without a user, any user can unlock it.
+ * This class manages the lock state of an object, usually a device. A device can be locked either with a specific user or without one.
+ * If the device is locked with a specific user, only that user can unlock it. If the device is locked without a user, any user can unlock it.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqUserLock} interface.
  */
@@ -64,7 +65,8 @@ public class UserLock extends BaseObject {
     }
 
     /**
-     * Lock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user, or with an anonymous user, any user can unlock it.
+     * Lock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user,
+     * or with an anonymous user, any user can unlock it.
      * &#64;param user User performing the lock action.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUserLock_lock()}.
@@ -84,7 +86,8 @@ public class UserLock extends BaseObject {
     }
 
     /**
-     * Unlock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user, or with an anonymous user, any user can unlock it.
+     * Unlock the object. Only the user who locked the object can unlock it. If the object was locked without a specific user,
+     * or with an anonymous user, any user can unlock it.
      * &#64;param user User performing the unlock action.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUserLock_unlock()}.

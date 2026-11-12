@@ -12,18 +12,23 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Signal descriptor field that defines a scaling transformation, which should be applied to data carried by the signal's packets when read.
+ * Signal descriptor field that defines a scaling transformation, which should be
+ * applied to data carried by the signal's packets when read.
+ *
  * Each scaling specifies its `scalingType` and parses the parameters accordingly. The parameters
  * are to be interpreted and used as specified by each specific scaling type as detailed below.
+ *
  * Additionally, each Scaling object states is input and output data types. The inputDataType
  * describes the raw data type of the signal value (that data is input into the scaling scaling),
  * while the outputDataType should match the sample type of the signal's value descriptor.
+ *
  * Scaling objects implement the Struct methods internally and are Core type `ctStruct`.
  * &#64;subsection scaling_types Scaling types
  * &#64;subsubsection scaling_types_linear Linear scaling
  * Linear scaling parameters must have two entries:
  * - Scale: coefficient by which the input data is to be multiplied
  * - Offset: a constant that is added to the &lt;em&gt;scale * value&lt;/em&gt; multiplication result
+ *
  * The linear scaling output is calculated as follows: &lt;em&gt;inputValue * scale + offset&lt;/em&gt;
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqScaling} interface.
@@ -74,7 +79,8 @@ public class Scaling extends BaseObject {
     }
 
     /**
-     * Creates a Scaling with a Linear scaling type configuration. The returned Scaling object is already frozen.
+     * Creates a Scaling with a Linear scaling type configuration.
+     * The returned Scaling object is already frozen.
      * &#64;param scale Coefficient by which the input data is to be multiplied.
      * &#64;param offset Constant that is added to the &lt;em&gt;scale * value&lt;/em&gt; multiplication result.
      * &#64;param inputDataType The scaling's input data type.
@@ -99,6 +105,7 @@ public class Scaling extends BaseObject {
     /**
      * Gets the scaling's input data type.
      * &#64;param[out] type The input data type
+     *
      * The input data type corresponds to the raw values passed through the signal path in
      * data packets.
      *
@@ -115,6 +122,7 @@ public class Scaling extends BaseObject {
     /**
      * Gets the scaling's output data type.
      * &#64;param[out] type The output data type
+     *
      * The output data type corresponds to the sample type specified in the value descriptor of
      * a signal, and is the type in which said signal's data should be read in after having
      * the scaling applied to it.
@@ -144,7 +152,8 @@ public class Scaling extends BaseObject {
     }
 
     /**
-     * Gets the type of the scaling that determines how the scaling parameters should be interpreted and how the scaling should be calculated.
+     * Gets the type of the scaling that determines how the scaling parameters should be interpreted
+     * and how the scaling should be calculated.
      * &#64;param[out] type The type of the scaling.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqScaling_getType()}.

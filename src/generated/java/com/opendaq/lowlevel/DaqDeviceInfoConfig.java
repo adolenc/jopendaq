@@ -96,7 +96,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the asset ID of the device. Represents a user writable alphanumeric character sequence uniquely identifying a component.  Calls {@code daqDeviceInfoConfig_setAssetId()}. */
+    /** Sets the asset ID of the device. Represents a user writable alphanumeric character  Calls {@code daqDeviceInfoConfig_setAssetId()}. */
     public static void setAssetId(MemorySegment self, MemorySegment id) {
         try {
             int err = (int) Ffi.require(MH_setAssetId, "daqDeviceInfoConfig_setAssetId").invokeExact(Ffi.orNull(self), Ffi.orNull(id));
@@ -120,7 +120,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the address of the user manual. It may be a pathname in the file system or a URL (Web address)  Calls {@code daqDeviceInfoConfig_setDeviceManual()}. */
+    /** Sets the address of the user manual.  Calls {@code daqDeviceInfoConfig_setDeviceManual()}. */
     public static void setDeviceManual(MemorySegment self, MemorySegment deviceManual) {
         try {
             int err = (int) Ffi.require(MH_setDeviceManual, "daqDeviceInfoConfig_setDeviceManual").invokeExact(Ffi.orNull(self), Ffi.orNull(deviceManual));
@@ -136,7 +136,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets a device type as an object providing type id, name, short description and default device configuration.  Calls {@code daqDeviceInfoConfig_setDeviceType()}. */
+    /** Sets a device type as an object providing type id, name, short description and  Calls {@code daqDeviceInfoConfig_setDeviceType()}. */
     public static void setDeviceType(MemorySegment self, MemorySegment deviceType) {
         try {
             int err = (int) Ffi.require(MH_setDeviceType, "daqDeviceInfoConfig_setDeviceType").invokeExact(Ffi.orNull(self), Ffi.orNull(deviceType));
@@ -176,7 +176,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the unique identifier of the company that manufactured the device. This identifier should be a fully qualified domain name; however, it may be a GUID or similar construct that ensures global uniqueness.  Calls {@code daqDeviceInfoConfig_setManufacturerUri()}. */
+    /** Sets the unique identifier of the company that manufactured the device.  Calls {@code daqDeviceInfoConfig_setManufacturerUri()}. */
     public static void setManufacturerUri(MemorySegment self, MemorySegment manufacturerUri) {
         try {
             int err = (int) Ffi.require(MH_setManufacturerUri, "daqDeviceInfoConfig_setManufacturerUri").invokeExact(Ffi.orNull(self), Ffi.orNull(manufacturerUri));
@@ -208,7 +208,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the platform of the device. The platform specifies whether real hardware is used or if the device is simulated.  Calls {@code daqDeviceInfoConfig_setPlatform()}. */
+    /** Sets the platform of the device. The platform specifies whether real hardware  Calls {@code daqDeviceInfoConfig_setPlatform()}. */
     public static void setPlatform(MemorySegment self, MemorySegment platform) {
         try {
             int err = (int) Ffi.require(MH_setPlatform, "daqDeviceInfoConfig_setPlatform").invokeExact(Ffi.orNull(self), Ffi.orNull(platform));
@@ -216,7 +216,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the position of the device. The position specifies the position within a given system. For example in which slot or slice the device is in.  Calls {@code daqDeviceInfoConfig_setPosition()}. */
+    /** Sets the position of the device. The position specifies the position within a  Calls {@code daqDeviceInfoConfig_setPosition()}. */
     public static void setPosition(MemorySegment self, long position) {
         try {
             int err = (int) Ffi.require(MH_setPosition, "daqDeviceInfoConfig_setPosition").invokeExact(Ffi.orNull(self), position);
@@ -232,7 +232,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the globally unique resource identifier provided by the manufacturer. The recommended syntax of the ProductInstanceUri is: &lt;ManufacturerUri&gt;/&lt;any string&gt; where &lt;any string&gt; is unique among all instances using the same ManufacturerUri.  Calls {@code daqDeviceInfoConfig_setProductInstanceUri()}. */
+    /** Sets the globally unique resource identifier provided by the manufacturer.  Calls {@code daqDeviceInfoConfig_setProductInstanceUri()}. */
     public static void setProductInstanceUri(MemorySegment self, MemorySegment productInstanceUri) {
         try {
             int err = (int) Ffi.require(MH_setProductInstanceUri, "daqDeviceInfoConfig_setProductInstanceUri").invokeExact(Ffi.orNull(self), Ffi.orNull(productInstanceUri));
@@ -240,7 +240,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the incremental counter indicating the number of times the configuration data has been modified.  Calls {@code daqDeviceInfoConfig_setRevisionCounter()}. */
+    /** Sets the incremental counter indicating the number of times the configuration  Calls {@code daqDeviceInfoConfig_setRevisionCounter()}. */
     public static void setRevisionCounter(MemorySegment self, long revisionCounter) {
         try {
             int err = (int) Ffi.require(MH_setRevisionCounter, "daqDeviceInfoConfig_setRevisionCounter").invokeExact(Ffi.orNull(self), revisionCounter);
@@ -264,7 +264,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the system type. The system type can, for example, be LayeredSystem, StandaloneSystem, or RackSystem.  Calls {@code daqDeviceInfoConfig_setSystemType()}. */
+    /** Sets the system type. The system type can, for example, be LayeredSystem,  Calls {@code daqDeviceInfoConfig_setSystemType()}. */
     public static void setSystemType(MemorySegment self, MemorySegment type) {
         try {
             int err = (int) Ffi.require(MH_setSystemType, "daqDeviceInfoConfig_setSystemType").invokeExact(Ffi.orNull(self), Ffi.orNull(type));
@@ -272,7 +272,7 @@ public final class DaqDeviceInfoConfig {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the system UUID that represents a unique ID of a system. All devices in a system share this UUID.  Calls {@code daqDeviceInfoConfig_setSystemUuid()}. */
+    /** Sets the system UUID that represents a unique ID of a system. All devices in a system  Calls {@code daqDeviceInfoConfig_setSystemUuid()}. */
     public static void setSystemUuid(MemorySegment self, MemorySegment uuid) {
         try {
             int err = (int) Ffi.require(MH_setSystemUuid, "daqDeviceInfoConfig_setSystemUuid").invokeExact(Ffi.orNull(self), Ffi.orNull(uuid));

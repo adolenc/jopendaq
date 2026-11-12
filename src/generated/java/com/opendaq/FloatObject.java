@@ -12,7 +12,22 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqFloatObject} interface.
+ * Represents float number as `IFloat` interface. Use this interface to wrap float
+ * variable when you need to add the number to lists, dictionaries and other containers which
+ * accept `IBaseObject` and derived interfaces.
+ *
+ * Float type is defined as double-precision IEEE 754 value.
+ *
+ * Available factories:
+ * &#64;code
+ * // Creates a new Float. Throws exception if not successful.
+ * IFloat* Float_Create(Float value)
+ *
+ * // Creates a new Float. Returns error code if not successful.
+ * ErrCode createFloat(IFloat** obj, Float value)
+ * &#64;endcode
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqFloat} interface.
  */
 public class FloatObject extends BaseObject {
 
@@ -22,33 +37,56 @@ public class FloatObject extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqFloatObject_createFloatObject()}.
+     * Calls the openDAQ C function {&#64;code daqFloat_createFloat()}.
      */
     public FloatObject(double value) {
-        super(create$createFloatObject(value));
+        super(create$createFloat(value));
     }
 
-    private static MemorySegment create$createFloatObject(double value) {
-        return DaqFloatObject.createFloatObject(value);
+    private static MemorySegment create$createFloat(double value) {
+        return DaqFloat.createFloat(value);
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqFloatObject_equalsValue()}.
+     * Calls the openDAQ C function {&#64;code daqFloat_createFloatFromPool()}.
+     */
+    public static FloatObject createFloatFromPool(double value) {
+        return DaqObject.wrap(create$createFloatFromPool(value), FloatObject.class);
+    }
+
+    private static MemorySegment create$createFloatFromPool(double value) {
+        return DaqFloat.createFloatFromPool(value);
+    }
+
+    /**
+     * Compares stored float value to the float parameter.
+     * &#64;param value Value for comparison.
+     * &#64;param[out] equals The result of the comparison.
+     *
+     * Call this method to directly compare the object to the value parameter.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFloat_equalsValue()}.
      */
     public boolean equalsValue(double value) {
         try {
-            return DaqFloatObject.equalsValue(requireLivePointer(), value);
+            return DaqFloat.equalsValue(requireLivePointer(), value);
         } finally {
             Reference.reachabilityFence(this);
         }
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqFloatObject_getValue()}.
+     * Gets a float value stored in the object.
+     * &#64;param[out] value Stored float value.
+     * &#64;return OPENDAQ_SUCCESS if succeeded, error code otherwise.
+     *
+     * Call this method to extract the float value that is stored in the object.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFloat_getValue()}.
      */
     public double getValue() {
         try {
-            return DaqFloatObject.getValue(requireLivePointer());
+            return DaqFloat.getValue(requireLivePointer());
         } finally {
             Reference.reachabilityFence(this);
         }

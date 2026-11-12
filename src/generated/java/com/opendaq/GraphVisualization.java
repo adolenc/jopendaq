@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents a way to get a string representation of a graph usually in some diagram description language like DOT, mermaid or D2.
+ * Represents a way to get a string representation of a graph
+ * usually in some diagram description language like DOT, mermaid or D2.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqGraphVisualization} interface.
  */

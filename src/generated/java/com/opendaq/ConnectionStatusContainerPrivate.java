@@ -13,13 +13,16 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Provides access to private methods for managing the Device's connection statuses.
+ *
  * Enables adding, removing, and updating statuses stored in the connection status container.
  * Statuses are identified by unique connection strings and can be accessed via
  * IComponentStatusContainer using name aliases. A configuration status, accessible via alias "ConfigurationStatus",
  * is unique per container and cannot be removed if added.
+ *
  * On the other hand, multiple streaming statuses are supported, one per each streaming source attached to the device.
  * Aliases for these follow the pattern "StreamingStatus_n," with optional protocol-based prefixes (e.g.,
  * "OpenDAQNativeStreamingStatus_1", "OpenDAQLTStreamingStatus_2", "StreamingStatus_3" etc.).
+ *
  * "ConnectionStatusChanged" Core events are triggered whenever there is a change in the connection status of the openDAQ Device,
  * including parameters such as status name alias, value, protocol type, connection string, and streaming
  * object (nullptr for configuration statuses). Removing streaming statuses also triggers said Core event with
@@ -95,7 +98,8 @@ public class ConnectionStatusContainerPrivate extends BaseObject {
      * Updates the value of an existing connection status.
      * &#64;param connectionString The connection string identifying the status to update.
      * &#64;param value The new value of the status.
-     * &#64;param streamingObject The streaming object associated with the connection, used in triggered Core events. Set to nullptr for configuration connections.
+     * &#64;param streamingObject The streaming object associated with the connection, used in triggered Core events.
+     * Set to nullptr for configuration connections.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnectionStatusContainerPrivate_updateConnectionStatus()}.
      */
@@ -116,7 +120,8 @@ public class ConnectionStatusContainerPrivate extends BaseObject {
      * Updates the value of an existing connection status with a message.
      * &#64;param connectionString The connection string identifying the status to update.
      * &#64;param value The new value of the status.
-     * &#64;param streamingObject The streaming object associated with the connection, used in triggered Core events. Set to nullptr for configuration connections.
+     * &#64;param streamingObject The streaming object associated with the connection, used in triggered Core events.
+     * Set to nullptr for configuration connections.
      * &#64;param message The new message of the connection status. Usually describes last reconnect attempt failure.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnectionStatusContainerPrivate_updateConnectionStatusWithMessage()}.

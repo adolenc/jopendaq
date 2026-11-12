@@ -1,15 +1,16 @@
-name: Build and release native jars
+name: Build and release jars
 
-# Builds the openDAQ native libraries from source for every supported platform,
-# packages each platform's libraries into a `natives-<triple>` classifier jar
-# (com/opendaq/natives/<triple>/ with an index.txt file list and a tag.txt cache
-# key), builds the pure-Java main jar, and publishes them all as assets on a
-# GitHub release.  The bindings load the natives from whichever
-# `jopendaq-<version>-natives-<triple>.jar` is on the classpath — there is no
+# Builds the pure-Java main jar and one `natives-<triple>` classifier jar per
+# supported platform (com/opendaq/natives/<triple>/ with an index.txt file list
+# and a tag.txt cache key), and publishes them all as assets on a GitHub
+# release.  The bindings load the natives from whichever
+# `jopendaq-<version>-natives-<triple>.jar` is on the classpath -- there is no
 # runtime download.
 #
-# Adapted from cl-opendaq's build-native-binaries.yml; the openDAQ CMake flags
-# are kept in sync with the Makefile.
+# Nothing here builds openDAQ.  The native libraries are the ones of the
+# opendaq-bindings-nightly release pinned in opendaq-nightly.lock, the same
+# release whose API spec the checked-in bindings were generated from; they are
+# downloaded, verified against the release's manifest, and repackaged as jars.
 
 'on':
   workflow_dispatch:
@@ -18,128 +19,53 @@ name: Build and release native jars
         description: "Release version for the jars/tag (default: pom project.version)."
         required: false
         type: string
-      opendaq_repo:
-        description: "openDAQ repository URL (default: OPENDAQ_REPO_URL from Makefile)."
-        required: false
-        type: string
-      opendaq_ref:
-        description: "openDAQ ref to build (default: OPENDAQ_REF from Makefile)."
-        required: false
-        type: string
 
 permissions:
   contents: write
 
-env:
-  OPENDAQ_SOURCE_DIR: tmp/openDAQ
-  OPENDAQ_BUILD_DIR: tmp/build
-  # Keep in sync with OPENDAQ_CMAKE_ARGS in the Makefile.
-  OPENDAQ_CMAKE_ARGS: >-
-    -DOPENDAQ_GENERATE_C_BINDINGS=ON
-    -DOPENDAQ_GENERATE_PYTHON_BINDINGS=OFF
-    -DOPENDAQ_GENERATE_DELPHI_BINDINGS=OFF
-    -DOPENDAQ_GENERATE_CSHARP_BINDINGS=OFF
-    -DOPENDAQ_ENABLE_TESTS=OFF
-    -DOPENDAQ_ENABLE_TEST_UTILS=OFF
-    -DOPENDAQ_ENABLE_ACCESS_CONTROL=OFF
-    -DOPENDAQ_ENABLE_NATIVE_STREAMING=ON
-    -DDAQMODULES_OPENDAQ_CLIENT_MODULE=ON
-    -DDAQMODULES_REF_DEVICE_MODULE=ON
-    -DDAQMODULES_REF_FB_MODULE=ON
-    -DDAQMODULES_REF_FB_MODULE_ENABLE_RENDERER=OFF
-    -DBOOST_LOCALE_ENABLE_ICU=OFF
-
 jobs:
   resolve:
-    name: Resolve version and openDAQ ref
+    name: Resolve version and pinned nightly
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.resolve.outputs.version }}
-      repo: ${{ steps.resolve.outputs.repo }}
-      ref: ${{ steps.resolve.outputs.ref }}
-      sha: ${{ steps.resolve.outputs.sha }}
+      nightly: ${{ steps.resolve.outputs.nightly }}
     steps:
       - uses: actions/checkout@v4
       - id: resolve
         shell: bash
         env:
           INPUT_VERSION: ${{ inputs.version }}
-          INPUT_REPO: ${{ inputs.opendaq_repo }}
-          INPUT_REF: ${{ inputs.opendaq_ref }}
         run: |
           version="$INPUT_VERSION"
           [ -z "$version" ] && version="$(grep -m1 '<version>' pom.xml | sed -E 's|.*<version>(.*)</version>.*|\1|')"
           version="${version%-SNAPSHOT}"   # a release is never a snapshot
-
-          repo="$INPUT_REPO"
-          [ -z "$repo" ] && repo="$(awk '/^OPENDAQ_REPO_URL[[:space:]]*\?=/{print $3; exit}' Makefile)"
-
-          ref="$INPUT_REF"
-          [ -z "$ref" ] && ref="$(awk '/^OPENDAQ_REF[[:space:]]*\?=/{print $3; exit}' Makefile)"
-
-          sha="$(git ls-remote "$repo" "refs/heads/$ref" "refs/tags/$ref" | head -n1 | cut -f1)"
-          [ -z "$sha" ] && sha="$ref"   # a raw commit sha
-
+          nightly="$(python3 -c "import json; print(json.load(open('opendaq-nightly.lock'))['tag'])")"
           {
             echo "version=$version"
-            echo "repo=$repo"
-            echo "ref=$ref"
-            echo "sha=$sha"
+            echo "nightly=$nightly"
           } >> "$GITHUB_OUTPUT"
 
-  # Regenerate src/generated/java from the openDAQ ref being released and commit
-  # it back onto the dispatched branch, so the checked-in bindings never drift
-  # from the natives.  The same freshly generated tree is handed to the main-jar
-  # build below (via the generated-bindings artifact), so the published jar is
-  # compiled from exactly the bindings committed here -- the two stay in sync.
+  # The checked-in bindings must be exactly what the pinned spec generates;
+  # otherwise the jar would not match the natives it ships with.  A mismatch
+  # means someone bumped the lock without regenerating (`make bump-nightly`).
   bindings:
-    name: Regenerate and commit bindings
+    name: Verify bindings match the pinned spec
     runs-on: ubuntu-latest
-    needs: resolve
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Check out the branch itself so the regenerated bindings can be
-          # committed back to it.
-          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Clone openDAQ (headers for the generators)
+      - name: Regenerate and compare
         shell: bash
         run: |
-          rm -rf "$OPENDAQ_SOURCE_DIR"
-          mkdir -p "$(dirname "$OPENDAQ_SOURCE_DIR")"
-          git clone "${{ needs.resolve.outputs.repo }}" "$OPENDAQ_SOURCE_DIR"
-          git -C "$OPENDAQ_SOURCE_DIR" checkout --force "${{ needs.resolve.outputs.ref }}"
-      - name: Regenerate bindings
-        shell: bash
-        run: |
-          # Same generators as `make bindings`, but against the resolved openDAQ
-          # ref rather than the Makefile default.  Pure Python, standard library.
-          python3 tools/generate_low_level_bindings.py \
-            --opendaq-repo "$OPENDAQ_SOURCE_DIR" --output-dir src/generated/java
-          python3 tools/generate_high_level_bindings.py \
-            --opendaq-repo "$OPENDAQ_SOURCE_DIR" --output-dir src/generated/java
-      - uses: actions/upload-artifact@v4
-        with:
-          name: generated-bindings
-          path: src/generated/java
-          if-no-files-found: error
-      - name: Commit regenerated bindings
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # `git add <dir>` stages additions, edits, and deletions under it, so
-          # the commit reflects the regeneration exactly.
-          git add src/generated/java
-          if git diff --cached --quiet; then
-            echo "Committed bindings already match openDAQ ${{ needs.resolve.outputs.ref }} -- nothing to commit."
-            exit 0
+          make bindings
+          if [ -n "$(git status --porcelain -- src/generated/java)" ]; then
+            git status --short -- src/generated/java | head -n 40
+            echo "::error::src/generated/java does not match opendaq-nightly.lock -- run 'make bump-nightly TAG=<tag>' and commit the result." >&2
+            exit 1
           fi
-          git commit -m "Regenerate bindings for openDAQ ${{ needs.resolve.outputs.ref }} (${{ needs.resolve.outputs.sha }})"
-          git push origin "HEAD:${{ github.ref_name }}"
 
   main-jar:
     name: Build main jar
@@ -151,17 +77,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '22'
-      # Build from the bindings the `bindings` job just generated and committed,
-      # so the published jar matches the checked-in src/generated/java exactly.
-      # Clear the checked-out copy first so any files the regeneration dropped
-      # don't linger.
-      - name: Use the freshly generated bindings
-        shell: bash
-        run: rm -rf src/generated/java
-      - uses: actions/download-artifact@v4
-        with:
-          name: generated-bindings
-          path: src/generated/java
       - name: Set project version
         shell: bash
         run: mvn -q -B versions:set -DnewVersion="${{ needs.resolve.outputs.version }}" -DgenerateBackupPoms=false
@@ -174,136 +89,75 @@ jobs:
           path: target/jopendaq-${{ needs.resolve.outputs.version }}.jar
           if-no-files-found: error
 
-  natives-jar:
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.runner }}
-    needs: resolve
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Linux x64
-            runner: ubuntu-22.04
-            triple: linux-x86_64
-            lib_glob: '*.so'
-          - name: macOS arm64
-            runner: macos-15
-            triple: osx-aarch_64
-            lib_glob: '*.dylib'
-            cmake_extra: -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15
-          - name: Windows x64
-            runner: windows-2022
-            triple: windows-x86_64
-            lib_glob: '*.dll'
+  # The jars only repackage prebuilt libraries, so all platforms are produced
+  # on one runner.
+  natives-jars:
+    name: Package natives jars
+    runs-on: ubuntu-latest
+    needs: [resolve, bindings]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '22'
-      - uses: jwlawson/actions-setup-cmake@v2
-      - uses: seanmiddleditch/gha-setup-ninja@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Clone openDAQ
+      - name: Download the pinned natives
         shell: bash
+        run: python3 tools/fetch_nightly.py --natives all
+
+      - name: Package one jar per platform
+        shell: bash
+        env:
+          VERSION: ${{ needs.resolve.outputs.version }}
+          NIGHTLY: ${{ needs.resolve.outputs.nightly }}
         run: |
-          rm -rf "$OPENDAQ_SOURCE_DIR" "$OPENDAQ_BUILD_DIR"
-          mkdir -p "$(dirname "$OPENDAQ_SOURCE_DIR")"
-          git clone "${{ needs.resolve.outputs.repo }}" "$OPENDAQ_SOURCE_DIR"
-          git -C "$OPENDAQ_SOURCE_DIR" checkout --force "${{ needs.resolve.outputs.ref }}"
-
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            ninja-build \
-            $(tr '\n' ' ' < "$OPENDAQ_SOURCE_DIR/.github/packages/apt.txt")
-
-      - name: Install macOS dependencies
-        if: runner.os == 'macOS'
-        shell: bash
-        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install mono ninja
-
-      - name: Configure
-        shell: bash
-        run: |
-          cmake -S "$OPENDAQ_SOURCE_DIR" -B "$OPENDAQ_BUILD_DIR" \
-            -G Ninja -DCMAKE_BUILD_TYPE=Release \
-            $OPENDAQ_CMAKE_ARGS ${{ matrix.cmake_extra }}
-
-      - name: Build
-        shell: bash
-        run: cmake --build "$OPENDAQ_BUILD_DIR" --config Release
-
-      - name: Stage natives jar layout
-        id: stage
-        shell: bash
-        run: |
-          triple="${{ matrix.triple }}"
-          stage="stage/com/opendaq/natives/$triple"
-          rm -rf stage
-          mkdir -p "$stage"
-
-          # Collect the runtime libraries produced under the build's bin/,
-          # excluding the python module and any test-only dlls.
-          list="$(find "$OPENDAQ_BUILD_DIR" -type f -path '*/bin/*' -name '${{ matrix.lib_glob }}' \
-            ! -name 'opendaq.cpython*' ! -name '*_test_dll.*')"
-          if [ -z "$list" ]; then
-            echo "No ${{ matrix.lib_glob }} runtime libraries found under $OPENDAQ_BUILD_DIR." >&2
-            exit 1
-          fi
-
-          : > "$stage/index.txt"
-          while IFS= read -r lib; do
-            cp "$lib" "$stage/"
-            basename "$lib" >> "$stage/index.txt"
-          done <<< "$list"
-
-          # Cache key: the exact openDAQ commit these libraries were built from.
-          printf '%s\n' "${{ needs.resolve.outputs.sha }}" > "$stage/tag.txt"
-
-          # Sanity: the core libraries must be present.
-          for stem in daqcoretypes daqcoreobjects opendaq copendaq; do
-            if ! ls "$stage" | grep -q "$stem"; then
-              echo "Missing expected library matching *$stem* for $triple." >&2
+          mkdir -p dist
+          # Maven os classifier <- nightly platform name
+          for pair in linux-x86_64:linux-x64 osx-aarch_64:darwin-arm64 windows-x86_64:windows-x64; do
+            triple="${pair%%:*}"
+            source="tmp/nightly/$NIGHTLY/natives/${pair##*:}"
+            if [ ! -d "$source" ]; then
+              echo "::error::nightly $NIGHTLY has no natives for ${pair##*:}" >&2
               exit 1
             fi
-          done
-          sort -o "$stage/index.txt" "$stage/index.txt"
-          echo "index:"; cat "$stage/index.txt"
 
-      - name: Package natives jar
-        shell: bash
-        run: |
-          jar --create \
-            --file "jopendaq-${{ needs.resolve.outputs.version }}-natives-${{ matrix.triple }}.jar" \
-            -C stage .
+            stage="stage/$triple/com/opendaq/natives/$triple"
+            mkdir -p "$stage"
+            cp "$source"/* "$stage/"
+            ls -1 "$source" | sort > "$stage/index.txt"
+            # Cache key: the release these libraries came from.
+            printf '%s\n' "$NIGHTLY" > "$stage/tag.txt"
+
+            # Sanity: the core libraries must be present.
+            for stem in daqcoretypes daqcoreobjects opendaq copendaq; do
+              if ! ls "$stage" | grep -q "$stem"; then
+                echo "::error::missing a library matching *$stem* for $triple" >&2
+                exit 1
+              fi
+            done
+
+            jar --create --file "dist/jopendaq-$VERSION-natives-$triple.jar" -C "stage/$triple" .
+            echo "$triple:"; sed 's/^/  /' "$stage/index.txt"
+          done
 
       - uses: actions/upload-artifact@v4
         with:
-          name: natives-${{ matrix.triple }}
-          path: jopendaq-${{ needs.resolve.outputs.version }}-natives-${{ matrix.triple }}.jar
+          name: natives-jars
+          path: dist/*.jar
           if-no-files-found: error
 
   release:
     name: Publish release
     runs-on: ubuntu-latest
-    needs: [resolve, main-jar, natives-jar]
+    needs: [resolve, main-jar, natives-jars]
     steps:
       - uses: actions/checkout@v4
-      # Only the jar artifacts are release assets; the generated-bindings
-      # artifact is consumed by main-jar / committed by the bindings job, not
-      # published here.
       - uses: actions/download-artifact@v4
         with:
-          pattern: main-jar
-          path: dist
-          merge-multiple: true
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: natives-*
           path: dist
           merge-multiple: true
       - name: List assets
@@ -314,6 +168,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.resolve.outputs.version }}
+          NIGHTLY: ${{ needs.resolve.outputs.nightly }}
         run: |
           tag="v${VERSION}"
           if gh release view "$tag" >/dev/null 2>&1; then
@@ -321,7 +176,7 @@ jobs:
           fi
           gh release create "$tag" \
             --title "jopendaq $VERSION" \
-            --notes "openDAQ Java bindings $VERSION. Native libraries built from ${{ needs.resolve.outputs.repo }} @ ${{ needs.resolve.outputs.ref }} (${{ needs.resolve.outputs.sha }}).
+            --notes "openDAQ Java bindings $VERSION, generated from and shipping the native libraries of openDAQ bindings nightly \`$NIGHTLY\`.
 
           Add the \`jopendaq-$VERSION.jar\` plus the \`jopendaq-$VERSION-natives-<platform>.jar\` for your OS to the classpath." \
             dist/jopendaq-*.jar

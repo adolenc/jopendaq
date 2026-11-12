@@ -12,13 +12,17 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Enumerations are immutable objects that encapsulate a value within a predefined set of named integral constants. These constants are predefined in an Enumeration type with the same name as the Enumeration.
+ * Enumerations are immutable objects that encapsulate a value within a predefined set of named integral constants.
+ * These constants are predefined in an Enumeration type with the same name as the Enumeration.
+ *
  * The Enumeration types are stored within a Type Manager. In any given Instance of openDAQ, a single Type Manager should
  * exist that is part of its Context.
+ *
  * When creating an Enumeration object, the Type Manager is used to validate the given enumerator value name against the
  * Enumeration type stored within the Manager. If no type with the given Enumeration name is currently stored,
  * construction of the Enumeration object will fail. Similarly, if the provided enumerator value name is not part of
  * the Enumeration type, the construction of the Enumeration object will also fail.
+ *
  * Since the Enumerations objects are immutable the value of an existing Enumeration object cannot be modified.
  * However, the Enumeration object encapsulated by a smart pointer of the corresponding type can be replaced
  * with a newly created one. This replacement is accomplished using the assignment operator with the right

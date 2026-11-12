@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup opendaq_devices
- * &#64;addtogroup opendaq_device Device private
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqDevicePrivate} interface.
+ * Wraps the openDAQ {&#64;code daqDevicePrivate} interface.
  */
 public class DevicePrivate extends BaseObject {
 

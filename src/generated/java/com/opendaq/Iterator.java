@@ -13,11 +13,14 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Use this interface to iterator through items of a container object.
+ *
  * Call moveNext function in a loop until it returns OPENDAQ_NO_MORE_ITEMS. Iteration
  * cannot be restarted. In this case a new iterator must be created.
+ *
  * Example:
  * &#64;code
  * IIterator* it = ...;
+ *
  * while (it-&gt;moveNext() != OPENDAQ_NO_MORE_ITEMS)
  * {
  * IBaseObject* obj;

@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * As with Data packets, Event packets travel along the signal paths. They are used to notify recipients of any relevant changes to the signal sending the packet.
+ * As with Data packets, Event packets travel along the signal paths. They are used to
+ * notify recipients of any relevant changes to the signal sending the packet.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqEventPacket} interface.
  */
@@ -48,6 +49,7 @@ public class EventPacket extends Packet {
      * Creates a DataDescriptorChanged Event packet.
      * &#64;param dataDescriptor The data descriptor of the value signal.
      * &#64;param domainDataDescriptor The data descriptor of the domain signal that carries domain data of the value signal.
+     *
      * The ID of the packet is "DATA_DESCRIPTOR_CHANGED". Its parameters dictionary contains the keys "DataDescriptor"
      * and "DomainDataDescriptor", carrying their respective Signal descriptor objects as values.
      *
@@ -69,6 +71,7 @@ public class EventPacket extends Packet {
     /**
      * Creates a ImplicitDomainGapDetected Event packet.
      * &#64;param diff The size of the gap in ticks or value
+     *
      * The ID of the packet is "IMPLICIT_DOMAIN_GAP_DETECTED". Its parameters dictionary contains the key "Diff", which holds
      * the size of the gap. The size can be negative, in which case it is an overlap of samples.
      *
@@ -100,7 +103,8 @@ public class EventPacket extends Packet {
     }
 
     /**
-     * Dictionary containing parameters as &lt;String, BaseObject&gt; pairs relevant to the event signalized by the Event packet.
+     * Dictionary containing parameters as &lt;String, BaseObject&gt; pairs relevant to the event
+     * signalized by the Event packet.
      * &#64;param[out] parameters The event parameters dictionary.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEventPacket_getParameters()}.

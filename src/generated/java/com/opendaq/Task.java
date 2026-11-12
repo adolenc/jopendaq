@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A packaged callback with possible continuations and dependencies that can be arranged in a dependency graph (directed acyclic graph). The task is not executed directly but only when the graph is scheduled for execution and all dependencies have been satisfied.
+ * A packaged callback with possible continuations and dependencies that can
+ * be arranged in a dependency graph (directed acyclic graph). The task is not executed directly but only
+ * when the graph is scheduled for execution and all dependencies have been satisfied.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqTask} interface.
  */
@@ -73,7 +75,8 @@ public class Task extends BaseObject {
     }
 
     /**
-     * Sets the continuation to only execute after this task completes. Be careful of forming cycles as tasks whose dependencies cannot be satisfied will never execute.
+     * Sets the continuation to only execute after this task completes.
+     * Be careful of forming cycles as tasks whose dependencies cannot be satisfied will never execute.
      * &#64;param continuation The task that should wait for this one to complete.
      * &#64;retval OPENDAQ_ERR_NOT_SUPPORTED If the &#64;p continuation implementation was not crated by the scheduler library.
      *

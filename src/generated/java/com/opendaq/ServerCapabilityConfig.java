@@ -167,6 +167,23 @@ public class ServerCapabilityConfig extends ServerCapability {
     }
 
     /**
+     * Sets the ID of protocol group. Empty protocol group ID means that the protocol is not part of any group.
+     * &#64;param protocolGroupId The ID of protocol group
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServerCapabilityConfig_setProtocolGroupId()}.
+     */
+    public void setProtocolGroupId(String protocolGroupId) {
+        try {
+            MemorySegment protocolGroupId$s = Wrap.daqStringOrNull(protocolGroupId);
+            try {
+                DaqServerCapabilityConfig.setProtocolGroupId(requireLivePointer(), protocolGroupId$s);
+            } finally { Ffi.releaseRef(protocolGroupId$s); }
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
      * Sets the ID of protocol
      * &#64;param protocolId The ID of protocol
      *
@@ -195,6 +212,27 @@ public class ServerCapabilityConfig extends ServerCapability {
             try {
                 DaqServerCapabilityConfig.setProtocolName(requireLivePointer(), protocolName$s);
             } finally { Ffi.releaseRef(protocolName$s); }
+        } finally {
+            Reference.reachabilityFence(this);
+        }
+    }
+
+    /**
+     * Sets the security level of the protocol.
+     * &#64;param securityLevel The security level of the protocol.
+     *
+     * Could be '-1' if the protocol does not define any security level or if the security level is not known,
+     * '0' if the protocol is not secure, and positive integer values for different security levels defined by the protocol.
+     * The higher the value, the more secure the protocol is considered to be.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqServerCapabilityConfig_setProtocolSecurityLevel()}.
+     */
+    public void setProtocolSecurityLevel(Object securityLevel) {
+        try {
+            Box.Boxed securityLevel$b = Box.box(securityLevel);
+            try {
+                DaqServerCapabilityConfig.setProtocolSecurityLevel(requireLivePointer(), securityLevel$b.segment());
+            } finally { Box.releaseBoxed(securityLevel$b); }
         } finally {
             Reference.reachabilityFence(this);
         }

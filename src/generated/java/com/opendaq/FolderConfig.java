@@ -13,6 +13,7 @@ import com.opendaq.lowlevel.*;
 
 /**
  * Allows write access to folder.
+ *
  * Provides methods to add and remove items to the folder.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqFolderConfig} interface.
@@ -53,6 +54,7 @@ public class FolderConfig extends Folder {
      * &#64;param context The Context. Most often the creating function-block/device passes its own Context to the Folder.
      * &#64;param parent The parent component.
      * &#64;param localId The local ID of the parent.
+     *
      * IO folders are folder created by device and may contain only channels and other IO folders.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqFolderConfig_createIoFolder()}.

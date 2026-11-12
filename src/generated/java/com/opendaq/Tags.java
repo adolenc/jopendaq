@@ -13,8 +13,10 @@ import com.opendaq.lowlevel.*;
 
 /**
  * List of string tags. Provides helpers to get and search the list of tags.
+ *
  * Tags provide a view into an underlying list of tags. The list can be retrieved via
  * `getList`, and inspected through `contains` and `query`.
+ *
  * To manipulate the list of tags, the add/remove tag functions can be used. The Tags
  * object can only be modified if the object is not locked by the owning Component.
  *
@@ -71,7 +73,8 @@ public class Tags extends BaseObject {
     }
 
     /**
-     * Queries the list of tags, creating an EvalValue expression from the `query` string. Returns true if the list of tags matches the query, false otherwise.
+     * Queries the list of tags, creating an EvalValue expression from the `query` string.
+     * Returns true if the list of tags matches the query, false otherwise.
      * &#64;param query The query string. I.e. "tag1 || (tag2 &amp;&amp; tag3)"
      * &#64;param[out] value The result of the query
      *

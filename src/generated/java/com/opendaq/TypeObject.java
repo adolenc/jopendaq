@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * The base object type that is inherited by all Types (eg. Struct type, Simple type, Property object class) in openDAQ.
+ * The base object type that is inherited by all Types (eg. Struct type, Simple type, Property object class)
+ * in openDAQ.
+ *
  * Types are used for the construction of objects that are require validation/have pre-defined fields such as
  * Structs and Property objects. Types should be inserted into the Type manager to be used by different parts
  * of the SDK.

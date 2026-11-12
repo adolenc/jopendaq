@@ -24,10 +24,7 @@ public class UpdateParameters extends PropertyObject {
     }
 
     /**
-     * &#64;ingroup opendaq_update_parameters
-     * &#64;addtogroup opendaq_update_parameters Factories
-     *
-     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqUpdateParameters_createUpdateParameters()}.
+     * Calls the openDAQ C function {&#64;code daqUpdateParameters_createUpdateParameters()}.
      */
     public UpdateParameters() {
         super(create$createUpdateParameters());

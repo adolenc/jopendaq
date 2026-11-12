@@ -12,7 +12,9 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Channels represent physical sensors of openDAQ devices. Internally they are standard function blocks with an additional option to provide a list of tags.
+ * Channels represent physical sensors of openDAQ devices. Internally
+ * they are standard function blocks with an additional option to provide a list of
+ * tags.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqChannel} interface.
  */

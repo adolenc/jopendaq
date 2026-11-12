@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Struct objects. Contains setter methods to configure the Struct parameters, and a `build` method that builds the Struct object.
+ * Builder component of Struct objects. Contains setter methods to configure the Struct parameters, and a
+ * `build` method that builds the Struct object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqStructBuilder} interface.
  */
@@ -105,6 +106,7 @@ public class StructBuilder extends BaseObject {
     /**
      * Gets a list of all Struct field names.
      * &#64;param[out] names The list of field names.
+     *
      * The list of names will be of equal length to the list of values. Additionally, the name of a field at any given
      * index corresponds to the value stored in the list of values.
      *
@@ -121,6 +123,7 @@ public class StructBuilder extends BaseObject {
     /**
      * Gets a list of all Struct field values.
      * &#64;param[out] values The list of field values.
+     *
      * The list of names will be of equal length to the list of values. Additionally, the name of a field at any given
      * index corresponds to the value stored in the list of values.
      *
@@ -192,6 +195,7 @@ public class StructBuilder extends BaseObject {
     /**
      * Gets a list of all Struct field values.
      * &#64;param[out] values The list of field values.
+     *
      * The list of names will be of equal length to the list of values. Additionally, the name of a field at any given
      * index corresponds to the value stored in the list of values.
      *

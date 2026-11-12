@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Builder component of Multi reader objects. Contains setter methods to configure the Multi reader parameters and a `build` method that builds the Unit object.
+ * Builder component of Multi reader objects. Contains setter methods to configure the Multi reader parameters
+ * and a `build` method that builds the Unit object.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqMultiReaderBuilder} interface.
  */
@@ -151,6 +152,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Gets the notification method of ports created/owned by the multi reader. The default notification method is SameThread.
      * &#64;param notificationMethod The notification method to be used.
+     *
      * If "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_getInputPortNotificationMethod()}.
@@ -166,6 +168,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Gets the notification methods of ports created/owned by the multi reader. The default notification method is Unspecified.
      * &#64;param notificationMethods The notification methods to be used.
+     *
      * The list of methods corresponds to the list of reader components (signals, input ports). Both the size and order of both must match if configured.
      * If a method is set to "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
@@ -182,6 +185,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Gets the minimal number of samples to read.
      * &#64;param[out] minReadCount The minimal number of samples to read.
+     *
      * If set, the reader will return 0 for `getAvailableCount` if less than `minReadCount`
      * samples are available. It will also never read less than `minReadCount` samples. The
      * default value is 1.
@@ -212,7 +216,9 @@ public class MultiReaderBuilder extends BaseObject {
 
     /**
      * Gets the read timeout mode
-     * &#64;param type The timeout mode. if "Any" returns immediately if there is available data otherwise time-out is exceeded. if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
+     * &#64;param type The timeout mode.
+     * if "Any" returns immediately if there is available data otherwise time-out is exceeded.
+     * if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_getReadTimeoutType()}.
      */
@@ -329,6 +335,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Sets the notification method of ports created/owned by the multi reader. The default notification method is Unspecified.
      * &#64;param notificationMethod The notification method to be used.
+     *
      * If "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setInputPortNotificationMethod()}.
@@ -346,6 +353,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Sets the notification methods of ports created/owned by the multi reader. The default notification method is Unspecified.
      * &#64;param notificationMethods The notification methods to be used.
+     *
      * The list of methods corresponds to the list of reader components (signals, input ports). Both the size and order of both must match if configured.
      * If a method is set to "Unspecified", the reader keeps the mode of the input port. When building with signals, "Unspecified" is an invalid configuration.
      *
@@ -367,6 +375,7 @@ public class MultiReaderBuilder extends BaseObject {
     /**
      * Sets the minimal number of samples to read.
      * &#64;param minReadCount The minimal number of samples to read.
+     *
      * If set, the reader will return 0 for `getAvailableCount` if less than `minReadCount`
      * samples are available. It will also never read less than `minReadCount` samples. The
      * default value is 1.
@@ -401,7 +410,10 @@ public class MultiReaderBuilder extends BaseObject {
 
     /**
      * Sets the read timeout mode
-     * &#64;param type The timeout mode. if "Any" returns immediately if there is available data otherwise time-out is exceeded. if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
+     * &#64;param type The timeout mode.
+     * if "Any" returns immediately if there is available data otherwise time-out is exceeded.
+     * if "All" waiting until timeout and returns available data if existing. otherwise time-out is exceeded.
+     *
      * NOTE: THIS IS CURRENTLY IGNORED AND IS ALWAYS SET TO ReadTimeoutType::All
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReaderBuilder_setReadTimeoutType()}.

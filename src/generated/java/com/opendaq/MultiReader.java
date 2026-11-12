@@ -95,7 +95,10 @@ public class MultiReader extends SampleReader {
     }
 
     /**
-     * Gets the common sample rate in case input signal have different rates. The value of common sample rate is such that sample rate of any individual signal can be represented as commonSampleRate / Div, where Div is an integer. Unless the required common sample rate is specified in the MultiReader constructor, common sample rate is lowest common multiple of individual signal's sample rates. The number of samples to be read is specified in common sample rate.
+     * Gets the common sample rate in case input signal have different rates. The value of common sample rate is such
+     * that sample rate of any individual signal can be represented as commonSampleRate / Div, where Div is an integer. Unless
+     * the required common sample rate is specified in the MultiReader constructor, common sample rate is lowest common multiple
+     * of individual signal's sample rates. The number of samples to be read is specified in common sample rate.
      * &#64;param commonSampleRate The domain point at which the reader managed to synchronize all the signals.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_getCommonSampleRate()}.
@@ -111,7 +114,7 @@ public class MultiReader extends SampleReader {
     /**
      * Get the used flag for the input component. If the result is false, the input is not used (ignored) by the MultiReader.
      * &#64;param id Global ID of a component previously added into the MultiReader.
-     * &#64;param unused Output parameter
+     * &#64;param isUsed Output parameter
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_getInputUsed()}.
      */
@@ -129,6 +132,7 @@ public class MultiReader extends SampleReader {
     /**
      * Gets the synchronization status of the reader
      * &#64;param isSynchronized True if reader is synchronized, False otherwise.
+     *
      * Reader will try to synchronize the data from the signals when `getAvailableCount` or any of the read methods is called.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_getIsSynchronized()}.
@@ -158,7 +162,8 @@ public class MultiReader extends SampleReader {
     }
 
     /**
-     * Gets the origin the reader aligned all the signals to. This is usually the earliest (lowest value) from all the signals.
+     * Gets the origin the reader aligned all the signals to.
+     * This is usually the earliest (lowest value) from all the signals.
      * &#64;param origin The origin all signals are aligned to.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_getOrigin()}.
@@ -172,7 +177,8 @@ public class MultiReader extends SampleReader {
     }
 
     /**
-     * Gets the resolution the reader aligned all the signals to. This is the highest resolution (lowest value) of all the signals to not loose the precision.
+     * Gets the resolution the reader aligned all the signals to.
+     * This is the highest resolution (lowest value) of all the signals to not loose the precision.
      * &#64;param resolution The aligned resolution used for all read signals.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_getTickResolution()}.
@@ -219,7 +225,8 @@ public class MultiReader extends SampleReader {
     /**
      * Set whether input with matching global ID is used in synchronization and reading.
      * &#64;param id Global ID of a component previously added into the MultiReader.
-     * &#64;param unused If true, the component won't be synchronized or read from. An unused component cannot cause the MultiReader to enter invalid state. In reading operations, provide buffers for ALL inputs, even the unused ones.
+     * &#64;param isUsed If false, the component won't be synchronized or read from. An unused (isUsed=false) component cannot cause the MultiReader to enter
+     * invalid state. In reading operations, provide buffers for ALL inputs, even the unused ones.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqMultiReader_setInputUsed()}.
      */

@@ -14,12 +14,22 @@ public final class DaqConnectionInternal {
 
     private DaqConnectionInternal() {}
 
+    private static final MethodHandle MH_closeQueue =
+        Ffi.downcallOrNull("daqConnectionInternal_closeQueue", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_dequeueUpTo =
         Ffi.downcallOrNull("daqConnectionInternal_dequeueUpTo", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_enqueueLastDescriptor =
         Ffi.downcallOrNull("daqConnectionInternal_enqueueLastDescriptor", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqConnectionInternal_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
+
+    /** Permanently closes the queue: drops all queued packets and rejects all future  Calls {@code daqConnectionInternal_closeQueue()}. */
+    public static void closeQueue(MemorySegment self) {
+        try {
+            int err = (int) Ffi.require(MH_closeQueue, "daqConnectionInternal_closeQueue").invokeExact(Ffi.orNull(self));
+            Ffi.checkError(err, "daqConnectionInternal_closeQueue");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
 
     /** Result of {@link #dequeueUpTo}. */
     public record DequeueUpToResult(MemorySegment packetPtr, long count) {}

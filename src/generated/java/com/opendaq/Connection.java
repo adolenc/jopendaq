@@ -12,10 +12,14 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents a connection between an Input port and Signal. Acts as a queue for packets sent by the signal, which can be read by the input port and the input port's owner.
+ * Represents a connection between an Input port and Signal. Acts as a queue
+ * for packets sent by the signal, which can be read by the input port and the input port's
+ * owner.
+ *
  * The Connection provides standard queue methods, allowing for packets to be put at the back
  * of the queue, and popped from the front. Additionally, the front packet can be inspected via
  * `peek`, and the number of queued packets can be obtained through `getPacketCount`.
+ *
  * The Connection has a reference to the connected Signal and Input port.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqConnection} interface.
@@ -62,6 +66,7 @@ public class Connection extends BaseObject {
     /**
      * Removes all packets from the queue.
      * &#64;param[out] packets The removed packets.
+     *
      * Removing all packets can be more efficient than dequeuing packet by packet in heavily loaded systems.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_dequeueAll()}.
@@ -92,6 +97,7 @@ public class Connection extends BaseObject {
     /**
      * Places a packet at the back of the queue. The reference of the packet is stolen.
      * &#64;param packet The packet to be enqueued.
+     *
      * After calling the method, the packet should not be touched again. The ownership of the packet
      * is taken by underlying connections and it could be destroyed before the function returns.
      *
@@ -126,6 +132,7 @@ public class Connection extends BaseObject {
     /**
      * Places multiple packets at the back of the queue. The references of the packets are stolen.
      * &#64;param packets The packets to be enqueued.
+     *
      * After calling the method, the packets should not be touched again. The ownership of the packets
      * is taken by underlying connections and it could be destroyed before the function returns.
      *
@@ -145,6 +152,7 @@ public class Connection extends BaseObject {
     /**
      * Places a packet at the back of the queue.
      * &#64;param packet The packet to be enqueued.
+     *
      * The connection notifies the listener on the same thread that this method was called.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_enqueueOnThisThread()}.
@@ -161,6 +169,7 @@ public class Connection extends BaseObject {
     /**
      * Places a packet at the back of the queue.
      * &#64;param packet The packet to be enqueued.
+     *
      * The connection schedules the `onPacketReceived` notification.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_enqueueWithScheduler()}.
@@ -175,7 +184,8 @@ public class Connection extends BaseObject {
     }
 
     /**
-     * Gets the number of samples available in the queued packets. The returned value ignores any Sample-Descriptor changes.
+     * Gets the number of samples available in the queued packets.
+     * The returned value ignores any Sample-Descriptor changes.
      * &#64;param[out] samples The total amount of samples currently available in the stored packets.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_getAvailableSamples()}.
@@ -217,7 +227,8 @@ public class Connection extends BaseObject {
     }
 
     /**
-     * Gets the number of same-type samples available in the queued packets. The returned value is up-to the next Sample-Descriptor-Changed packet if any.
+     * Gets the number of same-type samples available in the queued packets.
+     * The returned value is up-to the next Sample-Descriptor-Changed packet if any.
      * &#64;param[out] samples The total amount of same-type samples currently available in the stored packets.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_getSamplesUntilNextDescriptor()}.
@@ -231,7 +242,8 @@ public class Connection extends BaseObject {
     }
 
     /**
-     * Gets the number of samples available in the queued packets until the next event packet. The returned value is up-to the next Event packet if any.
+     * Gets the number of samples available in the queued packets until the next event packet.
+     * The returned value is up-to the next Event packet if any.
      * &#64;param[out] samples The total amount of samples currently available in the stored packets until the next event packet.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_getSamplesUntilNextEventPacket()}.
@@ -245,7 +257,8 @@ public class Connection extends BaseObject {
     }
 
     /**
-     * Gets the number of samples available in the queued packets until the next gap packet. The returned value is up-to the next Gap packet if any.
+     * Gets the number of samples available in the queued packets until the next gap packet.
+     * The returned value is up-to the next Gap packet if any.
      * &#64;param[out] samples The total amount of samples currently available in the stored packets until the next gap packet.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqConnection_getSamplesUntilNextGapPacket()}.
@@ -303,6 +316,7 @@ public class Connection extends BaseObject {
     /**
      * Returns true if the type of connection is remote.
      * &#64;param[out] remote True if connection is remote.
+     *
      * Remote connections do not pass any packets. They represent the connection between input ports and signals
      * on remote devices.
      *

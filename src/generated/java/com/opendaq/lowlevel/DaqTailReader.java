@@ -81,7 +81,7 @@ public final class DaqTailReader {
     /** Result of {@link #read}. */
     public record ReadResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` unread samples to the values buffer. The amount actually read is returned through the `count` parameter.  Calls {@code daqTailReader_read()}. */
+    /** Copies at maximum the next `count` unread samples to the values buffer.  Calls {@code daqTailReader_read()}. */
     public static ReadResult read(MemorySegment self, MemorySegment values, long count) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);
@@ -96,7 +96,7 @@ public final class DaqTailReader {
     /** Result of {@link #readWithDomain}. */
     public record ReadWithDomainResult(long count, MemorySegment status) {}
 
-    /** Copies at maximum the next `count` unread samples and clock-stamps to the `values` and `stamps` buffers. The amount actually read is returned through the `count` parameter.  Calls {@code daqTailReader_readWithDomain()}. */
+    /** Copies at maximum the next `count` unread samples and clock-stamps to the `values` and `stamps` buffers.  Calls {@code daqTailReader_readWithDomain()}. */
     public static ReadWithDomainResult readWithDomain(MemorySegment self, MemorySegment values, MemorySegment domain, long count) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment countSlot = arena.allocate(JAVA_LONG);

@@ -9,12 +9,10 @@ import java.util.Map;
 import com.opendaq.lowlevel.DaqBoolean;
 import com.opendaq.lowlevel.DaqComplexNumber;
 import com.opendaq.lowlevel.DaqDict;
-import com.opendaq.lowlevel.DaqFloatObject;
-import com.opendaq.lowlevel.DaqFunction;
+import com.opendaq.lowlevel.DaqFloat;
 import com.opendaq.lowlevel.DaqInteger;
 import com.opendaq.lowlevel.DaqList;
 import com.opendaq.lowlevel.DaqNumber;
-import com.opendaq.lowlevel.DaqProcedure;
 import com.opendaq.lowlevel.DaqRatio;
 import com.opendaq.lowlevel.DaqString;
 import com.opendaq.lowlevel.Ffi;
@@ -65,10 +63,10 @@ final class Box {
                 return new Boxed(DaqBoolean.createBoolObject(b), true, null);
             }
             case Double d -> {
-                return new Boxed(DaqFloatObject.createFloatObject(d), true, null);
+                return new Boxed(DaqFloat.createFloatObject(d), true, null);
             }
             case Float f -> {
-                return new Boxed(DaqFloatObject.createFloatObject(f.doubleValue()), true, null);
+                return new Boxed(DaqFloat.createFloatObject(f.doubleValue()), true, null);
             }
             case Long l -> {
                 return new Boxed(DaqInteger.createInteger(l), true, null);
@@ -95,10 +93,10 @@ final class Box {
                 return new Boxed(boxDictOwned(map), true, null);
             }
             case FunctionCallback fn -> {
-                return new Boxed(DaqFunction.createFunction(Callbacks.functionStub(fn)), true, null);
+                return new Boxed(Callbacks.createFunction(fn), true, null);
             }
             case ProcedureCallback fn -> {
-                return new Boxed(DaqProcedure.createProcedure(Callbacks.procedureStub(fn)), true, null);
+                return new Boxed(Callbacks.createProcedure(fn), true, null);
             }
             default -> throw new IllegalArgumentException(
                 "Cannot box " + value.getClass().getName() + " as an openDAQ object.");
@@ -173,8 +171,8 @@ final class Box {
             }
         }
         MemorySegment boxed = switch (value) {
-            case Double d -> DaqFloatObject.createFloatObject(d);
-            case Float f -> DaqFloatObject.createFloatObject(f.doubleValue());
+            case Double d -> DaqFloat.createFloatObject(d);
+            case Float f -> DaqFloat.createFloatObject(f.doubleValue());
             case Long l -> DaqInteger.createInteger(l);
             case Integer i -> DaqInteger.createInteger(i.longValue());
             case Short s -> DaqInteger.createInteger(s.longValue());
@@ -207,7 +205,7 @@ final class Box {
         List<Candidate> candidates = List.of(
             new Candidate(UnboxKind.STRING, DaqString::getInterfaceId),
             new Candidate(UnboxKind.INTEGER, DaqInteger::getInterfaceId),
-            new Candidate(UnboxKind.FLOAT, DaqFloatObject::getInterfaceId),
+            new Candidate(UnboxKind.FLOAT, DaqFloat::getInterfaceId),
             new Candidate(UnboxKind.BOOLEAN, DaqBoolean::getInterfaceId),
             new Candidate(UnboxKind.RATIO, DaqRatio::getInterfaceId),
             new Candidate(UnboxKind.COMPLEX, DaqComplexNumber::getInterfaceId),
@@ -226,7 +224,7 @@ final class Box {
         return switch (probe.kind()) {
             case STRING -> Ffi.readDaqString(probe.borrowed());
             case INTEGER -> DaqInteger.getValue(probe.borrowed());
-            case FLOAT -> DaqFloatObject.getValue(probe.borrowed());
+            case FLOAT -> DaqFloat.getValue(probe.borrowed());
             case BOOLEAN -> DaqBoolean.getValue(probe.borrowed());
             case RATIO -> new RatioValue(DaqRatio.getNumerator(probe.borrowed()),
                                          DaqRatio.getDenominator(probe.borrowed()));

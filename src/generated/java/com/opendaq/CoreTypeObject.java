@@ -12,7 +12,14 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Wraps the openDAQ {&#64;code daqCoreType} interface.
+ * Adds the ability for openDAQ objects to report what type of object they represent.
+ *
+ * An object can implement this interface to give clients introspection ability on the type
+ * of the object. The client can use this information to further query for the interface of the
+ * specific type. For example, if the `CoreType` reported is ctInt, the object is expected to
+ * implement the IIntObject interface.
+ *
+ * &lt;p&gt;Wraps the openDAQ {&#64;code daqCoreType} interface.
  */
 public class CoreTypeObject extends BaseObject {
 
@@ -22,7 +29,10 @@ public class CoreTypeObject extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqCoreType_getCoreType()}.
+     * Gets the object's CoreType.
+     * &#64;param[out] coreType The object's CoreType.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqCoreType_getCoreType()}.
      */
     public CoreType getCoreType() {
         try {

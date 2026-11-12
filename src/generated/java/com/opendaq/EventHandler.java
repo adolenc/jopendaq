@@ -12,10 +12,7 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * &#64;ingroup types_events
- * &#64;defgroup types_event_handler EventHandler
- *
- * &lt;p&gt;Wraps the openDAQ {&#64;code daqEventHandler} interface.
+ * Wraps the openDAQ {&#64;code daqEventHandler} interface.
  */
 public class EventHandler extends BaseObject {
 
@@ -25,7 +22,12 @@ public class EventHandler extends BaseObject {
     }
 
     /**
-     * Calls the openDAQ C function {&#64;code daqEventHandler_createEventHandler()}.
+     * Creates an event handler that calls a C function.
+     * &#64;param call The function to call with the sender and the arguments of the event.
+     *
+     * C++ creates event handlers from callables through templates, which have no exported symbol; this factory is provided by the C bindings.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEventHandler_createEventHandler()}.
      */
     public static EventHandler createEventHandler(MemorySegment call) {
         return DaqObject.wrap(create$createEventHandler(call), EventHandler.class);
@@ -33,6 +35,24 @@ public class EventHandler extends BaseObject {
 
     private static MemorySegment create$createEventHandler(MemorySegment call) {
         return DaqEventHandler.createEventHandler(Ffi.orNull(call));
+    }
+
+    /**
+     * Creates an event handler that calls a C function with data of the caller's own.
+     * &#64;param call The function to call with the sender and the arguments of the event, and userData.
+     * &#64;param userData Passed to every call; owned by the created object.
+     * &#64;param freeUserData Called with userData once the object is destroyed, or if creating it fails; may be null.
+     *
+     * Provided by the C bindings, so that a callback can carry state.
+     *
+     * &lt;p&gt;Calls the openDAQ C function {&#64;code daqEventHandler_createEventHandlerWithData()}.
+     */
+    public static EventHandler createEventHandlerWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqObject.wrap(create$createEventHandlerWithData(call, userData, freeUserData), EventHandler.class);
+    }
+
+    private static MemorySegment create$createEventHandlerWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        return DaqEventHandler.createEventHandlerWithData(Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
     }
 
     /**
@@ -60,7 +80,7 @@ public class EventHandler extends BaseObject {
      * event fires; reference counting is handled for you.
      */
     public EventHandler(EventCallback callback) {
-        super(DaqEventHandler.createEventHandler(Callbacks.eventStub(callback)));
+        super(Callbacks.createEventHandler(callback));
     }
 
 }

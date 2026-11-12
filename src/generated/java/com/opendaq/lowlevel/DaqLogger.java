@@ -58,7 +58,7 @@ public final class DaqLogger {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Triggers writing out the messages stored in temporary buffers for added components and sinks associated with the Logger object.  Calls {@code daqLogger_flush()}. */
+    /** Triggers writing out the messages stored in temporary buffers for added components  Calls {@code daqLogger_flush()}. */
     public static void flush(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_flush, "daqLogger_flush").invokeExact(Ffi.orNull(self));

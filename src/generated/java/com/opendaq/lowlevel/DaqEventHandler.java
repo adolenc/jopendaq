@@ -16,17 +16,29 @@ public final class DaqEventHandler {
 
     private static final MethodHandle MH_createEventHandler =
         Ffi.downcallOrNull("daqEventHandler_createEventHandler", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createEventHandlerWithData =
+        Ffi.downcallOrNull("daqEventHandler_createEventHandlerWithData", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_getInterfaceId =
         Ffi.downcallOrNull("daqEventHandler_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle MH_handleEvent =
         Ffi.downcallOrNull("daqEventHandler_handleEvent", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
 
-    /** Calls {@code daqEventHandler_createEventHandler()}. */
+    /** Creates an event handler that calls a C function.  Calls {@code daqEventHandler_createEventHandler()}. */
     public static MemorySegment createEventHandler(MemorySegment call) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createEventHandler, "daqEventHandler_createEventHandler").invokeExact(objSlot, Ffi.orNull(call));
             Ffi.checkError(err, "daqEventHandler_createEventHandler");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates an event handler that calls a C function with data of the caller's own.  Calls {@code daqEventHandler_createEventHandlerWithData()}. */
+    public static MemorySegment createEventHandlerWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createEventHandlerWithData, "daqEventHandler_createEventHandlerWithData").invokeExact(objSlot, Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+            Ffi.checkError(err, "daqEventHandler_createEventHandlerWithData");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

@@ -16,8 +16,14 @@ public final class DaqDeserializer {
 
     private static final MethodHandle MH_callCustomProc =
         Ffi.downcallOrNull("daqDeserializer_callCustomProc", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createJsonDeserializer =
+        Ffi.downcallOrNull("daqDeserializer_createJsonDeserializer", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_deserialize =
         Ffi.downcallOrNull("daqDeserializer_deserialize", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqDeserializer_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
+    private static final MethodHandle MH_unregisterSerializerFactory =
+        Ffi.downcallOrNull("daqDeserializer_unregisterSerializerFactory", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle MH_update =
         Ffi.downcallOrNull("daqDeserializer_update", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
 
@@ -29,6 +35,16 @@ public final class DaqDeserializer {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
+    /** Calls {@code daqDeserializer_createJsonDeserializer()}. */
+    public static MemorySegment createJsonDeserializer() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createJsonDeserializer, "daqDeserializer_createJsonDeserializer").invokeExact(objSlot);
+            Ffi.checkError(err, "daqDeserializer_createJsonDeserializer");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
     /** Calls {@code daqDeserializer_deserialize()}. */
     public static MemorySegment deserialize(MemorySegment self, MemorySegment serialized, MemorySegment context, MemorySegment factoryCallback) {
         try (Arena arena = Arena.ofConfined()) {
@@ -36,6 +52,21 @@ public final class DaqDeserializer {
             int err = (int) Ffi.require(MH_deserialize, "daqDeserializer_deserialize").invokeExact(Ffi.orNull(self), Ffi.orNull(serialized), Ffi.orNull(context), Ffi.orNull(factoryCallback), objectSlot);
             Ffi.checkError(err, "daqDeserializer_deserialize");
             return objectSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqDeserializer_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqDeserializer_getInterfaceId").invokeExact(Ffi.orNull(intfId));
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqDeserializer_unregisterSerializerFactory()}. */
+    public static void unregisterSerializerFactory(MemorySegment id) {
+        try {
+            int err = (int) Ffi.require(MH_unregisterSerializerFactory, "daqDeserializer_unregisterSerializerFactory").invokeExact(Ffi.orNull(id));
+            Ffi.checkError(err, "daqDeserializer_unregisterSerializerFactory");
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

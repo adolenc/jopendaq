@@ -83,7 +83,7 @@ public final class DaqDeviceInfo {
     private static final MethodHandle MH_hasServerCapability =
         Ffi.downcallOrNull("daqDeviceInfo_hasServerCapability", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
 
-    /** Gets the asset ID of the device. Represents a user writable alphanumeric character sequence uniquely identifying a component.  Calls {@code daqDeviceInfo_getAssetId()}. */
+    /** Gets the asset ID of the device. Represents a user writable alphanumeric character  Calls {@code daqDeviceInfo_getAssetId()}. */
     public static MemorySegment getAssetId(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment idSlot = arena.allocate(ADDRESS);
@@ -123,7 +123,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list of property names that are not in the default set of Device info properties. Default properties are all info properties that have a corresponding getter method.  Calls {@code daqDeviceInfo_getCustomInfoPropertyNames()}. */
+    /** Gets the list of property names that are not in the default set of Device info properties.  Calls {@code daqDeviceInfo_getCustomInfoPropertyNames()}. */
     public static MemorySegment getCustomInfoPropertyNames(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment customInfoNamesSlot = arena.allocate(ADDRESS);
@@ -143,7 +143,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the address of the user manual. It may be a pathname in the file system or a URL (Web address)  Calls {@code daqDeviceInfo_getDeviceManual()}. */
+    /** Gets the address of the user manual.  Calls {@code daqDeviceInfo_getDeviceManual()}. */
     public static MemorySegment getDeviceManual(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment deviceManualSlot = arena.allocate(ADDRESS);
@@ -163,7 +163,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets a device type as an object providing type id, name, short description and default device configuration. By using default config object as a starting point, users can easily modify the preset properties to tailor the configuration of the client device accordingly.  Calls {@code daqDeviceInfo_getDeviceType()}. */
+    /** Gets a device type as an object providing type id, name, short description and  Calls {@code daqDeviceInfo_getDeviceType()}. */
     public static MemorySegment getDeviceType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment deviceTypeSlot = arena.allocate(ADDRESS);
@@ -220,7 +220,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the unique identifier of the company that manufactured the device This identifier should be a fully qualified domain name; however, it may be a GUID or similar construct that ensures global uniqueness.  Calls {@code daqDeviceInfo_getManufacturerUri()}. */
+    /** Gets the unique identifier of the company that manufactured the device  Calls {@code daqDeviceInfo_getManufacturerUri()}. */
     public static MemorySegment getManufacturerUri(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment manufacturerUriSlot = arena.allocate(ADDRESS);
@@ -280,7 +280,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the platform of the device. The platform specifies whether real hardware is used or if the device is simulated.  Calls {@code daqDeviceInfo_getPlatform()}. */
+    /** Gets the platform of the device. The platform specifies whether real hardware  Calls {@code daqDeviceInfo_getPlatform()}. */
     public static MemorySegment getPlatform(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment platformSlot = arena.allocate(ADDRESS);
@@ -290,7 +290,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the position of the device. The position specifies the position within a given system. For example in which slot or slice the device is in.  Calls {@code daqDeviceInfo_getPosition()}. */
+    /** Gets the position of the device. The position specifies the position within a  Calls {@code daqDeviceInfo_getPosition()}. */
     public static long getPosition(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment positionSlot = arena.allocate(JAVA_LONG);
@@ -310,7 +310,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the globally unique resource identifier provided by the manufacturer. The recommended syntax of the ProductInstanceUri is: &lt;ManufacturerUri&gt;/&lt;any string&gt; where &lt;any string&gt; is unique among all instances using the same ManufacturerUri.  Calls {@code daqDeviceInfo_getProductInstanceUri()}. */
+    /** Gets the globally unique resource identifier provided by the manufacturer.  Calls {@code daqDeviceInfo_getProductInstanceUri()}. */
     public static MemorySegment getProductInstanceUri(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment productInstanceUriSlot = arena.allocate(ADDRESS);
@@ -320,7 +320,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the incremental counter indicating the number of times the configuration data has been modified.  Calls {@code daqDeviceInfo_getRevisionCounter()}. */
+    /** Gets the incremental counter indicating the number of times the configuration  Calls {@code daqDeviceInfo_getRevisionCounter()}. */
     public static long getRevisionCounter(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment revisionCounterSlot = arena.allocate(JAVA_LONG);
@@ -330,7 +330,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the version of the SDK used to build said device. Can be empty if the device does not use the SDK as its firmware/is implemented at a protocol-level.  Calls {@code daqDeviceInfo_getSdkVersion()}. */
+    /** Gets the version of the SDK used to build said device. Can be empty if the device does not use  Calls {@code daqDeviceInfo_getSdkVersion()}. */
     public static MemorySegment getSdkVersion(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment versionSlot = arena.allocate(ADDRESS);
@@ -380,7 +380,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the system type. The system type can, for example, be LayeredSystem, StandaloneSystem, or RackSystem.  Calls {@code daqDeviceInfo_getSystemType()}. */
+    /** Gets the system type. The system type can, for example, be LayeredSystem,  Calls {@code daqDeviceInfo_getSystemType()}. */
     public static MemorySegment getSystemType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(ADDRESS);
@@ -390,7 +390,7 @@ public final class DaqDeviceInfo {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the system UUID that represents a unique ID of a system. All devices in a system share this UUID.  Calls {@code daqDeviceInfo_getSystemUuid()}. */
+    /** Gets the system UUID that represents a unique ID of a system. All devices in a system  Calls {@code daqDeviceInfo_getSystemUuid()}. */
     public static MemorySegment getSystemUuid(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment uuidSlot = arena.allocate(ADDRESS);

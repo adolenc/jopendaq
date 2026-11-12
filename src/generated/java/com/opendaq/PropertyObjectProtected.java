@@ -42,6 +42,7 @@ public class PropertyObjectProtected extends BaseObject {
 
     /**
      * Clears values of all properties contained in the Property object, including nested child properties.
+     *
      * This function behaves similarly to `IPropertyObject::clearPropertyValues()`, but also clears read-only properties.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqPropertyObjectProtected_clearProtectedPropertyValues()}.

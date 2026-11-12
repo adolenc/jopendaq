@@ -12,7 +12,8 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Represents configuration interface for mirrored device. Allows attaching and removing streaming data sources associated with the device.
+ * Represents configuration interface for mirrored device.
+ * Allows attaching and removing streaming data sources associated with the device.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqMirroredDeviceConfig} interface.
  */

@@ -17,6 +17,22 @@ public final class DaqCoreEventArgs {
 
     private static final MethodHandle MH_createCoreEventArgs =
         Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgs", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsAttributeChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsAttributeChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsComponentAdded =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsComponentAdded", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsComponentRemoved =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsComponentRemoved", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsComponentUpdateEnd =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsComponentUpdateEnd", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsDataDescriptorChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsDataDescriptorChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsDeviceDomainChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsDeviceDomainChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsDeviceLockStateChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsDeviceLockStateChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_BYTE));
+    private static final MethodHandle MH_createCoreEventArgsDeviceOperationModeChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsDeviceOperationModeChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_LONG));
     private static final MethodHandle MH_createCoreEventArgsPropertyAdded =
         Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsPropertyAdded", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createCoreEventArgsPropertyObjectUpdateEnd =
@@ -27,6 +43,12 @@ public final class DaqCoreEventArgs {
         Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsPropertyRemoved", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createCoreEventArgsPropertyValueChanged =
         Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsPropertyValueChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsSignalConnected =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsSignalConnected", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsSignalDisconnected =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsSignalDisconnected", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+    private static final MethodHandle MH_createCoreEventArgsTagsChanged =
+        Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsTagsChanged", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createCoreEventArgsTypeAdded =
         Ffi.downcallOrNull("daqCoreEventArgs_createCoreEventArgsTypeAdded", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle MH_createCoreEventArgsTypeRemoved =
@@ -42,6 +64,86 @@ public final class DaqCoreEventArgs {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createCoreEventArgs, "daqCoreEventArgs_createCoreEventArgs").invokeExact(objSlot, eventId.value(), Ffi.orNull(eventName), Ffi.orNull(parameters));
             Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgs");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a component's internal attribute  Calls {@code daqCoreEventArgs_createCoreEventArgsAttributeChanged()}. */
+    public static MemorySegment createCoreEventArgsAttributeChanged(MemorySegment attributeName, MemorySegment attributeValue) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsAttributeChanged, "daqCoreEventArgs_createCoreEventArgsAttributeChanged").invokeExact(objSlot, Ffi.orNull(attributeName), Ffi.orNull(attributeValue));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsAttributeChanged");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a new component is added as a child.  Calls {@code daqCoreEventArgs_createCoreEventArgsComponentAdded()}. */
+    public static MemorySegment createCoreEventArgsComponentAdded(MemorySegment component) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsComponentAdded, "daqCoreEventArgs_createCoreEventArgsComponentAdded").invokeExact(objSlot, Ffi.orNull(component));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsComponentAdded");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a component is removed from the list of children.  Calls {@code daqCoreEventArgs_createCoreEventArgsComponentRemoved()}. */
+    public static MemorySegment createCoreEventArgsComponentRemoved(MemorySegment componentId) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsComponentRemoved, "daqCoreEventArgs_createCoreEventArgsComponentRemoved").invokeExact(objSlot, Ffi.orNull(componentId));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsComponentRemoved");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a component is finished updating.  Calls {@code daqCoreEventArgs_createCoreEventArgsComponentUpdateEnd()}. */
+    public static MemorySegment createCoreEventArgsComponentUpdateEnd() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsComponentUpdateEnd, "daqCoreEventArgs_createCoreEventArgsComponentUpdateEnd").invokeExact(objSlot);
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsComponentUpdateEnd");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when the descriptor of a signal changes.  Calls {@code daqCoreEventArgs_createCoreEventArgsDataDescriptorChanged()}. */
+    public static MemorySegment createCoreEventArgsDataDescriptorChanged(MemorySegment descriptor) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsDataDescriptorChanged, "daqCoreEventArgs_createCoreEventArgsDataDescriptorChanged").invokeExact(objSlot, Ffi.orNull(descriptor));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsDataDescriptorChanged");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when the domain of a device changes.  Calls {@code daqCoreEventArgs_createCoreEventArgsDeviceDomainChanged()}. */
+    public static MemorySegment createCoreEventArgsDeviceDomainChanged(MemorySegment deviceDomain) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsDeviceDomainChanged, "daqCoreEventArgs_createCoreEventArgsDeviceDomainChanged").invokeExact(objSlot, Ffi.orNull(deviceDomain));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsDeviceDomainChanged");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when the device is locked or unlocked.  Calls {@code daqCoreEventArgs_createCoreEventArgsDeviceLockStateChanged()}. */
+    public static MemorySegment createCoreEventArgsDeviceLockStateChanged(boolean isLocked) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsDeviceLockStateChanged, "daqCoreEventArgs_createCoreEventArgsDeviceLockStateChanged").invokeExact(objSlot, (byte) (isLocked ? 1 : 0));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsDeviceLockStateChanged");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when the device operation mode changes.  Calls {@code daqCoreEventArgs_createCoreEventArgsDeviceOperationModeChanged()}. */
+    public static MemorySegment createCoreEventArgsDeviceOperationModeChanged(long operationMode) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsDeviceOperationModeChanged, "daqCoreEventArgs_createCoreEventArgsDeviceOperationModeChanged").invokeExact(objSlot, operationMode);
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsDeviceOperationModeChanged");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
@@ -92,6 +194,36 @@ public final class DaqCoreEventArgs {
             MemorySegment objSlot = arena.allocate(ADDRESS);
             int err = (int) Ffi.require(MH_createCoreEventArgsPropertyValueChanged, "daqCoreEventArgs_createCoreEventArgsPropertyValueChanged").invokeExact(objSlot, Ffi.orNull(propOwner), Ffi.orNull(propName), Ffi.orNull(value), Ffi.orNull(path));
             Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsPropertyValueChanged");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a signal is connected to an input port.  Calls {@code daqCoreEventArgs_createCoreEventArgsSignalConnected()}. */
+    public static MemorySegment createCoreEventArgsSignalConnected(MemorySegment signal) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsSignalConnected, "daqCoreEventArgs_createCoreEventArgsSignalConnected").invokeExact(objSlot, Ffi.orNull(signal));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsSignalConnected");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a signal is connected to an input port.  Calls {@code daqCoreEventArgs_createCoreEventArgsSignalDisconnected()}. */
+    public static MemorySegment createCoreEventArgsSignalDisconnected() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsSignalDisconnected, "daqCoreEventArgs_createCoreEventArgsSignalDisconnected").invokeExact(objSlot);
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsSignalDisconnected");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Creates Core event args that are passed as argument when a tag is added/removed from a component.  Calls {@code daqCoreEventArgs_createCoreEventArgsTagsChanged()}. */
+    public static MemorySegment createCoreEventArgsTagsChanged(MemorySegment tags) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createCoreEventArgsTagsChanged, "daqCoreEventArgs_createCoreEventArgsTagsChanged").invokeExact(objSlot, Ffi.orNull(tags));
+            Ffi.checkError(err, "daqCoreEventArgs_createCoreEventArgsTagsChanged");
             return objSlot.get(ADDRESS, 0);
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }

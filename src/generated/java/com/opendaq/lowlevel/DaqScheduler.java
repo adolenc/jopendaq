@@ -106,7 +106,7 @@ public final class DaqScheduler {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Schedules the specified &#64;p work function to run on the thread-pool. The call does not block but immediately returns an &#64;p awaitable that represents the asynchronous execution. It can be waited upon and queried for status and result.  Calls {@code daqScheduler_scheduleFunction()}. */
+    /** Schedules the specified &#64;p work function to run on the thread-pool.  Calls {@code daqScheduler_scheduleFunction()}. */
     public static MemorySegment scheduleFunction(MemorySegment self, MemorySegment function) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment awaitableSlot = arena.allocate(ADDRESS);
@@ -116,7 +116,7 @@ public final class DaqScheduler {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Schedules the specified dependency &#64;p graph to run on the thread-pool. The call does not block but immediately returns an &#64;p awaitable that represents the asynchronous execution. It can be waited upon and queried for status and result. &lt;b&gt;Any exceptions that occur during the graph execution are silently ignored.&lt;/b&gt;  Calls {@code daqScheduler_scheduleGraph()}. */
+    /** Schedules the specified dependency &#64;p graph to run on the thread-pool.  Calls {@code daqScheduler_scheduleGraph()}. */
     public static MemorySegment scheduleGraph(MemorySegment self, MemorySegment graph) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment awaitableSlot = arena.allocate(ADDRESS);
@@ -126,7 +126,7 @@ public final class DaqScheduler {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Schedules the specified work callback to run on the thread-pool. The call does not block.  Calls {@code daqScheduler_scheduleWork()}. */
+    /** Schedules the specified work callback to run on the thread-pool.  Calls {@code daqScheduler_scheduleWork()}. */
     public static void scheduleWork(MemorySegment self, MemorySegment work) {
         try {
             int err = (int) Ffi.require(MH_scheduleWork, "daqScheduler_scheduleWork").invokeExact(Ffi.orNull(self), Ffi.orNull(work));
@@ -142,7 +142,7 @@ public final class DaqScheduler {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Cancels all outstanding work and waits for the remaining to complete. After this point the scheduler does not allow any new work or graphs for scheduling.  Calls {@code daqScheduler_stop()}. */
+    /** Cancels all outstanding work and waits for the remaining to complete.  Calls {@code daqScheduler_stop()}. */
     public static void stop(MemorySegment self) {
         try {
             int err = (int) Ffi.require(MH_stop, "daqScheduler_stop").invokeExact(Ffi.orNull(self));

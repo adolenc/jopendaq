@@ -16,8 +16,12 @@ public final class DaqProcedure {
 
     private static final MethodHandle MH_createProcedure =
         Ffi.downcallOrNull("daqProcedure_createProcedure", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_createProcedureWithData =
+        Ffi.downcallOrNull("daqProcedure_createProcedureWithData", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, ADDRESS, ADDRESS));
     private static final MethodHandle MH_dispatch =
         Ffi.downcallOrNull("daqProcedure_dispatch", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
+    private static final MethodHandle MH_getInterfaceId =
+        Ffi.downcallOrNull("daqProcedure_getInterfaceId", FunctionDescriptor.ofVoid(ADDRESS));
 
     /** Calls {@code daqProcedure_createProcedure()}. */
     public static MemorySegment createProcedure(MemorySegment value) {
@@ -29,11 +33,28 @@ public final class DaqProcedure {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Calls {@code daqProcedure_dispatch()}. */
+    /** Creates a procedure that calls a C function with data of the caller's own.  Calls {@code daqProcedure_createProcedureWithData()}. */
+    public static MemorySegment createProcedureWithData(MemorySegment call, MemorySegment userData, MemorySegment freeUserData) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment objSlot = arena.allocate(ADDRESS);
+            int err = (int) Ffi.require(MH_createProcedureWithData, "daqProcedure_createProcedureWithData").invokeExact(objSlot, Ffi.orNull(call), Ffi.orNull(userData), Ffi.orNull(freeUserData));
+            Ffi.checkError(err, "daqProcedure_createProcedureWithData");
+            return objSlot.get(ADDRESS, 0);
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls the stored callback.  Calls {@code daqProcedure_dispatch()}. */
     public static void dispatch(MemorySegment self, MemorySegment params) {
         try {
             int err = (int) Ffi.require(MH_dispatch, "daqProcedure_dispatch").invokeExact(Ffi.orNull(self), Ffi.orNull(params));
             Ffi.checkError(err, "daqProcedure_dispatch");
+        } catch (Throwable t) { throw Ffi.rethrow(t); }
+    }
+
+    /** Calls {@code daqProcedure_getInterfaceId()} with caller-allocated out slots. */
+    public static void getInterfaceId(MemorySegment intfId) {
+        try {
+            Ffi.require(MH_getInterfaceId, "daqProcedure_getInterfaceId").invokeExact(Ffi.orNull(intfId));
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 

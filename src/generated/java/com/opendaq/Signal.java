@@ -12,20 +12,27 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * A signal with an unique ID that sends event/data packets through connections to input ports the signal is connected to.
+ * A signal with an unique ID that sends event/data packets through connections to input ports
+ * the signal is connected to.
+ *
  * A signal features an unique ID within a given device. It sends data along its signal path to all
  * connected input ports, if its set to be active via its active property.
+ *
  * A signal is visible, and its data is streamed to all clients connected to a device only if its public
  * property is set to `True`.
+ *
  * Each signal has a domain descriptor, which is set by the owner of the signal - most often a function
  * block or device. The descriptor defines all properties of the signal, such as its name, description
  * and data structure.
+ *
  * Signals can have a reference to another signal, which is used for determining the domain data. The domain
  * signal outputs data at the same rate as the signal itself, providing domain (most often time - timestamps)
  * information for each sample sent along the signal path. Each value packet sent by a signal thus contains
  * a reference to another data packet containing domain data (if the signal is associated with another domain signal).
+ *
  * Additionally, a list of related signals can be defined, containing any signals relevant to interpreting the
  * signal data.
+ *
  * To get the list of connections to input ports of the signal, `getConnections` can be used.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqSignal} interface.
@@ -54,6 +61,7 @@ public class Signal extends Component {
     /**
      * Gets the signal's data descriptor.
      * &#64;param[out] descriptor The signal's data descriptor.
+     *
      * The descriptor contains metadata about the signal, providing information about its name, description,...
      * and defines how the data in it's packet's buffers should be interpreted.
      *
@@ -70,6 +78,7 @@ public class Signal extends Component {
     /**
      * Gets the signal that carries its domain data.
      * &#64;param[out] signal The domain signal.
+     *
      * The domain signal contains domain (most often time) data that is used to interpret a signal's data in
      * a given domain. It has the same sampling rate as the signal.
      *
@@ -86,10 +95,12 @@ public class Signal extends Component {
     /**
      * Gets the signal last value.
      * &#64;param[out] value The IBaseObject value can be a nullptr if there is no value, or if the data type is not supported by the function.
+     *
      * If a value is assigned, it can be cast based on the signal description to IFloat if the type is Float32 or Float64,
      * to IInteger if the type is Int8 through Int64 or UInt8 through UInt64, to IComplexNumber if the type is ComplexFloat32 or ComplexFloat64,
      * to IRange if the type is RangeInt64, to IString if the type is String, to IStruct if the type is Struct, and to IList of the forementioned types if there is exactly
      * one dimension.
+     *
      * For String type signals in binary data packets, the string data must be encoded as UTF-8 strings. The string length is
      * determined by the sample size, and the string does not need to be null-terminated. The method extracts the string value
      * from the packet data and returns it as an IString object.
@@ -107,6 +118,7 @@ public class Signal extends Component {
     /**
      * Returns true if the signal is public; false otherwise.
      * &#64;param[out] isPublic True if the signal is public; false otherwise.
+     *
      * Public signals are visible to clients connected to the device, and are streamed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSignal_getPublic()}.
@@ -122,6 +134,7 @@ public class Signal extends Component {
     /**
      * Gets a list of related signals.
      * &#64;param[out] signals The list of related signals.
+     *
      * Signals within the related signals list are facilitate the interpretation of a given signal's data, or
      * are otherwise relevant when working with the signal.
      *
@@ -138,6 +151,7 @@ public class Signal extends Component {
     /**
      * Returns true if the signal is streamed; false otherwise.
      * &#64;param[out] streamed True if the signal is streamed; false otherwise.
+     *
      * A streamed signal receives packets from a streaming server and forwards packets on the signal path.
      * Method always sets `streamed` parameter to False if the signal is local to the current Instance.
      *
@@ -154,6 +168,7 @@ public class Signal extends Component {
     /**
      * Sets the signal to be either public or private.
      * &#64;param isPublic If false, the signal is set to private; if true, the signal is set to be public.
+     *
      * Public signals are visible to clients connected to the device, and are streamed.
      *
      * &lt;p&gt;Calls the openDAQ C function {&#64;code daqSignal_setPublic()}.
@@ -169,6 +184,7 @@ public class Signal extends Component {
     /**
      * Sets the signal to be either streamed or not.
      * &#64;param streamed The new streamed state of the signal.
+     *
      * A streamed signal receives packets from a streaming server and forwards packets on the signal path.
      * Setting the "Streamed" flag has no effect if the signal is local to the current Instance.
      * Method returns OPENDAQ_IGNORED if that is the case.

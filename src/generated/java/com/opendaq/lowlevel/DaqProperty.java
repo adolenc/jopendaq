@@ -139,7 +139,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a function- or procedure-type Property object. Requires the a CallableInfo object to specify the argument type/count and function return type.  Calls {@code daqProperty_createFunctionProperty()}. */
+    /** Creates a function- or procedure-type Property object. Requires the a CallableInfo object  Calls {@code daqProperty_createFunctionProperty()}. */
     public static MemorySegment createFunctionProperty(MemorySegment name, MemorySegment callableInfo, MemorySegment visible) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -189,7 +189,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Reference Property object that points at a property specified in the `referencedProperty` parameter.  Calls {@code daqProperty_createReferenceProperty()}. */
+    /** Creates a Reference Property object that points at a property specified in the `referencedProperty`  Calls {@code daqProperty_createReferenceProperty()}. */
     public static MemorySegment createReferenceProperty(MemorySegment name, MemorySegment referencedPropertyEval) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -199,7 +199,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Selection Property object with a list of selection values. The default value is an integer index into the default selected value.  Calls {@code daqProperty_createSelectionProperty()}. */
+    /** Creates a Selection Property object with a list of selection values. The default value  Calls {@code daqProperty_createSelectionProperty()}. */
     public static MemorySegment createSelectionProperty(MemorySegment name, MemorySegment selectionValues, MemorySegment defaultValue, MemorySegment visible) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -209,7 +209,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Creates a Selection Property object with a dictionary of selection values. The default value is an integer key into the provided dictionary.  Calls {@code daqProperty_createSparseSelectionProperty()}. */
+    /** Creates a Selection Property object with a dictionary of selection values. The default value  Calls {@code daqProperty_createSparseSelectionProperty()}. */
     public static MemorySegment createSparseSelectionProperty(MemorySegment name, MemorySegment selectionValues, MemorySegment defaultValue, MemorySegment visible) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment objSlot = arena.allocate(ADDRESS);
@@ -239,7 +239,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Callable information objects of the Property that specifies the argument and return types of the callable object stored as the Property value.  Calls {@code daqProperty_getCallableInfo()}. */
+    /** Gets the Callable information objects of the Property that specifies the argument and return types  Calls {@code daqProperty_getCallableInfo()}. */
     public static MemorySegment getCallableInfo(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment callableSlot = arena.allocate(ADDRESS);
@@ -259,7 +259,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Default value of the Property. The Default value must always be configured for a Property to be in a valid state. Exceptions are Function/Procedure and Reference properties.  Calls {@code daqProperty_getDefaultValue()}. */
+    /** Gets the Default value of the Property. The Default value must always be configured for a Property to be  Calls {@code daqProperty_getDefaultValue()}. */
     public static MemorySegment getDefaultValue(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valueSlot = arena.allocate(ADDRESS);
@@ -296,7 +296,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Item type of the Property. Configured only if the Value type is `ctDict` or `ctList`. If so, the item types of the list/dictionary must match the Property's Item type.  Calls {@code daqProperty_getItemType()}. */
+    /** Gets the Item type of the Property. Configured only if the Value type is `ctDict` or `ctList`. If so,  Calls {@code daqProperty_getItemType()}. */
     public static CoreType getItemType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(JAVA_INT);
@@ -306,7 +306,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Key type of the Property. Configured only if the Value type is `ctDict`. If so, the key type of the dictionary Property values must match the Property's Key type.  Calls {@code daqProperty_getKeyType()}. */
+    /** Gets the Key type of the Property. Configured only if the Value type is `ctDict`. If so,  Calls {@code daqProperty_getKeyType()}. */
     public static CoreType getKeyType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(JAVA_INT);
@@ -336,7 +336,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Name of the Property. The names of Properties in a Property object must be unique. The name is used as the key to the corresponding Property value when getting/setting the value.  Calls {@code daqProperty_getName()}. */
+    /** Gets the Name of the Property. The names of Properties in a Property object must be unique.  Calls {@code daqProperty_getName()}. */
     public static MemorySegment getName(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment nameSlot = arena.allocate(ADDRESS);
@@ -366,7 +366,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the event triggered when a user retrieves the selection values field. Allows for overriding the returned value.  Calls {@code daqProperty_getOnSelectionValuesRead()}. */
+    /** Gets the event triggered when a user retrieves the selection values field. Allows for overriding  Calls {@code daqProperty_getOnSelectionValuesRead()}. */
     public static MemorySegment getOnSelectionValuesRead(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);
@@ -376,7 +376,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the event triggered when a user retrieves the suggested values field. Allows for overriding the returned value.  Calls {@code daqProperty_getOnSuggestedValuesRead()}. */
+    /** Gets the event triggered when a user retrieves the suggested values field. Allows for overriding  Calls {@code daqProperty_getOnSuggestedValuesRead()}. */
     public static MemorySegment getOnSuggestedValuesRead(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment eventSlot = arena.allocate(ADDRESS);
@@ -406,7 +406,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and `Is referenced` getters will return the value of the `Referenced property`.  Calls {@code daqProperty_getReferencedProperty()}. */
+    /** Gets the referenced property. If set, all getters except for the `Name`, `Referenced property`, and  Calls {@code daqProperty_getReferencedProperty()}. */
     public static MemorySegment getReferencedProperty(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment propertySlot = arena.allocate(ADDRESS);
@@ -416,7 +416,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list or dictionary of selection values. If the list/dictionary is not empty, the property is a Selection property, and must have the Value type `ctInt`.  Calls {@code daqProperty_getSelectionValues()}. */
+    /** Gets the list or dictionary of selection values. If the list/dictionary is not empty, the property  Calls {@code daqProperty_getSelectionValues()}. */
     public static MemorySegment getSelectionValues(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valuesSlot = arena.allocate(ADDRESS);
@@ -436,7 +436,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the list of Suggested values. Contains values that are the optimal settings for the corresponding Property value. These values, however, are not enforced when setting a new Property value.  Calls {@code daqProperty_getSuggestedValues()}. */
+    /** Gets the list of Suggested values. Contains values that are the optimal settings for the corresponding  Calls {@code daqProperty_getSuggestedValues()}. */
     public static MemorySegment getSuggestedValues(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment valuesSlot = arena.allocate(ADDRESS);
@@ -476,7 +476,7 @@ public final class DaqProperty {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the Value type of the Property. Values written to the corresponding Property value must be of the same type.  Calls {@code daqProperty_getValueType()}. */
+    /** Gets the Value type of the Property. Values written to the corresponding Property value  Calls {@code daqProperty_getValueType()}. */
     public static CoreType getValueType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment typeSlot = arena.allocate(JAVA_INT);

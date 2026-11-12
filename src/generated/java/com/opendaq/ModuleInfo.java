@@ -12,7 +12,11 @@ import java.util.Map;
 import com.opendaq.lowlevel.*;
 
 /**
- * Give module information composing of: - version info (major, minor, patch) - name - id.
+ * Give module information
+ * composing of:
+ * - version info (major, minor, patch)
+ * - name
+ * - id.
  *
  * &lt;p&gt;Wraps the openDAQ {&#64;code daqModuleInfo} interface.
  */

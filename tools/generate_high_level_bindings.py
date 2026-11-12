@@ -28,7 +28,7 @@ idiom):
 
 Usage:
     python3 tools/generate_high_level_bindings.py \
-        --opendaq-repo tmp/openDAQ --output-dir src/generated/java
+        --spec tmp/nightly/<tag>/opendaq.json --output-dir src/generated/java
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ MANUAL_DIR = Path(__file__).resolve().parent / "manual"
 CLASS_NAME_OVERRIDES = {
     "daqString": "StringObject",
     "daqInteger": "IntegerObject",
-    "daqFloatObject": "FloatObject",
+    "daqFloat": "FloatObject",
     "daqBoolean": "BooleanObject",
     "daqNumber": "NumberObject",
     "daqList": "ObjectList",
@@ -68,8 +68,7 @@ CLASS_NAME_OVERRIDES = {
     "daqCoreType": "CoreTypeObject",
 }
 
-# Parents for receivers that have functions but no interface record in the C
-# headers (their DECLARE_OPENDAQ_INTERFACE lives in the C++ core headers).
+# Parents for receivers that have functions but no interface record.
 EXTRA_PARENTS = {
     "daqPropertyValueEventArgs": "daqEventArgs",
 }
@@ -77,12 +76,13 @@ EXTRA_PARENTS = {
 # Functions not surfaced in the high-level layer.
 SUPPRESSED_FUNCTIONS = {
     # covered by DaqObject / the runtime
-    "daqBaseObject_addRef",
-    "daqBaseObject_releaseRef",
-    "daqBaseObject_queryInterface",
+    "daqUnknown_addRef",
+    "daqUnknown_releaseRef",
+    "daqUnknown_queryInterface",
+    "daqUnknown_getInterfaceId",
     "daqBaseObject_borrowInterface",
     # exact duplicates of the canonical constructor
-    "daqFloatObject_createFloat",
+    "daqFloat_createFloatObject",
     "daqBoolean_createBoolean",
     # daqIntfID-typed plumbing with idiomatic equivalents (asType/isA)
     "daqList_createListWithElementType",
@@ -128,7 +128,7 @@ OPTIONAL_DEFAULT_OVERRIDES = {
 
 # The interfaces whose values box/unbox to plain Java scalars.
 BOXED_PRIMITIVE_BASES = {
-    "daqBaseObject", "daqInteger", "daqFloatObject", "daqBoolean",
+    "daqBaseObject", "daqInteger", "daqFloat", "daqBoolean",
     "daqRatio", "daqComplexNumber",
 }
 
@@ -187,7 +187,8 @@ class Generator:
 
     def _build_classes(self) -> None:
         receivers = {f.receiver for f in self.model.functions}
-        all_c = set(self.model.interfaces) | (receivers - {"daqBaseObject"})
+        # daqUnknown has no class: its functions are covered by DaqObject.
+        all_c = set(self.model.interfaces) | (receivers - {"daqBaseObject", "daqUnknown"})
         all_c.add("daqBaseObject")
         for c_name in sorted(all_c):
             java = self.java_class(c_name)
@@ -273,7 +274,7 @@ class Generator:
         jt = param.jtype
         if base == "daqString":
             return "String", "daqstring"
-        if base == "daqConstCharPtr":
+        if base == "daqCConstCharPtr":
             return "String", "cstring"
         if base in BOXED_PRIMITIVE_BASES and jt.kind == "pointer":
             return "Object", "boxed"
@@ -740,8 +741,8 @@ class Generator:
         return "\n".join(lines) + "\n"
 
 
-def generate(opendaq_repo: Path, output_dir: Path) -> None:
-    model = Model(opendaq_repo)
+def generate(spec: Path, output_dir: Path) -> None:
+    model = Model(spec)
     generator = Generator(model)
     public_dir = output_dir / "com" / "opendaq"
     public_dir.mkdir(parents=True, exist_ok=True)
@@ -764,12 +765,12 @@ def generate(opendaq_repo: Path, output_dir: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--opendaq-repo", type=Path, required=True,
-                        help="Path to the openDAQ repository (containing bindings/c/include/).")
+    parser.add_argument("--spec", type=Path, required=True,
+                        help="Path to opendaq.json, the openDAQ API spec.")
     parser.add_argument("--output-dir", type=Path,
                         default=Path(__file__).resolve().parents[1] / "src" / "generated" / "java")
     args = parser.parse_args()
-    generate(args.opendaq_repo, args.output_dir)
+    generate(args.spec, args.output_dir)
     return 0
 
 

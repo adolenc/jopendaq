@@ -29,7 +29,7 @@ public final class DaqSampleReader {
     private static final MethodHandle MH_setValueTransformFunction =
         Ffi.downcallOrNull("daqSampleReader_setValueTransformFunction", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
 
-    /** Gets the sample-type the signal domain samples will be converted to when read or &#64;c SampleType::Invalid if read-type has not been determined yet.  Calls {@code daqSampleReader_getDomainReadType()}. */
+    /** Gets the sample-type the signal domain samples will be converted to when read  Calls {@code daqSampleReader_getDomainReadType()}. */
     public static SampleType getDomainReadType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment sampleTypeSlot = arena.allocate(JAVA_INT);
@@ -56,7 +56,7 @@ public final class DaqSampleReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Gets the sample-type the signal value samples will be converted to when read or &#64;c SampleType::Invalid if read-type has not been determined yet.  Calls {@code daqSampleReader_getValueReadType()}. */
+    /** Gets the sample-type the signal value samples will be converted to when read  Calls {@code daqSampleReader_getValueReadType()}. */
     public static SampleType getValueReadType(MemorySegment self) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment sampleTypeSlot = arena.allocate(JAVA_INT);
@@ -66,7 +66,7 @@ public final class DaqSampleReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step. The function should have a signature compatible with:  Calls {@code daqSampleReader_setDomainTransformFunction()}. */
+    /** Sets the transform function that will be called with the read domain-data and currently valid Signal-Descriptor  Calls {@code daqSampleReader_setDomainTransformFunction()}. */
     public static void setDomainTransformFunction(MemorySegment self, MemorySegment transform) {
         try {
             int err = (int) Ffi.require(MH_setDomainTransformFunction, "daqSampleReader_setDomainTransformFunction").invokeExact(Ffi.orNull(self), Ffi.orNull(transform));
@@ -74,7 +74,7 @@ public final class DaqSampleReader {
         } catch (Throwable t) { throw Ffi.rethrow(t); }
     }
 
-    /** Sets the transform function that will be called with the read value-data and currently valid Signal-Descriptor giving the user the chance add a custom post-processing step. The function should have a signature compatible with:  Calls {@code daqSampleReader_setValueTransformFunction()}. */
+    /** Sets the transform function that will be called with the read value-data and currently valid Signal-Descriptor  Calls {@code daqSampleReader_setValueTransformFunction()}. */
     public static void setValueTransformFunction(MemorySegment self, MemorySegment transform) {
         try {
             int err = (int) Ffi.require(MH_setValueTransformFunction, "daqSampleReader_setValueTransformFunction").invokeExact(Ffi.orNull(self), Ffi.orNull(transform));
